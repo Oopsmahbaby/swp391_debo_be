@@ -21,5 +21,10 @@ namespace swp391_debo_be.Cores
         {
            return _userRepository.getRolesName(user);
         }
+
+        public static bool IsRefreshTokenExist(User user)
+        {
+            return _userRepository.IsRefreshTokenExist(user);
+        }
     }
 }

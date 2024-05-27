@@ -67,6 +67,18 @@ namespace swp391_debo_be.Dao.Implement
             return user;
         }
 
+        public bool IsRefreshTokenExist(User user)
+        {
+            User foundUser = GetUserById(user.Id);
+
+            if (foundUser.RefreshToken == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public User UpdateUser(User user)
         {
             _context.Users.Update(user);

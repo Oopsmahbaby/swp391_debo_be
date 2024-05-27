@@ -28,6 +28,8 @@ public partial class User
 
     public string Address { get; set; }
 
+    public string RefreshToken { get; set; }
+
     public DateTime? DateOfBirthday { get; set; }
 
     public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();

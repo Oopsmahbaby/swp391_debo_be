@@ -1,4 +1,5 @@
-﻿using swp391_debo_be.Models;
+﻿using Microsoft.Owin.Security;
+using swp391_debo_be.Models;
 
 namespace swp391_debo_be.Repository.Interface
 {
@@ -17,5 +18,7 @@ namespace swp391_debo_be.Repository.Interface
         public User GetUserByPhone(string phone);
 
         public string[] getRolesName(User user);
+
+        public bool IsRefreshTokenExist(User user);
     }
 }

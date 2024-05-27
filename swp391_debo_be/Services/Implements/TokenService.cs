@@ -80,6 +80,14 @@ namespace swp391_debo_be.Services.Implements
         {
             try
             {
+                List<Claim> claims = JwtProvider.DecodeToken(token);
+                Claim claim = claims.FirstOrDefault(x => x.Type == JwtConstant.KeyClaim.Email);
+                User user = CUser.GetUserByEmail(claim.Value);
+
+                if (CUser.IsRefreshTokenExist(user) == false)
+                {
+                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.Forbidden, ErrorMessage = new List<string> { UserNotFoundErrorMessage }, IsSuccess = false };
+                }
                 string accessToken = string.Empty;
                 string refreshToken = string.Empty;
                 

@@ -18,5 +18,7 @@ namespace swp391_debo_be.Dao.Interface
 
         public string[] GetRolesName(User user);
 
+        public bool IsRefreshTokenExist(User user);
+
     }
 }
