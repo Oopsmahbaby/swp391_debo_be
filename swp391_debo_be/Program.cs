@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using swp391_debo_be.Auth;
 using swp391_debo_be.Dao.Implement;
@@ -11,14 +9,13 @@ using swp391_debo_be.Services.Implements;
 using swp391_debo_be.Services.Interfaces;
 using System.Text;
 
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
-builder.Services.AddCors();
 // Add services to the container.
 builder.Configuration.GetSection("GoogleAuthSetting").Bind(new GoogleAuthSetting());
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -29,11 +26,6 @@ builder.Services.AddDbContext<Debo_dev_02Context>(options =>
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUserDao, UserDao>();
 
-builder.Services.AddCors(p => p.AddPolicy("DEBO_CORS", build =>
-{
-    build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
-}));
-
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddGoogle(googleOptions =>
     {
@@ -41,20 +33,35 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
     })
     .AddJwtBearer(options =>
-{
-    options.RequireHttpsMetadata = false;
-    options.SaveToken = true;
-    options.TokenValidationParameters = new TokenValidationParameters()
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-    };
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+    });
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:5173")
+                   .AllowCredentials()
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
 });
 
+
 var app = builder.Build();
+
+app.UseCors("AllowSpecificOrigin");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -64,8 +71,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("DEBO_CORS");
-
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
