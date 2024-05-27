@@ -18,6 +18,7 @@ namespace swp391_debo_be.Controllers
 {
     [Route("api/auth")]
     [ApiController]
+    [EnableCors("MyAllowSpecificOrigins")]
     public class AuthController : ControllerBase
     {
         private readonly ITokenService _tokenService;
