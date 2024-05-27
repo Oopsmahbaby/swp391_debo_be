@@ -44,11 +44,11 @@ namespace swp391_debo_be.Repository.Implement
             return _userDao.GetUserByPhone(phone);
         }
 
-        public bool IsRefreshTokenExists(User user)
+        public bool IsRefreshTokenExist(User user)
         {
             return _userDao.IsRefreshTokenExist(user);
-        }
 
+        }
         public User UpdateUser(User user)
         {
             return _userDao.UpdateUser(user);
