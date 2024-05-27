@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using swp391_debo_be.Auth;
 using swp391_debo_be.Dao.Implement;
@@ -14,6 +15,7 @@ var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
+builder.Services.AddCors();
 // Add services to the container.
 builder.Configuration.GetSection("GoogleAuthSetting").Bind(new GoogleAuthSetting());
 builder.Services.AddControllers();
@@ -27,16 +29,11 @@ builder.Services.AddDbContext<Debo_dev_02Context>(options =>
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUserDao, UserDao>();
 
-builder.Services.AddCors(options =>
+builder.Services.AddCors(p => p.AddPolicy("DEBO_CORS", build =>
 {
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-                      policy =>
-                      {
-                          policy.WithOrigins("http://localhost:5173")
-                       .AllowAnyHeader()
-                       .AllowAnyMethod();
-                      });
-});
+    build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+}));
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddGoogle(googleOptions =>
     {
@@ -67,7 +64,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors(MyAllowSpecificOrigins);
+app.UseCors("DEBO_CORS");
 
 app.UseAuthentication();
 app.UseAuthorization();
