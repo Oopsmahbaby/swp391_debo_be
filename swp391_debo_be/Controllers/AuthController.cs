@@ -29,7 +29,7 @@ namespace swp391_debo_be.Controllers
             this._googleAuthSetting = googleAuthSetting.Value;
         }
 
-        [EnableCors("MyAllowSpecificOrigins")]
+        [EnableCors("AllowSpecificOrigin")]
         [HttpPost("credentials/login")]
         public IActionResult LoginByCredentials([FromBody] UserRequestDto userRequest)
         {

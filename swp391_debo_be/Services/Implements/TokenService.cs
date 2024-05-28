@@ -30,8 +30,10 @@ namespace swp391_debo_be.Services.Implements
 
                 if (foundUser == null)
                 {
-                    return new ApiRespone {StatusCode = System.Net.HttpStatusCode.NotFound ,ErrorMessage =  [ UserNotFoundErrorMessage ], IsSuccess = false };
+                    return new ApiRespone {StatusCode = System.Net.HttpStatusCode.NotFound ,Message =  UserNotFoundErrorMessage , IsSuccess = false };
                 }
+
+                Role role = CRole.GetRoleById((int)foundUser.Role);
 
                 List<Claim> claims = new List<Claim>
                 {
@@ -39,6 +41,7 @@ namespace swp391_debo_be.Services.Implements
                     new Claim(ClaimTypes.Email, foundUser.Email),
                     new Claim(ClaimTypes.Name, foundUser.Username),
                     new Claim(ClaimTypes.MobilePhone, foundUser.Phone),
+                    new Claim(ClaimTypes.Role, role.Name)
                 };
 
                 string accessToken = JwtProvider.GenerateToken(claims);
@@ -86,7 +89,7 @@ namespace swp391_debo_be.Services.Implements
 
                 if (CUser.IsRefreshTokenExist(user) == false)
                 {
-                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.Forbidden, ErrorMessage = new List<string> { UserNotFoundErrorMessage }, IsSuccess = false };
+                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.Forbidden, Message = UserNotFoundErrorMessage, IsSuccess = false };
                 }
                 string accessToken = string.Empty;
                 string refreshToken = string.Empty;
