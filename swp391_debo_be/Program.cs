@@ -24,6 +24,8 @@ builder.Services.AddDbContext<Debo_dev_02Context>(options =>
 );
 
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IRoleDao, RoleDao>(); 
+builder.Services.AddScoped<IUserService, UserService>();    
 builder.Services.AddScoped<IUserDao, UserDao>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

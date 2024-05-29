@@ -98,9 +98,9 @@ namespace swp391_debo_be.Controllers
 
         [EnableCors("AllowSpecificOrigin")]
         [HttpPost("register")]
-        public IActionResult Register([FromBody] String email, [FromBody]string password)
+        public IActionResult Register([FromBody] CreateUserDto createUserDto)
         {
-            return Ok(_userService.CreateUser(email, password));
+            return Ok(_userService.CreateUser(createUserDto));
         }
     }
 }

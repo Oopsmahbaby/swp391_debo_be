@@ -1,5 +1,6 @@
 ﻿using swp391_debo_be.Constants;
 using swp391_debo_be.Cores;
+using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Helpers;
 using swp391_debo_be.Models;
 using swp391_debo_be.Services.Interfaces;
@@ -10,13 +11,13 @@ namespace swp391_debo_be.Services.Implements
 {
     public class UserService : IUserService
     {
-        public ApiRespone CreateUser(string email, string password)
+        public ApiRespone CreateUser(CreateUserDto createUserDto)
         {
             User user = new User()
             {
                 Id = System.Guid.NewGuid(),
-                Email = email,
-                Password = Helper.HashPassword(password)
+                Email = createUserDto.Email,
+                Password = Helper.HashPassword(createUserDto.password)
             };
 
             User createdUser = CUser.CreateUser(user);
