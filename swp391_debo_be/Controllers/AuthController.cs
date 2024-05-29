@@ -46,7 +46,7 @@ namespace swp391_debo_be.Controllers
                 return BadRequest("Invalid token");
             }
 
-            return Ok(new ApiRespone { Result = tokenResponse });
+            return Ok(new ApiRespone { Data = tokenResponse });
         }
 
         [EnableCors("AllowSpecificOrigin")]
@@ -60,7 +60,7 @@ namespace swp391_debo_be.Controllers
                 return BadRequest("Invalid token");
             }
 
-            return Ok(new ApiRespone { Result = tokenResponse });
+            return Ok(new ApiRespone { Data = tokenResponse });
         }
         private async Task<TokenResponse> ExchangeCodeForTokenAsync(string code)
         {

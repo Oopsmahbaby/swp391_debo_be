@@ -30,7 +30,7 @@ namespace swp391_debo_be.Services.Implements
 
                 if (foundUser == null)
                 {
-                    return new ApiRespone {StatusCode = System.Net.HttpStatusCode.NotFound ,Message =  UserNotFoundErrorMessage , IsSuccess = false };
+                    return new ApiRespone {StatusCode = System.Net.HttpStatusCode.NotFound ,Message =  UserNotFoundErrorMessage , Success = false };
                 }
 
                 Role role = CRole.GetRoleById((int)foundUser.Role);
@@ -49,7 +49,7 @@ namespace swp391_debo_be.Services.Implements
                 string refreshToken = JwtProvider.GenerateRefreshToken(claims); 
                 // Add code here to generate access token
 
-                return new ApiRespone { StatusCode = System.Net.HttpStatusCode.OK, Result = new { AccessToken = accessToken, RefreshToken = refreshToken } };
+                return new ApiRespone { StatusCode = System.Net.HttpStatusCode.OK, Data = new { AccessToken = accessToken, RefreshToken = refreshToken } };
             }
             catch (System.Exception)
             {
@@ -89,7 +89,7 @@ namespace swp391_debo_be.Services.Implements
 
                 if (CUser.IsRefreshTokenExist(user) == false)
                 {
-                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.Forbidden, Message = UserNotFoundErrorMessage, IsSuccess = false };
+                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.Forbidden, Message = UserNotFoundErrorMessage, Success = false };
                 }
                 string accessToken = string.Empty;
                 string refreshToken = string.Empty;
@@ -98,7 +98,7 @@ namespace swp391_debo_be.Services.Implements
 
                 var result = new { AccessToken = accessToken, RefreshToken = refreshToken };
 
-                return new ApiRespone { StatusCode = System.Net.HttpStatusCode.OK, Result = result };
+                return new ApiRespone { StatusCode = System.Net.HttpStatusCode.OK, Data = result };
             }
             catch (System.Exception)
             {

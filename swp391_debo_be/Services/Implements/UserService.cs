@@ -21,7 +21,7 @@ namespace swp391_debo_be.Services.Implements
 
             User createdUser = CUser.CreateUser(user);
 
-            return new ApiRespone { IsSuccess = true, Result = createdUser , StatusCode = System.Net.HttpStatusCode.Created};
+            return new ApiRespone { Success = true, Data = createdUser , StatusCode = System.Net.HttpStatusCode.Created};
         }
 
         public bool IsRefreshToken(User user)
