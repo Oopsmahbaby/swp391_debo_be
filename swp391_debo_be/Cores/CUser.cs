@@ -13,6 +13,11 @@ namespace swp391_debo_be.Cores
             return _userRepository.GetUserByPhone(phoneNumber);
         }
 
+        public static User CreateUser(User user)
+        {
+            return _userRepository.CreateUser(user);
+        }
+
         public static User GetUserByEmail(string email)
         {
             return _userRepository.GetUserByEmail(email);

@@ -18,7 +18,7 @@ namespace swp391_debo_be.Dao.Implement
         }
 
         public User CreateUser(User user)
-        {
+        { 
             _context.Users.Add(user);
             _context.SaveChanges();
 

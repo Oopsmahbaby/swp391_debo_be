@@ -2,7 +2,6 @@
 using Google.Apis.Auth.OAuth2.Flows;
 using Google.Apis.Auth.OAuth2.Requests;
 using Google.Apis.Auth.OAuth2.Responses;
-using Google.Apis.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -10,8 +9,6 @@ using swp391_debo_be.Auth;
 using swp391_debo_be.Constants;
 using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Services.Interfaces;
-using System;
-using System.Threading.Tasks;
 
 
 namespace swp391_debo_be.Controllers
@@ -21,12 +18,14 @@ namespace swp391_debo_be.Controllers
     public class AuthController : ControllerBase
     {
         private readonly ITokenService _tokenService;
+        private readonly IUserService _userService;
 
         private readonly GoogleAuthSetting _googleAuthSetting;
-        public AuthController(ITokenService tokenService, IOptions<GoogleAuthSetting> googleAuthSetting)
+        public AuthController(ITokenService tokenService, IOptions<GoogleAuthSetting> googleAuthSetting, IUserService userService)
         {
             this._tokenService = tokenService;
             this._googleAuthSetting = googleAuthSetting.Value;
+            _userService = userService;
         }
 
         [EnableCors("AllowSpecificOrigin")]
@@ -36,6 +35,7 @@ namespace swp391_debo_be.Controllers
             return Ok(_tokenService.GenerateAccessToken(userRequest));
         }
 
+        [EnableCors("AllowSpecificOrigin")]
         [HttpPost("google/login")]
         public async Task<IActionResult> LoginByGoogle([FromBody] GoogleAuthDto googleAuthDto)
         {
@@ -49,6 +49,7 @@ namespace swp391_debo_be.Controllers
             return Ok(new ApiRespone { Result = tokenResponse });
         }
 
+        [EnableCors("AllowSpecificOrigin")]
         [HttpPost("google/refresh")]
         public async Task<IActionResult> RefreshToken([FromBody] string refreshToken)
         {
@@ -93,6 +94,13 @@ namespace swp391_debo_be.Controllers
             var tokenResponse = await flow.RefreshTokenAsync("user-id", refreshToken, CancellationToken.None);
 
             return tokenResponse;
+        }
+
+        [EnableCors("AllowSpecificOrigin")]
+        [HttpPost("register")]
+        public IActionResult Register([FromBody] String email, [FromBody]string password)
+        {
+            return Ok(_userService.CreateUser(email, password));
         }
     }
 }
