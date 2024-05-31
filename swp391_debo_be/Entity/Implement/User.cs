@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace swp391_debo_be.Entity.Implement;
 
-public partial class User : IdentityUser
+public partial class User
 {
     public Guid Id { get; set; }
 

@@ -91,5 +91,35 @@ namespace swp391_debo_be.Dao.Implement
         {
             return _context.Users.ToList<User>();
         }
+
+        public bool SaveRefreshToken(Guid userId, string refreshToken)
+        {
+            User? user = GetUserById(userId);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            user.RefreshToken = refreshToken;
+            UpdateUser(user);
+            return true;
+        }
+
+        public bool DeleteRefreshToken(Guid userId)
+        {
+            User? user = GetUserById(userId);
+
+            if(user == null)
+            {
+                return false;
+            }
+
+            user.RefreshToken = null;
+
+            UpdateUser(user);
+
+            return true;
+        }
     }
 }

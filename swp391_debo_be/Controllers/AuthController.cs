@@ -102,5 +102,20 @@ namespace swp391_debo_be.Controllers
         {
             return Ok(_userService.CreateUser(createUserDto));
         }
+
+        [EnableCors("AllowSpecificOrigin")]
+        [HttpPost("credentials/refreshToken")]
+        public IActionResult RefreshToken([FromBody] TokenRequestDto tokenRequestDto)
+        {
+            return Ok(_tokenService.GenerateRefreshToken(tokenRequestDto));
+        }
+
+        [EnableCors("AllowSpecificOrigin")]
+        [HttpPost("logout")]
+        public IActionResult Logout([FromBody] string token)
+        {
+            return Ok(_tokenService.HandleLogout(token));
+        }
+
     }
 }

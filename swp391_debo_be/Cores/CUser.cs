@@ -36,5 +36,15 @@ namespace swp391_debo_be.Cores
         {
             return _userRepository.IsRefreshTokenExist(user);
         }
+
+        public static bool SaveRefreshToken(Guid userId, string refreshToken)
+        {
+            return _userRepository.SaveRefreshToken(userId, refreshToken);
+        }
+
+        public static bool DeleteRefreshToken(Guid userId)
+        {
+            return _userRepository.DeleteRefreshToken(userId);
+        }
     }
 }

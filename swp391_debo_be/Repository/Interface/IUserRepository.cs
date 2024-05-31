@@ -22,5 +22,8 @@ namespace swp391_debo_be.Repository.Interface
         public string[] getRolesName(User user);
 
         public bool IsRefreshTokenExist(User user);
+
+        public bool SaveRefreshToken(Guid userId, string refreshToken);
+        public bool DeleteRefreshToken(Guid userId);
     }
 }

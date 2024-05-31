@@ -54,9 +54,20 @@ namespace swp391_debo_be.Repository.Implement
             return _userDao.IsRefreshTokenExist(user);
 
         }
+
+        public bool SaveRefreshToken(Guid userId, string refreshToken)
+        {
+            return _userDao.SaveRefreshToken(userId, refreshToken);
+        }
+
         public User UpdateUser(User user)
         {
             return _userDao.UpdateUser(user);
+        }
+
+        public bool DeleteRefreshToken(Guid userId)
+        {
+            return _userDao.DeleteRefreshToken(userId);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using swp391_debo_be.Auth;
+﻿using Google.Apis.Auth.OAuth2.Requests;
+using swp391_debo_be.Auth;
 using swp391_debo_be.Constants;
 using swp391_debo_be.Cores;
 using swp391_debo_be.Dto.Implement;
@@ -49,6 +50,8 @@ namespace swp391_debo_be.Services.Implements
                 string refreshToken = JwtProvider.GenerateRefreshToken(claims); 
                 // Add code here to generate access token
 
+                CUser.SaveRefreshToken(foundUser.Id, refreshToken);
+
                 return new ApiRespone { StatusCode = System.Net.HttpStatusCode.OK, Data = new { AccessToken = accessToken, RefreshToken = refreshToken } };
             }
             catch (System.Exception)
@@ -79,12 +82,25 @@ namespace swp391_debo_be.Services.Implements
             
         }
 
-        public ApiRespone GenerateRefreshToken(string token)
+        public ApiRespone GenerateRefreshToken(TokenRequestDto tokenRequest)
         {
             try
             {
-                List<Claim> claims = JwtProvider.DecodeToken(token);
-                Claim claim = claims.FirstOrDefault(x => x.Type == JwtConstant.KeyClaim.Email);
+                List<Claim> claims = JwtProvider.DecodeToken(tokenRequest.accessToken);
+
+                System.Console.WriteLine(claims.ToString());
+
+                if (claims == null)
+                {
+                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.Forbidden, Message = "Invalid Token", Success = false };
+                }
+
+
+                Claim claim = claims.FirstOrDefault(c => c.Type == "email");
+                if (claim == null)
+                {
+                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.Forbidden, Message = "Invalid Token", Success = false };
+                }   
                 User user = CUser.GetUserByEmail(claim.Value);
 
                 if (CUser.IsRefreshTokenExist(user) == false)
@@ -94,7 +110,8 @@ namespace swp391_debo_be.Services.Implements
                 string accessToken = string.Empty;
                 string refreshToken = string.Empty;
                 
-                JwtProvider.HandleRefreshToken(token, out accessToken, out refreshToken);
+                JwtProvider.HandleRefreshToken(tokenRequest.accessToken, out accessToken, out refreshToken);
+                CUser.SaveRefreshToken(user.Id, refreshToken);
 
                 var result = new { AccessToken = accessToken, RefreshToken = refreshToken };
 
@@ -106,6 +123,37 @@ namespace swp391_debo_be.Services.Implements
             }
         }
 
+        public ApiRespone HandleLogout(string token)
+        {
+            try
+            {
+                List<Claim> claims = JwtProvider.DecodeToken(token);
 
+                if (claims == null)
+                {
+                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.Forbidden, Message = "Invalid Token", Success = false };
+                }
+
+
+                Claim claim = claims.FirstOrDefault(x => x.Type == JwtConstant.KeyClaim.Email);
+                if (claim == null)
+                {
+                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.Forbidden, Message = "Invalid Claim", Success = false };
+                }
+                User user = CUser.GetUserByEmail(claim.Value);
+
+                var result = CUser.DeleteRefreshToken(user.Id);
+
+                if (result == false)
+                {
+                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.Forbidden, Message = UserNotFoundErrorMessage, Success = false };
+                }
+
+                return new ApiRespone { StatusCode = System.Net.HttpStatusCode.OK, Message = "Logout Success" };
+            } catch
+            {
+                throw;
+            }
+        }
     }
 }

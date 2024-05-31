@@ -20,6 +20,11 @@ namespace swp391_debo_be.Dao.Interface
 
         public string[] GetRolesName(User user);
 
+        public bool SaveRefreshToken(Guid userId, string refreshToken);
+
+        public bool DeleteRefreshToken(Guid userId);
+
+
         public bool IsRefreshTokenExist(User user);
 
     }

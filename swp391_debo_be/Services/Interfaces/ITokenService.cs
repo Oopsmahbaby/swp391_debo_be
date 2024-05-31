@@ -8,6 +8,8 @@ namespace swp391_debo_be.Services.Interfaces
     {
         public ApiRespone GenerateAccessToken(UserRequestDto user);
 
-        public ApiRespone GenerateRefreshToken(string token);
+        public ApiRespone GenerateRefreshToken(TokenRequestDto token);
+
+        public ApiRespone HandleLogout(string token);
     }
 }
