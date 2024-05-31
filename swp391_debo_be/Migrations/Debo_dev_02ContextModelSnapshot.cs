@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using swp391_debo_be.Models;
+using swp391_debo_be.Entity.Implement;
 
 #nullable disable
 
 namespace swp391_debo_be.Migrations
 {
-    [DbContext(typeof(Debo_dev_02Context))]
+    [DbContext(typeof(DeboDev02Context))]
     partial class Debo_dev_02ContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

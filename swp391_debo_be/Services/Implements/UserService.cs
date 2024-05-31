@@ -2,7 +2,7 @@
 using swp391_debo_be.Cores;
 using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Helpers;
-using swp391_debo_be.Models;
+using swp391_debo_be.Entity.Implement;
 using swp391_debo_be.Services.Interfaces;
 using System.Security.Cryptography;
 using System.Text;
@@ -23,6 +23,16 @@ namespace swp391_debo_be.Services.Implements
             User createdUser = CUser.CreateUser(user);
 
             return new ApiRespone { Success = true, Data = createdUser , StatusCode = System.Net.HttpStatusCode.Created};
+        }
+
+        public object? GetProfile(string? userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<User> GetUsers()
+        {
+            return CUser.GetUsers();
         }
 
         public bool IsRefreshToken(User user)

@@ -1,11 +1,11 @@
 ﻿using swp391_debo_be.Dao.Interface;
-using swp391_debo_be.Models;
+using swp391_debo_be.Entity.Implement;
 
 namespace swp391_debo_be.Dao.Implement
 {
     public class RoleDao : IRoleDao
     {
-        private readonly Debo_dev_02Context _context = new Debo_dev_02Context(new Microsoft.EntityFrameworkCore.DbContextOptions<Debo_dev_02Context>());
+        private readonly DeboDev02Context _context = new DeboDev02Context(new Microsoft.EntityFrameworkCore.DbContextOptions<DeboDev02Context>());
 
         public RoleDao()
         {

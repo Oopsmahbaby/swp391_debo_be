@@ -1,4 +1,4 @@
-﻿using swp391_debo_be.Models;
+﻿using swp391_debo_be.Entity.Implement;
 using swp391_debo_be.Repository.Implement;
 using swp391_debo_be.Repository.Interface;
 
@@ -25,6 +25,11 @@ namespace swp391_debo_be.Cores
         public static string[] GetRoleName(User user)
         {
            return _userRepository.getRolesName(user);
+        }
+
+        public static List<User> GetUsers()
+        {
+            return _userRepository.GetUsers();
         }
 
         public static bool IsRefreshTokenExist(User user)

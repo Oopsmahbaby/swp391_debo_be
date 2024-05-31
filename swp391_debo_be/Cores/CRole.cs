@@ -1,4 +1,4 @@
-﻿using swp391_debo_be.Models;
+﻿using swp391_debo_be.Entity.Implement;
 using swp391_debo_be.Repository.Implement;
 using swp391_debo_be.Repository.Interface;
 

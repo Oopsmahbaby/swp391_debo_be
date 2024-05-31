@@ -1,18 +1,18 @@
 ﻿using swp391_debo_be.Dao.Interface;
 using swp391_debo_be.DBContext;
-using swp391_debo_be.Models;
+using swp391_debo_be.Entity.Implement;
 
 namespace swp391_debo_be.Dao.Implement
 {
     public class UserDao : IUserDao
     {
-        private readonly Debo_dev_02Context _context = new Debo_dev_02Context (new Microsoft.EntityFrameworkCore.DbContextOptions<Debo_dev_02Context>());
+        private readonly DeboDev02Context _context = new DeboDev02Context (new Microsoft.EntityFrameworkCore.DbContextOptions<DeboDev02Context>());
 
         public UserDao()
         {
         }
 
-        public UserDao(Debo_dev_02Context context)
+        public UserDao(DeboDev02Context context)
         {
             this._context = context;
         }
@@ -44,7 +44,7 @@ namespace swp391_debo_be.Dao.Implement
                 return new string[0];
             }
 
-            return new string[] { role.Name };
+            return new string[] { role.Role1 };
         }
 
         public User GetUserByEmail(string email)
@@ -85,6 +85,11 @@ namespace swp391_debo_be.Dao.Implement
             _context.SaveChanges();
 
             return user;
+        }
+
+        public List<User> GetUsers()
+        {
+            return _context.Users.ToList<User>();
         }
     }
 }

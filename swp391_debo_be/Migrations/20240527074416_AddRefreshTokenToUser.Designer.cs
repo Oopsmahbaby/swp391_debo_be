@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using swp391_debo_be.Models;
+using swp391_debo_be.Entity.Implement;
 
 #nullable disable
 
 namespace swp391_debo_be.Migrations
 {
-    [DbContext(typeof(Debo_dev_02Context))]
+    [DbContext(typeof(DeboDev02Context))]
     [Migration("20240527074416_AddRefreshTokenToUser")]
     partial class AddRefreshTokenToUser
     {

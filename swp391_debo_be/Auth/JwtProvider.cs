@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using swp391_debo_be.Dto.Implement;
-using swp391_debo_be.Models;
+using swp391_debo_be.Entity.Implement;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.WebSockets;
 using System.Runtime.CompilerServices;

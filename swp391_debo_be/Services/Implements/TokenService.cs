@@ -2,7 +2,7 @@
 using swp391_debo_be.Constants;
 using swp391_debo_be.Cores;
 using swp391_debo_be.Dto.Implement;
-using swp391_debo_be.Models;
+using swp391_debo_be.Entity.Implement;
 using swp391_debo_be.Services.Interfaces;
 using System.Linq.Expressions;
 using System.Security.Claims;
@@ -41,7 +41,7 @@ namespace swp391_debo_be.Services.Implements
                     new Claim(ClaimTypes.Email, foundUser.Email),
                     new Claim(ClaimTypes.Name, foundUser.Username),
                     new Claim(ClaimTypes.MobilePhone, foundUser.Phone),
-                    new Claim(ClaimTypes.Role, role.Name)
+                    new Claim(ClaimTypes.Role, SystemRole.Customer)
                 };
 
                 string accessToken = JwtProvider.GenerateToken(claims);

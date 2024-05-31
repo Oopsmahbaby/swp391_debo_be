@@ -1,5 +1,5 @@
 ﻿using Microsoft.Owin.Security;
-using swp391_debo_be.Models;
+using swp391_debo_be.Entity.Implement;
 
 namespace swp391_debo_be.Repository.Interface
 {
@@ -16,6 +16,8 @@ namespace swp391_debo_be.Repository.Interface
         public User DeleteUser(User user);
 
         public User GetUserByPhone(string phone);
+
+        public List<User> GetUsers();
 
         public string[] getRolesName(User user);
 

@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using swp391_debo_be.Auth;
 using swp391_debo_be.Dao.Implement;
 using swp391_debo_be.Dao.Interface;
-using swp391_debo_be.Models;
+using swp391_debo_be.Entity.Implement;
 using swp391_debo_be.Services.Implements;
 using swp391_debo_be.Services.Interfaces;
 using System.Text;
@@ -19,9 +20,14 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<Debo_dev_02Context>(options =>
+builder.Services.AddDbContext<DeboDev02Context>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+
+// Corrected line for Identity setup
+//builder.Services.AddIdentity<User, IdentityRole>()
+ //   .AddEntityFrameworkStores<DeboDev02Context>()
+  //  .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IRoleDao, RoleDao>(); 
