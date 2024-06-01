@@ -3,9 +3,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using swp391_debo_be.Auth;
+using swp391_debo_be.Cores;
 using swp391_debo_be.Dao.Implement;
 using swp391_debo_be.Dao.Interface;
 using swp391_debo_be.Entity.Implement;
+using swp391_debo_be.Repository.Implement;
+using swp391_debo_be.Repository.Interface;
 using swp391_debo_be.Services.Implements;
 using swp391_debo_be.Services.Interfaces;
 using System.Text;
@@ -33,7 +36,10 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IRoleDao, RoleDao>(); 
 builder.Services.AddScoped<IUserService, UserService>();    
 builder.Services.AddScoped<IUserDao, UserDao>();
-
+builder.Services.AddScoped<ITreatmentRepository, TreatmentRepository>();
+builder.Services.AddScoped<ITreatmentDao, TreatmentDao>();
+builder.Services.AddScoped<CTreatment>();
+builder.Services.AddScoped<TreatmentService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddGoogle(googleOptions =>
     {
