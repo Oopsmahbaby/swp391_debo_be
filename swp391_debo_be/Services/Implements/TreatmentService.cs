@@ -21,9 +21,10 @@ namespace swp391_debo_be.Services.Implements
             var response = new ApiRespone();
             try
             {
-                var newTreat = await _treatCores.addTreatmentAsync(treatment);
-                var treat = await _treatCores.getTreatmentAsync(newTreat);
+                var newTreat = await CTreatment.addTreatmentAsync(treatment);
+                var treat = await CTreatment.getTreatmentAsync(newTreat);
                 response.StatusCode = HttpStatusCode.OK;
+                response.Data = treat;
                 response.Success = true;
                 response.Message = "Treatment data is added successfully.";
             }
@@ -41,8 +42,10 @@ namespace swp391_debo_be.Services.Implements
             var response = new ApiRespone();
             try
             {
-                await _treatCores.deleteTreatmentAsync(id);
+                var treat = await CTreatment.getTreatmentAsync(id);
+                await CTreatment.deleteTreatmentAsync(id);
                 response.StatusCode = HttpStatusCode.OK;
+                response.Data = treat;
                 response.Success = true;
                 response.Message = "Treatment data is deleted successfully.";
             }
@@ -60,7 +63,7 @@ namespace swp391_debo_be.Services.Implements
             var response = new ApiRespone();
             try
             {
-                var data = await _treatCores.getAllTreatmentAsync();
+                var data = await CTreatment.getAllTreatmentAsync();
                 response.StatusCode = HttpStatusCode.OK;
                 response.Data = data;
                 response.Success = true;
@@ -80,7 +83,7 @@ namespace swp391_debo_be.Services.Implements
             var response = new ApiRespone();
             try
             {
-                var data = await _treatCores.getTreatmentAsync(id);
+                var data = await CTreatment.getTreatmentAsync(id);
                 response.StatusCode = HttpStatusCode.OK;
                 response.Data = data;
                 response.Success = true;
@@ -106,8 +109,10 @@ namespace swp391_debo_be.Services.Implements
                     response.Success = false;
                     response.Message = "This Treatment does not exist in system";
                 }
-                await _treatCores.updateTreatmentAsync(id,treatment);
+                await CTreatment.updateTreatmentAsync(id,treatment);
+                var data = await CTreatment.getTreatmentAsync(id);
                 response.StatusCode = HttpStatusCode.OK;
+                response.Data = data;
                 response.Success = true;
                 response.Message = "Treatment data updated successfully.";
             }

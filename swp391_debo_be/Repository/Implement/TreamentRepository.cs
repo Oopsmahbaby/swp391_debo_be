@@ -1,4 +1,5 @@
 ﻿using swp391_debo_be.Dao.Implement;
+using swp391_debo_be.Dao.Interface;
 using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
 using swp391_debo_be.Repository.Interface;
@@ -7,11 +8,11 @@ namespace swp391_debo_be.Repository.Implement
 {
     public class TreatmentRepository : ITreatmentRepository
     {
-        private readonly TreatmentDao _treatmentDao;
+        private readonly ITreatmentDao _treatmentDao;
 
-        public TreatmentRepository()
+        public TreatmentRepository(ITreatmentDao treatmentDao)
         {
-            _treatmentDao = new TreatmentDao();
+            _treatmentDao = treatmentDao;
         }
         public Task<int> addTreatmentAsync(TreatmentDto treatment)
         {

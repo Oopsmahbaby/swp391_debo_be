@@ -15,12 +15,10 @@ namespace swp391_debo_be.Controllers
     [ApiController]
     public class TreatmentsController : ControllerBase
     {
-        private readonly ITreatmentRepository _treatRepo;
         private readonly TreatmentService _treatService;
 
-        public TreatmentsController(ITreatmentRepository treatRepo, TreatmentService treatService)
+        public TreatmentsController(TreatmentService treatService)
         {
-            _treatRepo = treatRepo;
             _treatService = treatService;
         }
 

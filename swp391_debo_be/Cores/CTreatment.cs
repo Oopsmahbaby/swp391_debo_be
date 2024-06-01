@@ -1,4 +1,6 @@
-﻿using swp391_debo_be.Dto.Implement;
+﻿using Microsoft.EntityFrameworkCore;
+using swp391_debo_be.Dao.Implement;
+using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
 using swp391_debo_be.Repository.Implement;
 using swp391_debo_be.Repository.Interface;
@@ -7,34 +9,36 @@ namespace swp391_debo_be.Cores
 {
     public class CTreatment
     {
-        private readonly TreatmentRepository _treatmentRepo;
+        protected static readonly TreatmentRepository _treatmentRepo;
 
-        public CTreatment()
+        static CTreatment()
         {
-            _treatmentRepo = new TreatmentRepository();
+            var context = new DeboDev02Context(new DbContextOptions<DeboDev02Context>());
+            _treatmentRepo = new TreatmentRepository(new TreatmentDao(context));
         }
 
-        public Task<int> addTreatmentAsync(TreatmentDto treatment)
+        public static Task<int> addTreatmentAsync(TreatmentDto treatment)
         {
             return _treatmentRepo.addTreatmentAsync(treatment);
         }
 
-        public Task deleteTreatmentAsync(int id)
+
+        public static Task deleteTreatmentAsync(int id)
         {
             return _treatmentRepo.deleteTreatmentAsync(id);
         }
 
-        public Task<List<TreatmentDto>> getAllTreatmentAsync()
+        public static Task<List<TreatmentDto>> getAllTreatmentAsync()
         {
             return _treatmentRepo.getAllTreatmentAsync();
         }
 
-        public Task<TreatmentDto> getTreatmentAsync(int id)
+        public static Task<TreatmentDto> getTreatmentAsync(int id)
         {
             return _treatmentRepo.getTreatmentAsync(id);
         }
 
-        public Task updateTreatmentAsync(int id, TreatmentDto treatment)
+        public static Task updateTreatmentAsync(int id, TreatmentDto treatment)
         {
             return _treatmentRepo.updateTreatmentAsync(id, treatment);
         }
