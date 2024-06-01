@@ -70,9 +70,9 @@ namespace swp391_debo_be.Repository.Implement
             return _userDao.DeleteRefreshToken(userId);
         }
 
-        public bool IsPasswordExist(User user)
+        public bool IsPasswordExist(string password, User user)
         {
-            return _userDao.IsPasswordExist(user);
+            return _userDao.IsPasswordExist(password, user);
         }
     }
 }

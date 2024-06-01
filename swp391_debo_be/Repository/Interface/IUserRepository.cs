@@ -25,6 +25,6 @@ namespace swp391_debo_be.Repository.Interface
 
         public bool SaveRefreshToken(Guid userId, string refreshToken);
         public bool DeleteRefreshToken(Guid userId);
-        public bool IsPasswordExist(User user);
+        public bool IsPasswordExist(string password, User user);
     }
 }

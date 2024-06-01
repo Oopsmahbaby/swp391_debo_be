@@ -48,10 +48,10 @@ namespace swp391_debo_be.Cores
             return _userRepository.DeleteRefreshToken(userId);
         }
 
-        public static bool IsPasswordExist(User user)
+        public static bool IsPasswordExist(string password, User user)
         {
-            user.Password = Helper.HashPassword(user.Password);
-            return _userRepository.IsPasswordExist(user);
+            string hashedPassword = Helper.HashPassword(password);
+            return _userRepository.IsPasswordExist(hashedPassword, user);
         }
     }
 }
