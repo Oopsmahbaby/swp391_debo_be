@@ -13,6 +13,12 @@ namespace swp391_debo_be.Services.Implements
     {
         public ApiRespone CreateUser(CreateUserDto createUserDto)
         {
+
+            if (CUser.GetUserByEmail(createUserDto.Email) != null)
+            {
+                return new ApiRespone { Success = false, Message = "Email is already exist", StatusCode = System.Net.HttpStatusCode.BadRequest };
+            }
+
             User user = new User()
             {
                 Id = System.Guid.NewGuid(),

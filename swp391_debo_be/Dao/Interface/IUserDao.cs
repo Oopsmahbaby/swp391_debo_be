@@ -1,4 +1,5 @@
-﻿using swp391_debo_be.Entity.Implement;
+﻿using Microsoft.Owin.Security;
+using swp391_debo_be.Entity.Implement;
 
 namespace swp391_debo_be.Dao.Interface
 {
@@ -24,7 +25,7 @@ namespace swp391_debo_be.Dao.Interface
 
         public bool DeleteRefreshToken(Guid userId);
 
-
+        public bool IsPasswordExist(User user);
         public bool IsRefreshTokenExist(User user);
 
     }

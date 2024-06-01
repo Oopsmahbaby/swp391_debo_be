@@ -1,4 +1,5 @@
 ﻿using swp391_debo_be.Entity.Implement;
+using swp391_debo_be.Helpers;
 using swp391_debo_be.Repository.Implement;
 using swp391_debo_be.Repository.Interface;
 
@@ -45,6 +46,12 @@ namespace swp391_debo_be.Cores
         public static bool DeleteRefreshToken(Guid userId)
         {
             return _userRepository.DeleteRefreshToken(userId);
+        }
+
+        public static bool IsPasswordExist(User user)
+        {
+            user.Password = Helper.HashPassword(user.Password);
+            return _userRepository.IsPasswordExist(user);
         }
     }
 }
