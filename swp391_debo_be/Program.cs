@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using swp391_debo_be.Auth;
 using swp391_debo_be.Dao.Implement;
@@ -25,13 +26,10 @@ builder.Services.AddDbContext<DeboDev02Context>(options =>
 );
 
 // Corrected line for Identity setup
-//builder.Services.AddIdentity<User, IdentityRole>()
- //   .AddEntityFrameworkStores<DeboDev02Context>()
-  //  .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IRoleDao, RoleDao>(); 
-builder.Services.AddScoped<IUserService, UserService>();    
+builder.Services.AddScoped<IRoleDao, RoleDao>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserDao, UserDao>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

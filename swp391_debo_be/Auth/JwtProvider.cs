@@ -120,7 +120,7 @@ namespace swp391_debo_be.Auth
                     Audience = new List<string> { _configuration["GoogleAuthSettings:ClientId"] }
                 };
 
-                var payload = await GoogleJsonWebSignature.ValidateAsync(googleAuthDto.IdToken, settings);
+                var payload = await GoogleJsonWebSignature.ValidateAsync(googleAuthDto.Code, settings);
 
                 return payload;
 
