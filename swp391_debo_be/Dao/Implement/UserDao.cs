@@ -121,5 +121,17 @@ namespace swp391_debo_be.Dao.Implement
 
             return true;
         }
+
+        public bool IsPasswordExist(string password, User user)
+        {
+            User? foundUser = GetUserById(user.Id);
+
+            if (foundUser.Password == password)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

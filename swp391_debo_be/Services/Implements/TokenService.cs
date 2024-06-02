@@ -17,16 +17,23 @@ namespace swp391_debo_be.Services.Implements
         public ApiRespone GenerateAccessToken(UserRequestDto user)
         {
             try
-            {
+                {
                 User foundUser = null;
                 if (user.PhoneNumber == null && user.Email != null)
                 {
                     foundUser = CUser.GetUserByEmail(user.Email);
                 }
-
-                if (user.PhoneNumber != null && user.Email == null)
+                else if (user.PhoneNumber != null && user.Email == null)
                 {
                     foundUser = CUser.GetUserByPhoneNumber(user.PhoneNumber);
+                } else
+                {
+                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Message = "Invalid Request", Success = false };
+                }
+
+                if (!CUser.IsPasswordExist(user.Password, foundUser))
+                {
+                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.NotFound, Message = "Invalid Password", Success = false };
                 }
 
                 if (foundUser == null)
@@ -39,10 +46,10 @@ namespace swp391_debo_be.Services.Implements
                 List<Claim> claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, foundUser.Id.ToString()),
-                    new Claim(ClaimTypes.Email, foundUser.Email),
-                    new Claim(ClaimTypes.Name, foundUser.Username),
-                    new Claim(ClaimTypes.MobilePhone, foundUser.Phone),
-                    new Claim(ClaimTypes.Role, SystemRole.Customer)
+                    new Claim(ClaimTypes.Email, foundUser.Email ?? string.Empty),
+                    new Claim(ClaimTypes.Name, foundUser.Username ?? string.Empty),
+                    new Claim(ClaimTypes.MobilePhone, foundUser.Phone ?? string.Empty),
+                    new Claim(ClaimTypes.Role, role.Role1 ?? string.Empty)
                 };
 
                 string accessToken = JwtProvider.GenerateToken(claims);
