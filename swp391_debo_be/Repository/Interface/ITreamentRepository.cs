@@ -5,7 +5,7 @@ namespace swp391_debo_be.Repository.Interface
 {
     public interface ITreatmentRepository
     {
-        public Task<List<TreatmentDto>> getAllTreatmentAsync(int pageNumber, int pageSize);
+        public Task<List<TreatmentDto>> getAllTreatmentAsync(int page, int limit);
         public Task<TreatmentDto> getTreatmentAsync(int id);
         public Task<int> addTreatmentAsync(TreatmentDto treatment);
         public Task updateTreatmentAsync(int id, TreatmentDto treatment);

@@ -12,6 +12,7 @@ using System.Net;
 namespace swp391_debo_be.Controllers
 {
     [Route("api/[controller]")]
+    //[Route("api/treatments")]
     [ApiController]
     public class TreatmentsController : ControllerBase
     {
@@ -23,9 +24,9 @@ namespace swp391_debo_be.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllTreatment([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 5)
+        public async Task<IActionResult> GetAllTreatment([FromQuery] int page = 1, [FromQuery] int limit = 5)
         {
-            var response = await _treatService.getAllTreatmentAsync(pageNumber,pageSize);
+            var response = await _treatService.getAllTreatmentAsync(page,limit);
             return new ObjectResult(response)
             {
                 StatusCode = (int)response.StatusCode

@@ -42,12 +42,22 @@ namespace swp391_debo_be.Dao.Implement
             }
         }
 
-        public async Task<List<TreatmentDto>> getAllTreatmentAsync(int pageNumber, int pageSize)
+        public async Task<List<TreatmentDto>> getAllTreatmentAsync(int page, int limit)
         {
-            var treatments = await _context.ClinicTreatments
-                                           .Skip((pageNumber - 1) * pageSize)
-                                           .Take(pageSize)
+            var treatments = new List<ClinicTreatment>();
+            if (limit < 0)
+            {
+                treatments = await _context.ClinicTreatments
                                            .ToListAsync();
+            }
+            else
+            {
+                treatments = await _context.ClinicTreatments
+                                           .Skip((page - 1) * limit)
+                                           .Take(limit)
+                                           .ToListAsync();
+            }
+
 
             var treatmentDtos = treatments.Select(t => new TreatmentDto
             {

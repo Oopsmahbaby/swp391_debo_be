@@ -52,12 +52,12 @@ namespace swp391_debo_be.Services.Implements
             return response;
         }
 
-        public async Task<ApiRespone> getAllTreatmentAsync(int pageNumber, int pageSize)
+        public async Task<ApiRespone> getAllTreatmentAsync(int page, int limit)
         {
             var response = new ApiRespone();
             try
             {
-                var data = await CTreatment.getAllTreatmentAsync(pageNumber,pageSize);
+                var data = await CTreatment.getAllTreatmentAsync(page,limit);
                 response.StatusCode = HttpStatusCode.OK;
                 response.Data = data;
                 response.Success = true;
