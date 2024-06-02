@@ -17,9 +17,11 @@ public partial class Appointment
 
     public int? EstDuration { get; set; }
 
-    public DateOnly? Date { get; set; }
-
     public string? Description { get; set; }
+
+    public DateTime? StartDate { get; set; }
+
+    public DateTime? EndDate { get; set; }
 
     public virtual Booking? Book { get; set; }
 

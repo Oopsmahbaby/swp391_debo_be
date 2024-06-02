@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 namespace swp391_debo_be.Entity.Implement;
 
 public partial class DeboDev02Context : DbContext
-
 {
     public DeboDev02Context()
     {
@@ -43,7 +42,8 @@ public partial class DeboDev02Context : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=debo_dev_02;Integrated Security=True;Encrypt=True;Trust Server Certificate=True");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=DESKTOP-3MT3PF7;Database=debo_dev_02;TrustServerCertificate=True;Trusted_Connection=True;MultipleActiveResultSets=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -67,7 +67,13 @@ public partial class DeboDev02Context : DbContext
             entity.Property(e => e.BookId).HasColumnName("Book_ID");
             entity.Property(e => e.CusRecId).HasColumnName("Cus_Rec_ID");
             entity.Property(e => e.Description).HasMaxLength(2000);
+            entity.Property(e => e.EndDate)
+                .HasColumnType("datetime")
+                .HasColumnName("End_Date");
             entity.Property(e => e.EstDuration).HasColumnName("Est_Duration");
+            entity.Property(e => e.StartDate)
+                .HasColumnType("datetime")
+                .HasColumnName("Start_Date");
             entity.Property(e => e.TempDent).HasColumnName("Temp_Dent");
             entity.Property(e => e.TreatId).HasColumnName("Treat_ID");
 
