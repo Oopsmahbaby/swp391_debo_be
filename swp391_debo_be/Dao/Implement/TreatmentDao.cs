@@ -42,12 +42,23 @@ namespace swp391_debo_be.Dao.Implement
             }
         }
 
-        public async Task<List<TreatmentDto>> getAllTreatmentAsync()
+        public async Task<List<TreatmentDto>> getAllTreatmentAsync(int page, int limit)
         {
-            //return await _context.ClinicTreatments!.ToListAsync();
-            //var treatment = await _context.ClinicTreatments!.ToListAsync();
-            //return _mapper.Map<List<TreatmentDto>>(treatment);
-            var treatments = await _context.ClinicTreatments.ToListAsync();
+            var treatments = new List<ClinicTreatment>();
+            if (limit < 0)
+            {
+                treatments = await _context.ClinicTreatments
+                                           .ToListAsync();
+            }
+            else
+            {
+                treatments = await _context.ClinicTreatments
+                                           .Skip((page - 1) * limit)
+                                           .Take(limit)
+                                           .ToListAsync();
+            }
+
+
             var treatmentDtos = treatments.Select(t => new TreatmentDto
             {
                 Id = t.Id,
@@ -60,10 +71,9 @@ namespace swp391_debo_be.Dao.Implement
             return treatmentDtos;
         }
 
+
         public async Task<TreatmentDto> getTreatmentAsync(int id)
         {
-            //var treatment = await _context.ClinicTreatments!.FindAsync(id);
-            //return _mapper.Map<TreatmentDto>(treatment);
             var treatment = await _context.ClinicTreatments.FindAsync(id);
             if (treatment == null)
             {

@@ -10,12 +10,6 @@ namespace swp391_debo_be.Services.Implements
 {
     public class TreatmentService
     {
-        private readonly CTreatment _treatCores;
-
-        public TreatmentService(CTreatment treatCores) 
-        {
-            _treatCores = treatCores;
-        }
         public async Task<ApiRespone> addTreatmentAsync(TreatmentDto treatment)
         {
             var response = new ApiRespone();
@@ -58,12 +52,12 @@ namespace swp391_debo_be.Services.Implements
             return response;
         }
 
-        public async Task<ApiRespone> getAllTreatmentAsync()
+        public async Task<ApiRespone> getAllTreatmentAsync(int page, int limit)
         {
             var response = new ApiRespone();
             try
             {
-                var data = await CTreatment.getAllTreatmentAsync();
+                var data = await CTreatment.getAllTreatmentAsync(page,limit);
                 response.StatusCode = HttpStatusCode.OK;
                 response.Data = data;
                 response.Success = true;
