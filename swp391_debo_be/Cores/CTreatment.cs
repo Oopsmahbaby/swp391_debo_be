@@ -28,9 +28,9 @@ namespace swp391_debo_be.Cores
             return _treatmentRepo.deleteTreatmentAsync(id);
         }
 
-        public static Task<List<TreatmentDto>> getAllTreatmentAsync()
+        public static Task<List<TreatmentDto>> getAllTreatmentAsync(int pageNumber, int pageSize)
         {
-            return _treatmentRepo.getAllTreatmentAsync();
+            return _treatmentRepo.getAllTreatmentAsync(pageNumber, pageSize);
         }
 
         public static Task<TreatmentDto> getTreatmentAsync(int id)

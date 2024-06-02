@@ -23,9 +23,9 @@ namespace swp391_debo_be.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllTreatment()
+        public async Task<IActionResult> GetAllTreatment([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 5)
         {
-            var response = await _treatService.getAllTreatmentAsync();
+            var response = await _treatService.getAllTreatmentAsync(pageNumber,pageSize);
             return new ObjectResult(response)
             {
                 StatusCode = (int)response.StatusCode
