@@ -294,7 +294,7 @@ public partial class DeboDev02Context : DbContext
             entity.Property(e => e.FirstName).HasMaxLength(30);
             entity.Property(e => e.LastName).HasMaxLength(30);
             entity.Property(e => e.MedRec).HasColumnName("Med_Rec");
-            entity.Property(e => e.Password).HasMaxLength(20);
+            entity.Property(e => e.Password).HasMaxLength(256);
             entity.Property(e => e.Phone).HasMaxLength(20);
             entity.Property(e => e.Username).HasMaxLength(20);
 

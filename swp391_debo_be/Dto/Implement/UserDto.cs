@@ -27,6 +27,10 @@ namespace swp391_debo_be.Dto.Implement
 
         public string RefreshToken { get; set; }
 
-        public DateTime DateOfBirthday { get; set; }
+        public DateTime? DateOfBirthday { get; set; }
+
+        public string? MedRec { get; set; }
+
+        public string? Avt { get; set; }
     }
 }
