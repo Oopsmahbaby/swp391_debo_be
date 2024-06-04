@@ -11,9 +11,15 @@ public partial class ClinicBranch
 
     public Guid? AdminId { get; set; }
 
+    public string? Name { get; set; }
+
     public string? Address { get; set; }
+
+    public string? Avt { get; set; }
 
     public virtual User? Admin { get; set; }
 
-    public virtual Manager? Manager { get; set; }
+    public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
+
+    public virtual User? Mng { get; set; }
 }
