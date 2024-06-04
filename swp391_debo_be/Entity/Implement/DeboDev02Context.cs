@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 namespace swp391_debo_be.Entity.Implement;
 
 public partial class DeboDev02Context : DbContext
-
 {
     public DeboDev02Context()
     {
@@ -18,23 +17,19 @@ public partial class DeboDev02Context : DbContext
 
     public virtual DbSet<Appointment> Appointments { get; set; }
 
-    public virtual DbSet<Booking> Bookings { get; set; }
-
     public virtual DbSet<ClinicBranch> ClinicBranches { get; set; }
 
     public virtual DbSet<ClinicTreatment> ClinicTreatments { get; set; }
-
-    public virtual DbSet<CustomerRecord> CustomerRecords { get; set; }
 
     public virtual DbSet<Employee> Employees { get; set; }
 
     public virtual DbSet<Feedback> Feedbacks { get; set; }
 
-    public virtual DbSet<Manager> Managers { get; set; }
-
     public virtual DbSet<Payment> Payments { get; set; }
 
     public virtual DbSet<PaymentMethod> PaymentMethods { get; set; }
+
+    public virtual DbSet<PaymentProvider> PaymentProviders { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
 
@@ -43,66 +38,16 @@ public partial class DeboDev02Context : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=debo_dev_02;Integrated Security=True;Encrypt=True;Trust Server Certificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Appointment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Appointm__3214EC2741C62A16");
+            entity.HasKey(e => e.Id).HasName("PK__Appointm__3214EC277B6C5D7B");
 
             entity.ToTable("Appointment");
-
-            entity.HasIndex(e => e.BookId, "IX_Appointment_Book_ID");
-
-            entity.HasIndex(e => e.CusRecId, "IX_Appointment_Cus_Rec_ID");
-
-            entity.HasIndex(e => e.TempDent, "IX_Appointment_Temp_Dent");
-
-            entity.HasIndex(e => e.TreatId, "IX_Appointment_Treat_ID");
-
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
-            entity.Property(e => e.BookId).HasColumnName("Book_ID");
-            entity.Property(e => e.CusRecId).HasColumnName("Cus_Rec_ID");
-            entity.Property(e => e.Description).HasMaxLength(2000);
-            entity.Property(e => e.EstDuration).HasColumnName("Est_Duration");
-            entity.Property(e => e.TempDent).HasColumnName("Temp_Dent");
-            entity.Property(e => e.TreatId).HasColumnName("Treat_ID");
-
-            entity.HasOne(d => d.Book).WithMany(p => p.Appointments)
-                .HasForeignKey(d => d.BookId)
-                .HasConstraintName("FK_Appointment_Book_ID");
-
-            entity.HasOne(d => d.CusRec).WithMany(p => p.Appointments)
-                .HasForeignKey(d => d.CusRecId)
-                .HasConstraintName("FK__Appointme__Cus_R__52593CB8");
-
-            entity.HasOne(d => d.TempDentNavigation).WithMany(p => p.Appointments)
-                .HasForeignKey(d => d.TempDent)
-                .HasConstraintName("FK_Appointment_Temp_Dent");
-
-            entity.HasOne(d => d.Treat).WithMany(p => p.Appointments)
-                .HasForeignKey(d => d.TreatId)
-                .HasConstraintName("FK_Appointment_Treat_ID");
-        });
-
-        modelBuilder.Entity<Booking>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Booking__3214EC27E7A736E0");
-
-            entity.ToTable("Booking");
-
-            entity.HasIndex(e => e.CreatorId, "IX_Booking_Creator_ID");
-
-            entity.HasIndex(e => e.CusId, "IX_Booking_Cus_ID");
-
-            entity.HasIndex(e => e.DenId, "IX_Booking_Den_ID");
-
-            entity.HasIndex(e => e.PaymentId, "UQ__Booking__DA6C7FE003D3E611")
-                .IsUnique()
-                .HasFilter("([Payment_ID] IS NOT NULL)");
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
@@ -110,58 +55,64 @@ public partial class DeboDev02Context : DbContext
             entity.Property(e => e.CreatedDate).HasColumnName("Created_Date");
             entity.Property(e => e.CreatorId).HasColumnName("Creator_ID");
             entity.Property(e => e.CusId).HasColumnName("Cus_ID");
-            entity.Property(e => e.DenId).HasColumnName("Den_ID");
+            entity.Property(e => e.DentId).HasColumnName("Dent_ID");
+            entity.Property(e => e.Description).HasMaxLength(2000);
             entity.Property(e => e.IsCreatedByStaff).HasColumnName("Is_Created_By_Staff");
-            entity.Property(e => e.MedRec).HasColumnName("Med_Rec");
+            entity.Property(e => e.Note).HasMaxLength(2000);
             entity.Property(e => e.PaymentId).HasColumnName("Payment_ID");
+            entity.Property(e => e.StartDate).HasColumnName("Start_Date");
             entity.Property(e => e.Status).HasMaxLength(20);
+            entity.Property(e => e.TempDentId).HasColumnName("Temp_Dent_ID");
+            entity.Property(e => e.TimeSlot).HasColumnName("Time_Slot");
+            entity.Property(e => e.TreatId).HasColumnName("Treat_ID");
 
-            entity.HasOne(d => d.Creator).WithMany(p => p.BookingCreators)
+            entity.HasOne(d => d.Creator).WithMany(p => p.AppointmentCreators)
                 .HasForeignKey(d => d.CreatorId)
-                .HasConstraintName("FK_Booking_Creator_ID");
+                .HasConstraintName("FK_Appointment.Creator_ID");
 
-            entity.HasOne(d => d.Cus).WithMany(p => p.BookingCus)
+            entity.HasOne(d => d.Cus).WithMany(p => p.AppointmentCus)
                 .HasForeignKey(d => d.CusId)
-                .HasConstraintName("FK_Booking_Cus_ID");
+                .HasConstraintName("FK_Appointment.Cus_ID");
 
-            entity.HasOne(d => d.Den).WithMany(p => p.Bookings)
-                .HasForeignKey(d => d.DenId)
-                .HasConstraintName("FK_Booking_Den_ID");
+            entity.HasOne(d => d.Dent).WithMany(p => p.AppointmentDents)
+                .HasForeignKey(d => d.DentId)
+                .HasConstraintName("FK_Appointment.Dent_ID");
 
-            entity.HasOne(d => d.Payment).WithOne(p => p.Booking)
-                .HasForeignKey<Booking>(d => d.PaymentId)
-                .HasConstraintName("FK_Booking_Payment_ID");
+            entity.HasOne(d => d.TempDent).WithMany(p => p.AppointmentTempDents)
+                .HasForeignKey(d => d.TempDentId)
+                .HasConstraintName("FK_Appointment.Temp_Dent_ID");
+
+            entity.HasOne(d => d.Treat).WithMany(p => p.Appointments)
+                .HasForeignKey(d => d.TreatId)
+                .HasConstraintName("FK_Appointment.Treat_ID");
         });
 
         modelBuilder.Entity<ClinicBranch>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Clinic_B__3214EC2754B82300");
+            entity.HasKey(e => e.Id).HasName("PK__Clinic_B__3214EC27D1C78800");
 
             entity.ToTable("Clinic_Branch");
-
-            entity.HasIndex(e => e.AdminId, "IX_Clinic_Branch_Admin_ID");
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
-            entity.Property(e => e.Address).HasMaxLength(100);
             entity.Property(e => e.AdminId).HasColumnName("Admin_ID");
             entity.Property(e => e.MngId).HasColumnName("Mng_ID");
 
-            entity.HasOne(d => d.Admin).WithMany(p => p.ClinicBranches)
+            entity.HasOne(d => d.Admin).WithMany(p => p.ClinicBranchAdmins)
                 .HasForeignKey(d => d.AdminId)
-                .HasConstraintName("FK_Clinic_Branch_Admin_ID");
+                .HasConstraintName("FK_Clinic Branch.Admin_ID");
+
+            entity.HasOne(d => d.Mng).WithMany(p => p.ClinicBranchMngs)
+                .HasForeignKey(d => d.MngId)
+                .HasConstraintName("FK_Clinic Branch.Mng_ID");
         });
 
         modelBuilder.Entity<ClinicTreatment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Clinic_T__3214EC27D3BB3E55");
+            entity.HasKey(e => e.Id).HasName("PK__Clinic_T__3214EC277F791234");
 
             entity.ToTable("Clinic_Treatment");
-
-            entity.HasIndex(e => e.AdminId, "IX_Clinic_Treatment_Admin_ID");
-
-            entity.HasIndex(e => e.Category, "IX_Clinic_Treatment_Category");
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
@@ -171,55 +122,32 @@ public partial class DeboDev02Context : DbContext
 
             entity.HasOne(d => d.Admin).WithMany(p => p.ClinicTreatments)
                 .HasForeignKey(d => d.AdminId)
-                .HasConstraintName("FK_Clinic_Treatment_Admin_ID");
+                .HasConstraintName("FK_Clinic Treatment.Admin_ID");
 
             entity.HasOne(d => d.CategoryNavigation).WithMany(p => p.ClinicTreatments)
                 .HasForeignKey(d => d.Category)
-                .HasConstraintName("FK_Clinic_Treatment_Category");
-        });
-
-        modelBuilder.Entity<CustomerRecord>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Customer__3214EC279115F950");
-
-            entity.ToTable("Customer_Record");
-
-            entity.HasIndex(e => e.CusId, "IX_Customer_Record_Cus_ID");
-
-            entity.HasIndex(e => e.DentId, "IX_Customer_Record_Dent_ID");
-
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
-            entity.Property(e => e.CusId).HasColumnName("Cus_ID");
-            entity.Property(e => e.DentId).HasColumnName("Dent_ID");
-            entity.Property(e => e.Summary).HasMaxLength(2000);
-
-            entity.HasOne(d => d.Cus).WithMany(p => p.CustomerRecords)
-                .HasForeignKey(d => d.CusId)
-                .HasConstraintName("FK_Customer_Record_Cus_ID");
-
-            entity.HasOne(d => d.Dent).WithMany(p => p.CustomerRecords)
-                .HasForeignKey(d => d.DentId)
-                .HasConstraintName("FK_Customer_Record_Dent_ID");
+                .HasConstraintName("FK_Clinic Treatment.Category");
         });
 
         modelBuilder.Entity<Employee>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Employee__3214EC27B38DD1FA");
+            entity.HasKey(e => e.Id).HasName("PK__Employee__3214EC274AA2C74F");
 
             entity.ToTable("Employee");
-
-            entity.HasIndex(e => e.MngId, "IX_Employee_Mng_ID");
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
-            entity.Property(e => e.MngId).HasColumnName("Mng_ID");
+            entity.Property(e => e.BrId).HasColumnName("Br_ID");
 
-            entity.HasOne(d => d.Mng).WithMany(p => p.Employees)
-                .HasForeignKey(d => d.MngId)
-                .HasConstraintName("FK_Employee_Mng_ID");
+            entity.HasOne(d => d.Br).WithMany(p => p.Employees)
+                .HasForeignKey(d => d.BrId)
+                .HasConstraintName("FK_Employee.Br_ID");
+
+            entity.HasOne(d => d.IdNavigation).WithOne(p => p.Employee)
+                .HasForeignKey<Employee>(d => d.Id)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Employee.UserID");
 
             entity.HasMany(d => d.Treats).WithMany(p => p.Dents)
                 .UsingEntity<Dictionary<string, object>>(
@@ -227,16 +155,15 @@ public partial class DeboDev02Context : DbContext
                     r => r.HasOne<ClinicTreatment>().WithMany()
                         .HasForeignKey("TreatId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_Dentist_Major_Treat_ID"),
+                        .HasConstraintName("FK_Dentist Major.Treat_ID"),
                     l => l.HasOne<Employee>().WithMany()
                         .HasForeignKey("DentId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_Dentist_Major_Dent_ID"),
+                        .HasConstraintName("FK_Dentist Major.Dent_ID"),
                     j =>
                     {
-                        j.HasKey("DentId", "TreatId").HasName("PK__Dentist___7EA26274A7A5F0FE");
+                        j.HasKey("DentId", "TreatId").HasName("PK__Dentist___7EA262746BE0065F");
                         j.ToTable("Dentist_Major");
-                        j.HasIndex(new[] { "TreatId" }, "IX_Dentist_Major_Treat_ID");
                         j.IndexerProperty<Guid>("DentId").HasColumnName("Dent_ID");
                         j.IndexerProperty<int>("TreatId").HasColumnName("Treat_ID");
                     });
@@ -244,13 +171,9 @@ public partial class DeboDev02Context : DbContext
 
         modelBuilder.Entity<Feedback>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Feedback__3214EC2719078489");
+            entity.HasKey(e => e.Id).HasName("PK__Feedback__3214EC271E80042A");
 
             entity.ToTable("Feedback");
-
-            entity.HasIndex(e => e.CusId, "IX_Feedback_Cus_ID");
-
-            entity.HasIndex(e => e.TreatId, "IX_Feedback_Treat_ID");
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
@@ -261,42 +184,18 @@ public partial class DeboDev02Context : DbContext
 
             entity.HasOne(d => d.Cus).WithMany(p => p.Feedbacks)
                 .HasForeignKey(d => d.CusId)
-                .HasConstraintName("FK_Feedback_Cus_ID");
+                .HasConstraintName("FK_Feedback.Cus_ID");
 
             entity.HasOne(d => d.Treat).WithMany(p => p.Feedbacks)
                 .HasForeignKey(d => d.TreatId)
-                .HasConstraintName("FK_Feedback_Treat_ID");
-        });
-
-        modelBuilder.Entity<Manager>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Manager__3214EC27A5342A08");
-
-            entity.ToTable("Manager");
-
-            entity.HasIndex(e => e.BrId, "UQ_Manager_Br_ID")
-                .IsUnique()
-                .HasFilter("([Br_ID] IS NOT NULL)");
-
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
-            entity.Property(e => e.BrId).HasColumnName("Br_ID");
-
-            entity.HasOne(d => d.Br).WithOne(p => p.Manager)
-                .HasForeignKey<Manager>(d => d.BrId)
-                .HasConstraintName("FK_Manager_Br_ID_Clinic_Branch_ID");
+                .HasConstraintName("FK_Feedback.Treat_ID");
         });
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Payment__3214EC2741530AD8");
+            entity.HasKey(e => e.Id).HasName("PK__Payment__3214EC27805006BC");
 
             entity.ToTable("Payment");
-
-            entity.HasIndex(e => e.CusId, "IX_Payment_Cus_ID");
-
-            entity.HasIndex(e => e.MethodId, "IX_Payment_Method_ID");
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
@@ -308,16 +207,16 @@ public partial class DeboDev02Context : DbContext
 
             entity.HasOne(d => d.Cus).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.CusId)
-                .HasConstraintName("FK_Payment_Cus_ID");
+                .HasConstraintName("FK_Payment.Cus_ID");
 
             entity.HasOne(d => d.Method).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.MethodId)
-                .HasConstraintName("FK_Payment_Method_ID");
+                .HasConstraintName("FK_Payment.Method_ID");
         });
 
         modelBuilder.Entity<PaymentMethod>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Payment___3214EC27A63F48AB");
+            entity.HasKey(e => e.Id).HasName("PK__Payment___3214EC2778F5B051");
 
             entity.ToTable("Payment_Method");
 
@@ -335,11 +234,28 @@ public partial class DeboDev02Context : DbContext
             entity.Property(e => e.PublicKey)
                 .HasMaxLength(256)
                 .HasColumnName("Public_Key");
+
+            entity.HasOne(d => d.Provider).WithMany(p => p.PaymentMethods)
+                .HasForeignKey(d => d.ProviderId)
+                .HasConstraintName("FK_Payment Method.Provider_ID");
+        });
+
+        modelBuilder.Entity<PaymentProvider>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Payment___3214EC272707E7F8");
+
+            entity.ToTable("Payment_Provider");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
+            entity.Property(e => e.Desciption).HasMaxLength(200);
+            entity.Property(e => e.Name).HasMaxLength(20);
         });
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.RoleId).HasName("PK__Role__D80AB49B9D6A0592");
+            entity.HasKey(e => e.RoleId).HasName("PK__Role__D80AB49BB8E7C484");
 
             entity.ToTable("Role");
 
@@ -353,7 +269,7 @@ public partial class DeboDev02Context : DbContext
 
         modelBuilder.Entity<TreatmentCategory>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Treatmen__3214EC270769FCB0");
+            entity.HasKey(e => e.Id).HasName("PK__Treatmen__3214EC27AC47EE49");
 
             entity.ToTable("Treatment_Category");
 
@@ -365,11 +281,9 @@ public partial class DeboDev02Context : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__User__3214EC2717C4EBC6");
+            entity.HasKey(e => e.Id).HasName("PK__User__3214EC27259B5854");
 
             entity.ToTable("User");
-
-            entity.HasIndex(e => e.Role, "IX_User_Role");
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
@@ -379,13 +293,14 @@ public partial class DeboDev02Context : DbContext
             entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.FirstName).HasMaxLength(30);
             entity.Property(e => e.LastName).HasMaxLength(30);
-            entity.Property(e => e.Password).HasMaxLength(256);
+            entity.Property(e => e.MedRec).HasColumnName("Med_Rec");
+            entity.Property(e => e.Password).HasMaxLength(20);
             entity.Property(e => e.Phone).HasMaxLength(20);
             entity.Property(e => e.Username).HasMaxLength(20);
 
             entity.HasOne(d => d.RoleNavigation).WithMany(p => p.Users)
                 .HasForeignKey(d => d.Role)
-                .HasConstraintName("FK_User_Role");
+                .HasConstraintName("FK_User.Role");
         });
 
         OnModelCreatingPartial(modelBuilder);

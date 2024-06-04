@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace swp391_debo_be.Entity.Implement;
@@ -30,17 +29,25 @@ public partial class User
 
     public DateTime? DateOfBirthday { get; set; }
 
-    public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
+    public string? MedRec { get; set; }
 
-    public virtual ICollection<Booking> BookingCreators { get; set; } = new List<Booking>();
+    public string? Avt { get; set; }
 
-    public virtual ICollection<Booking> BookingCus { get; set; } = new List<Booking>();
+    public virtual ICollection<Appointment> AppointmentCreators { get; set; } = new List<Appointment>();
 
-    public virtual ICollection<ClinicBranch> ClinicBranches { get; set; } = new List<ClinicBranch>();
+    public virtual ICollection<Appointment> AppointmentCus { get; set; } = new List<Appointment>();
+
+    public virtual ICollection<Appointment> AppointmentDents { get; set; } = new List<Appointment>();
+
+    public virtual ICollection<Appointment> AppointmentTempDents { get; set; } = new List<Appointment>();
+
+    public virtual ICollection<ClinicBranch> ClinicBranchAdmins { get; set; } = new List<ClinicBranch>();
+
+    public virtual ICollection<ClinicBranch> ClinicBranchMngs { get; set; } = new List<ClinicBranch>();
 
     public virtual ICollection<ClinicTreatment> ClinicTreatments { get; set; } = new List<ClinicTreatment>();
 
-    public virtual ICollection<CustomerRecord> CustomerRecords { get; set; } = new List<CustomerRecord>();
+    public virtual Employee? Employee { get; set; }
 
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
 

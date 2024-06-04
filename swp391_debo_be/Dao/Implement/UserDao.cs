@@ -92,6 +92,7 @@ namespace swp391_debo_be.Dao.Implement
             return _context.Users.ToList<User>();
         }
 
+
         public bool SaveRefreshToken(Guid userId, string refreshToken)
         {
             User? user = GetUserById(userId);
@@ -110,7 +111,7 @@ namespace swp391_debo_be.Dao.Implement
         {
             User? user = GetUserById(userId);
 
-            if(user == null)
+            if (user == null)
             {
                 return false;
             }

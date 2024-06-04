@@ -17,8 +17,6 @@ public partial class Payment
 
     public string? Description { get; set; }
 
-    public virtual Booking? Booking { get; set; }
-
     public virtual User? Cus { get; set; }
 
     public virtual PaymentMethod? Method { get; set; }

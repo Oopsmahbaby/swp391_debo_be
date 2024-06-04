@@ -18,4 +18,6 @@ public partial class PaymentMethod
     public string? IpnListenerLink { get; set; }
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+
+    public virtual PaymentProvider? Provider { get; set; }
 }

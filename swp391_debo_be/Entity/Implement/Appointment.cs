@@ -9,23 +9,37 @@ public partial class Appointment
 
     public int? TreatId { get; set; }
 
-    public Guid? TempDent { get; set; }
+    public Guid? PaymentId { get; set; }
 
-    public Guid? BookId { get; set; }
+    public Guid? DentId { get; set; }
 
-    public int? CusRecId { get; set; }
+    public Guid? TempDentId { get; set; }
 
-    public int? EstDuration { get; set; }
+    public Guid? CusId { get; set; }
 
-    public DateOnly? Date { get; set; }
+    public Guid? CreatorId { get; set; }
+
+    public bool? IsCreatedByStaff { get; set; }
+
+    public DateOnly? CreatedDate { get; set; }
+
+    public DateOnly? StartDate { get; set; }
+
+    public int? TimeSlot { get; set; }
+
+    public string? Status { get; set; }
 
     public string? Description { get; set; }
 
-    public virtual Booking? Book { get; set; }
+    public string? Note { get; set; }
 
-    public virtual CustomerRecord? CusRec { get; set; }
+    public virtual User? Creator { get; set; }
 
-    public virtual User? TempDentNavigation { get; set; }
+    public virtual User? Cus { get; set; }
+
+    public virtual User? Dent { get; set; }
+
+    public virtual User? TempDent { get; set; }
 
     public virtual ClinicTreatment? Treat { get; set; }
 }
