@@ -19,13 +19,13 @@ namespace swp391_debo_be.Controllers
     {
         private readonly ITokenService _tokenService;
         private readonly IUserService _userService;
+        private readonly IConfiguration configuration;
 
-        private readonly GoogleAuthSetting _googleAuthSetting;
-        public AuthController(ITokenService tokenService, IOptions<GoogleAuthSetting> googleAuthSetting, IUserService userService)
+        public AuthController(ITokenService tokenService, IConfiguration configuration, IUserService userService)
         {
             this._tokenService = tokenService;
-            this._googleAuthSetting = googleAuthSetting.Value;
-            _userService = userService;
+            this.configuration = configuration;
+            this._userService = userService;
         }
 
         [EnableCors("AllowSpecificOrigin")]
@@ -39,7 +39,7 @@ namespace swp391_debo_be.Controllers
         [HttpPost("google/login")]
         public async Task<IActionResult> LoginByGoogle([FromBody] GoogleAuthDto googleAuthDto)
         {
-            var tokenResponse = await ExchangeCodeForTokenAsync(googleAuthDto.IdToken);
+            var tokenResponse = await ExchangeCodeForTokenAsync(googleAuthDto.Code);
 
             if (tokenResponse == null)
             {
@@ -68,13 +68,12 @@ namespace swp391_debo_be.Controllers
             {
                 ClientSecrets = new ClientSecrets
                 {
-                    ClientId = _googleAuthSetting.ClientId,
-                    ClientSecret = _googleAuthSetting.ClientSecret
+                    ClientId = configuration["Authentication:Google:ClientId"],
+                    ClientSecret = configuration["Authentication:Google:ClientSecret"]
                 }
             };
-
             var flow = new GoogleAuthorizationCodeFlow(initializer);
-            var tokenResponse = await flow.ExchangeCodeForTokenAsync("user-id", code, "postmessage", CancellationToken.None);
+            var tokenResponse = await flow.ExchangeCodeForTokenAsync("user-id", code, "http://localhost:5173", CancellationToken.None);
 
             return tokenResponse;
         }
@@ -85,8 +84,8 @@ namespace swp391_debo_be.Controllers
             {
                 ClientSecrets = new ClientSecrets
                 {
-                    ClientId = _googleAuthSetting.ClientId,
-                    ClientSecret = _googleAuthSetting.ClientSecret
+                    ClientId = configuration["Authentication:Google:ClientId"],
+                    ClientSecret = configuration["Authentication:Google:ClientSecret"]
                 }
             };
 
