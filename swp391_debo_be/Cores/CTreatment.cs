@@ -42,5 +42,10 @@ namespace swp391_debo_be.Cores
         {
             return _treatmentRepo.updateTreatmentAsync(id, treatment);
         }
+
+        public static List<ClinicTreatment> GetTreatmentsBasedBranchId(int branchId)
+        {
+            return _treatmentRepo.GetClinicTreatmentsBasedBranchId(branchId);
+        }
     }
 }

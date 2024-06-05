@@ -123,6 +123,25 @@ namespace swp391_debo_be.Services.Implements
             return response;
         }
 
+        public ActionResult<ApiRespone> GetTreatmentsBasedBranchId(int branchId)
+        {
+            try
+            {
+                var data = CTreatment.GetTreatmentsBasedBranchId(branchId);
+
+                if (data == null)
+                {
+                    return new ApiRespone { StatusCode = HttpStatusCode.NotFound, Data = null, Success = false, Message = "This branch does not have any treatments" };
+                }
+
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = data, Success = true, Message = "Fetched treatments within constraints successfully" };
+
+            }catch (Exception ex)
+            {
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
+            }
+        }
+
         public async Task<ApiRespone> updateTreatmentAsync(int id, TreatmentDto treatment)
         {
             var response = new ApiRespone();
@@ -149,5 +168,6 @@ namespace swp391_debo_be.Services.Implements
             }
             return response;
         }
+
     }
 }

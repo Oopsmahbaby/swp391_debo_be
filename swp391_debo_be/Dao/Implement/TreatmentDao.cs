@@ -71,6 +71,17 @@ namespace swp391_debo_be.Dao.Implement
             return treatmentDtos;
         }
 
+        public List<ClinicTreatment> GetDentistsBasedOnBranchId(int branchId)
+        {
+            var treatments = _context.ClinicBranches
+                .Where(b => b.Id == branchId)
+                .SelectMany(b => b.Employees)
+                .Where(e => e.Type == 4)
+                .SelectMany(e => e.Treats)
+                .ToList();
+            return treatments;
+
+         }
 
         public async Task<TreatmentDto> getTreatmentAsync(int id)
         {

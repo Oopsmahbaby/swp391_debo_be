@@ -34,14 +34,14 @@ namespace swp391_debo_be.Services.Implements
             }
         }
 
-        public ApiRespone GetAppointmentsByStartDateAndEndDate(string startDate, string userId)
+        public ApiRespone GetAppointmentsByStartDateAndEndDate(string startDate,string endDate ,string userId)
         {
             try
             {
-                if (DateOnly.TryParse(startDate, out DateOnly start) && Guid.TryParse(userId, out Guid Id))
+                if (DateOnly.TryParse(startDate, out DateOnly start) && DateOnly.TryParse(endDate, out DateOnly end) && Guid.TryParse(userId, out Guid Id))
                 {
 
-                    ActionResult<List<object>> appointments = CAppointment.GetAppointmentsByStartDateAndEndDate(start, Id);
+                    ActionResult<List<object>> appointments = CAppointment.GetAppointmentsByStartDateAndEndDate(start,end ,Id);
 
             
                     if (appointments.Value.Count == 0)
