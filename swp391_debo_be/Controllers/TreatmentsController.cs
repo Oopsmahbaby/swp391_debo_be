@@ -11,8 +11,8 @@ using System.Net;
 
 namespace swp391_debo_be.Controllers
 {
-    [Route("api/[controller]")]
-    //[Route("api/treatments")]
+    //[Route("api/[controller]")]
+    [Route("api/treatments")]
     [ApiController]
     public class TreatmentsController : ControllerBase
     {

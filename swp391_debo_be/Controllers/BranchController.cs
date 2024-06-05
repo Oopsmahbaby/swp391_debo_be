@@ -5,7 +5,8 @@ using swp391_debo_be.Services.Interfaces;
 
 namespace swp391_debo_be.Controllers
 {
-    [Route("api/[controller]")]
+    //[Route("api/[controller]")]
+    [Route("api/branch")]
     [ApiController]
     public class BranchController : ControllerBase
     {
