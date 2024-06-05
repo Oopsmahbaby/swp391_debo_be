@@ -38,8 +38,12 @@ builder.Services.AddScoped<IBranchRepository, BranchRepository>();
 builder.Services.AddScoped<IUserDao, UserDao>();
 builder.Services.AddScoped<ITreatmentRepository, TreatmentRepository>();
 builder.Services.AddScoped<ITreatmentDao, TreatmentDao>();
+
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+
 builder.Services.AddScoped<BranchService>();
 builder.Services.AddScoped<CBranch>();
+
 builder.Services.AddScoped<CTreatment>();
 builder.Services.AddScoped<TreatmentService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
