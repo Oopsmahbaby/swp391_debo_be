@@ -59,9 +59,9 @@ namespace swp391_debo_be.Dao.Implement
             };
         }
 
-        public List<object> GetAppointmentsByStartDateAndEndDate(DateOnly startDate, Guid Id)
+        public List<object> GetAppointmentsByStartDateAndEndDate(DateOnly startDate, DateOnly endDate, Guid Id)
         {
-            var appointments = _context.Appointments.Where(a => a.StartDate == startDate && a.CusId == Id).ToList();
+          var appointments = _context.Appointments.Where(a => a.StartDate >= startDate && a.StartDate <= endDate && Guid.Equals(a.CusId, Id)).ToList();
 
 
             if (appointments == null)

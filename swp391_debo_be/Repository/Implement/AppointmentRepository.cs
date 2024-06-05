@@ -15,9 +15,9 @@ namespace swp391_debo_be.Repository.Implement
             return appointmentDao.GetAppointmentByPagination(page, limit, userId);
         }
 
-        public List<object> GetAppointmentsByStartDateAndEndDate(DateOnly startDate, Guid Id)
+        public List<object> GetAppointmentsByStartDateAndEndDate(DateOnly startDate, DateOnly endDate, Guid Id)
         {
-           return appointmentDao.GetAppointmentsByStartDateAndEndDate(startDate, Id);
+           return appointmentDao.GetAppointmentsByStartDateAndEndDate(startDate, endDate ,Id);
         }
     }
 }

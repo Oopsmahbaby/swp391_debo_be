@@ -9,11 +9,11 @@ namespace swp391_debo_be.Cores
     {
         protected static IAppointmentRepository appointmentRepository = new AppointmentRepository();
 
-        public static List<object> GetAppointmentsByStartDateAndEndDate(DateOnly startDate, Guid Id)
+        public static List<object> GetAppointmentsByStartDateAndEndDate(DateOnly startDate,DateOnly end ,Guid Id)
         {
             try
             {
-                return appointmentRepository.GetAppointmentsByStartDateAndEndDate(startDate, Id);
+                return appointmentRepository.GetAppointmentsByStartDateAndEndDate(startDate, end ,Id);
             } catch 
             {
                 throw;
