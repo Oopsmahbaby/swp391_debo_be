@@ -310,7 +310,6 @@ public partial class DeboDev02Context : DbContext
             entity.HasKey(e => e.Id).HasName("PK__Treatmen__3214EC27FF88C2AC");
 
             entity.HasKey(e => e.Id).HasName("PK__Treatmen__3214EC27AC47EE49");
-n
 
             entity.ToTable("Treatment_Category");
 

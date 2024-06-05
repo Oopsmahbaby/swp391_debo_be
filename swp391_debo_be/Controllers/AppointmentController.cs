@@ -19,8 +19,8 @@ namespace swp391_debo_be.Controllers
             _tokenService = tokenService;
         }
 
-        [HttpGet("patient/calendars")]
-        public ActionResult<ApiRespone> GetAppointmentsByStartDateAndEndDate([FromQuery] string startDate, [FromQuery] string endDate, [FromQuery] string view)
+        [HttpGet("patient/calendar")]
+        public ActionResult<ApiRespone> GetAppointmentsByStartDateAndEndDate([FromQuery] string start, [FromQuery] string end, [FromQuery] string view)
         {
             var authHeader = _tokenService.GetAuthorizationHeader(Request);
 
@@ -43,7 +43,7 @@ namespace swp391_debo_be.Controllers
                 return new ApiRespone { Data = null, Message = "Invalid token", Success = false };
             }
 
-            return _appointmentService.GetAppointmentsByStartDateAndEndDate(startDate, userId);
+            return _appointmentService.GetAppointmentsByStartDateAndEndDate(start, userId);
         }
 
         [HttpGet("patient/appointments")]
