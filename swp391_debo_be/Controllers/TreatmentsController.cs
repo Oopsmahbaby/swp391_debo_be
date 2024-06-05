@@ -66,7 +66,7 @@ namespace swp391_debo_be.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTreatment(int id, TreatmentDto model)
+        public async Task<IActionResult> UpdateTreatment(int id, [FromBody] TreatmentDto model)
         {
             var response = await _treatService.updateTreatmentAsync(id,model);
             return new ObjectResult(response)

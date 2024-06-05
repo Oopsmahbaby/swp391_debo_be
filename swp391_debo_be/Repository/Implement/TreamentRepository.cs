@@ -24,6 +24,11 @@ namespace swp391_debo_be.Repository.Implement
             return _treatmentDao.deleteTreatmentAsync(id);
         }
 
+        public Task activeTreatmentAsync(int id)
+        {
+            return _treatmentDao.activeTreatmentAsync(id);
+        }
+
         public Task<List<TreatmentDto>> getAllTreatmentAsync(int page, int limit)
         {
             return _treatmentDao.getAllTreatmentAsync(page, limit);
