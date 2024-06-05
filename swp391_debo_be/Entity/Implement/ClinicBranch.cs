@@ -17,6 +17,8 @@ public partial class ClinicBranch
 
     public string? Avt { get; set; }
 
+    public bool? Status { get; set; }
+
     public virtual User? Admin { get; set; }
 
     public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
