@@ -20,7 +20,7 @@ namespace swp391_debo_be.Controllers
         }
 
         [HttpGet("patient/calendar")]
-        public ActionResult<ApiRespone> GetAppointmentsByStartDateAndEndDate([FromQuery] string start, [FromQuery] string end, [FromQuery] string view)
+        public ActionResult<ApiRespone> GetAppointmentsByStartDateAndEndDate([FromQuery] string startDate, [FromQuery] string endDate, [FromQuery] string view)
         {
             var authHeader = _tokenService.GetAuthorizationHeader(Request);
 
