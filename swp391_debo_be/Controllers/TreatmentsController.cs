@@ -7,7 +7,9 @@ using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
 using swp391_debo_be.Repository.Interface;
 using swp391_debo_be.Services.Implements;
+using swp391_debo_be.Services.Interfaces;
 using System.Net;
+using System.Runtime.CompilerServices;
 
 namespace swp391_debo_be.Controllers
 {
@@ -16,9 +18,9 @@ namespace swp391_debo_be.Controllers
     [ApiController]
     public class TreatmentsController : ControllerBase
     {
-        private readonly TreatmentService _treatService;
+        private readonly ITreatmentService _treatService;
 
-        public TreatmentsController(TreatmentService treatService)
+        public TreatmentsController(ITreatmentService treatService)
         {
             _treatService = treatService;
         }
@@ -72,6 +74,13 @@ namespace swp391_debo_be.Controllers
                 StatusCode = (int)response.StatusCode
             };
 
+        }
+
+        [HttpGet("treatments")]
+        public ActionResult<ApiRespone> GetTreatmentBasedBranchId([FromQuery] int branchId)
+        {
+            var response = _treatService.GetTreatmentsBasedBranchId(branchId);
+            return response;
         }
     }
 }
