@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using swp391_debo_be.Auth;
 using swp391_debo_be.Cores;
 using swp391_debo_be.Dao.Implement;
@@ -83,6 +84,14 @@ builder.Services.AddCors(options =>
                    .AllowAnyMethod();
         });
 });
+
+// Add services to the container.
+builder.Services.AddControllers()
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                    options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
+                });
 
 var app = builder.Build();
 
