@@ -178,7 +178,7 @@ namespace swp391_debo_be.Services.Implements
                 return null;
             }
 
-            return jwtToken.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+            return jwtToken.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
         }
     }
 }

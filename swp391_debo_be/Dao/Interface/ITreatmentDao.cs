@@ -10,5 +10,6 @@ namespace swp391_debo_be.Dao.Interface
         public Task<int> addTreatmentAsync(TreatmentDto treatment);
         public Task updateTreatmentAsync(int id, TreatmentDto treatment);
         public Task deleteTreatmentAsync(int id);
+        List<ClinicTreatment> GetDentistsBasedOnBranchId(int branchId);
     }
 }
