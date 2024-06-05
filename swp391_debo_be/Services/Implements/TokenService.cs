@@ -5,6 +5,7 @@ using swp391_debo_be.Cores;
 using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
 using swp391_debo_be.Services.Interfaces;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq.Expressions;
 using System.Security.Claims;
 
@@ -161,6 +162,23 @@ namespace swp391_debo_be.Services.Implements
             {
                 throw;
             }
+        }
+
+        public string GetAuthorizationHeader(HttpRequest request)
+        {
+            return request.Headers.Authorization.FirstOrDefault();
+        }
+
+        public string GetUserIdFromToken(string token)
+        {
+            var jwtToken = new JwtSecurityTokenHandler().ReadToken(token) as JwtSecurityToken;
+
+            if (jwtToken == null)
+            {
+                return null;
+            }
+
+            return jwtToken.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
         }
     }
 }

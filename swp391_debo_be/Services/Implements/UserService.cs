@@ -23,7 +23,7 @@ namespace swp391_debo_be.Services.Implements
             {
                 Id = System.Guid.NewGuid(),
                 Email = createUserDto.Email,
-                Role = 4,
+                Role = 5,
                 Password = Helper.HashPassword(createUserDto.password)
             };
 

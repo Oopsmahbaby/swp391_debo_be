@@ -36,6 +36,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserDao, UserDao>();
 builder.Services.AddScoped<ITreatmentRepository, TreatmentRepository>();
 builder.Services.AddScoped<ITreatmentDao, TreatmentDao>();
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<CTreatment>();
 builder.Services.AddScoped<TreatmentService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

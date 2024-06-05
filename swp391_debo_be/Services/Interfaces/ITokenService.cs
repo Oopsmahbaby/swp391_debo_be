@@ -11,5 +11,8 @@ namespace swp391_debo_be.Services.Interfaces
         public ApiRespone GenerateRefreshToken(TokenRequestDto token);
 
         public ApiRespone HandleLogout(string token);
+
+        public string GetAuthorizationHeader(HttpRequest request);
+        public string GetUserIdFromToken(string token);
     }
 }
