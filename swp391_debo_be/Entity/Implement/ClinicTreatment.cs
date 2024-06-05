@@ -17,6 +17,8 @@ public partial class ClinicTreatment
 
     public double? Price { get; set; }
 
+    public bool? Status { get; set; }
+
     public virtual User? Admin { get; set; }
 
     public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();

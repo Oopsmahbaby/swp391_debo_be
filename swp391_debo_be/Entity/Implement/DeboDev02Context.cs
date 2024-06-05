@@ -45,11 +45,7 @@ public partial class DeboDev02Context : DbContext
     {
         modelBuilder.Entity<Appointment>(entity =>
         {
-
-            entity.HasKey(e => e.Id).HasName("PK__Appointm__3214EC270942E22D");
-
             entity.HasKey(e => e.Id).HasName("PK__Appointm__3214EC277B6C5D7B");
-
 
             entity.ToTable("Appointment");
 
@@ -93,11 +89,7 @@ public partial class DeboDev02Context : DbContext
 
         modelBuilder.Entity<ClinicBranch>(entity =>
         {
-
-            entity.HasKey(e => e.Id).HasName("PK__Clinic_B__3214EC274B196EB8");
-
             entity.HasKey(e => e.Id).HasName("PK__Clinic_B__3214EC27D1C78800");
-
 
             entity.ToTable("Clinic_Branch");
 
@@ -120,7 +112,6 @@ public partial class DeboDev02Context : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK__Clinic_T__3214EC277F791234");
 
-
             entity.ToTable("Clinic_Treatment");
 
             entity.Property(e => e.Id)
@@ -140,11 +131,7 @@ public partial class DeboDev02Context : DbContext
 
         modelBuilder.Entity<Employee>(entity =>
         {
-
-            entity.HasKey(e => e.Id).HasName("PK__Employee__3214EC277B8624C8");
-
             entity.HasKey(e => e.Id).HasName("PK__Employee__3214EC274AA2C74F");
-
 
             entity.ToTable("Employee");
 
@@ -175,11 +162,7 @@ public partial class DeboDev02Context : DbContext
                         .HasConstraintName("FK_Dentist Major.Dent_ID"),
                     j =>
                     {
-
-                        j.HasKey("DentId", "TreatId").HasName("PK__Dentist___7EA2627449EC37B8");
-
                         j.HasKey("DentId", "TreatId").HasName("PK__Dentist___7EA262746BE0065F");
-
                         j.ToTable("Dentist_Major");
                         j.IndexerProperty<Guid>("DentId").HasColumnName("Dent_ID");
                         j.IndexerProperty<int>("TreatId").HasColumnName("Treat_ID");
@@ -188,11 +171,7 @@ public partial class DeboDev02Context : DbContext
 
         modelBuilder.Entity<Feedback>(entity =>
         {
-
-            entity.HasKey(e => e.Id).HasName("PK__Feedback__3214EC272C2CC90F");
-
             entity.HasKey(e => e.Id).HasName("PK__Feedback__3214EC271E80042A");
-
 
             entity.ToTable("Feedback");
 
@@ -214,11 +193,7 @@ public partial class DeboDev02Context : DbContext
 
         modelBuilder.Entity<Payment>(entity =>
         {
-
-            entity.HasKey(e => e.Id).HasName("PK__Payment__3214EC2717BA771E");
-
             entity.HasKey(e => e.Id).HasName("PK__Payment__3214EC27805006BC");
-
 
             entity.ToTable("Payment");
 
@@ -241,11 +216,7 @@ public partial class DeboDev02Context : DbContext
 
         modelBuilder.Entity<PaymentMethod>(entity =>
         {
-
-            entity.HasKey(e => e.Id).HasName("PK__Payment___3214EC278212B1EA");
-
             entity.HasKey(e => e.Id).HasName("PK__Payment___3214EC2778F5B051");
-
 
             entity.ToTable("Payment_Method");
 
@@ -271,11 +242,7 @@ public partial class DeboDev02Context : DbContext
 
         modelBuilder.Entity<PaymentProvider>(entity =>
         {
-
-            entity.HasKey(e => e.Id).HasName("PK__Payment___3214EC27B80867AD");
-
             entity.HasKey(e => e.Id).HasName("PK__Payment___3214EC272707E7F8");
-
 
             entity.ToTable("Payment_Provider");
 
@@ -288,11 +255,7 @@ public partial class DeboDev02Context : DbContext
 
         modelBuilder.Entity<Role>(entity =>
         {
-
-            entity.HasKey(e => e.RoleId).HasName("PK__Role__D80AB49BC8DF745B");
-
             entity.HasKey(e => e.RoleId).HasName("PK__Role__D80AB49BB8E7C484");
-
 
             entity.ToTable("Role");
 
@@ -306,9 +269,6 @@ public partial class DeboDev02Context : DbContext
 
         modelBuilder.Entity<TreatmentCategory>(entity =>
         {
-
-            entity.HasKey(e => e.Id).HasName("PK__Treatmen__3214EC27FF88C2AC");
-
             entity.HasKey(e => e.Id).HasName("PK__Treatmen__3214EC27AC47EE49");
 
             entity.ToTable("Treatment_Category");
@@ -321,11 +281,7 @@ public partial class DeboDev02Context : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-
-            entity.HasKey(e => e.Id).HasName("PK__User__3214EC270A790CA6");
-
             entity.HasKey(e => e.Id).HasName("PK__User__3214EC27259B5854");
-
 
             entity.ToTable("User");
 
@@ -338,7 +294,6 @@ public partial class DeboDev02Context : DbContext
             entity.Property(e => e.FirstName).HasMaxLength(30);
             entity.Property(e => e.LastName).HasMaxLength(30);
             entity.Property(e => e.MedRec).HasColumnName("Med_Rec");
-
             entity.Property(e => e.Phone).HasMaxLength(20);
             entity.Property(e => e.Username).HasMaxLength(20);
 
