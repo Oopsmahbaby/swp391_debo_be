@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using swp391_debo_be.Dao.Interface;
+using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
 
 namespace swp391_debo_be.Dao.Implement
@@ -9,6 +10,11 @@ namespace swp391_debo_be.Dao.Implement
     {
         private readonly DeboDev02Context _context = new DeboDev02Context(new Microsoft.EntityFrameworkCore.DbContextOptions<DeboDev02Context>());
         public AppointmentDao() { }
+
+        public AppointmentDao(DeboDev02Context context)
+        {
+            _context = context;
+        }
 
         public object GetAppointmentByPagination(string page, string limit, Guid userId)
         {
@@ -78,6 +84,20 @@ namespace swp391_debo_be.Dao.Implement
             }
 
             return result;
+        }
+
+        public async Task<List<AppointmentHistoryDto>> GetHistoryAppointmentByUserID(Guid id)
+        {
+            var appointments = await (from a in _context.Appointments
+                               join ct in _context.ClinicTreatments on a.TreatId equals ct.Id
+                               where a.CusId == id
+                               select new AppointmentHistoryDto
+                               {
+                                   TreatmentName = ct.Name,
+                                   CreatedDate = a.CreatedDate,
+                                   StartDate = a.StartDate
+                               }).ToListAsync();
+            return appointments;
         }
     }
 }

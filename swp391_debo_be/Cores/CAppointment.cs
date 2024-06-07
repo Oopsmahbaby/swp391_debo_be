@@ -1,13 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using swp391_debo_be.Dao.Implement;
+using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
 using swp391_debo_be.Repository.Implement;
 using swp391_debo_be.Repository.Interface;
+using System.Collections.Generic;
 
 namespace swp391_debo_be.Cores
 {
     public class CAppointment
     {
         protected static IAppointmentRepository appointmentRepository = new AppointmentRepository();
+        private static readonly AppointmentRepository _appointmentRepo;
+
+        static CAppointment()
+        {
+            var context = new DeboDev02Context(new DbContextOptions<DeboDev02Context>());
+            _appointmentRepo = new AppointmentRepository(new AppointmentDao(context));
+        }
 
         public static List<object> GetAppointmentsByStartDateAndEndDate(DateOnly startDate,DateOnly end ,Guid Id)
         {
@@ -29,6 +40,11 @@ namespace swp391_debo_be.Cores
             {
                 throw;
             }
-        }   
+        }
+
+        public static Task<List<AppointmentHistoryDto>> GetHistoryAppointmentByUserID(Guid id)
+        {
+                return _appointmentRepo.GetHistoryAppointmentByUserID(id);
+        }
     }
 }

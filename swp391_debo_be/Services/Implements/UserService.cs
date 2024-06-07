@@ -24,7 +24,7 @@ namespace swp391_debo_be.Services.Implements
                 Id = System.Guid.NewGuid(),
                 Email = createUserDto.Email,
                 // Create phone number for user
-                Phone = createUserDto.PhoneNumber, 
+                Phone = createUserDto.PhoneNumber,
                 // Role = 5 la Customer -> dua tren database moi
                 Role = 5,
                 Password = Helper.HashPassword(createUserDto.password)
@@ -32,7 +32,7 @@ namespace swp391_debo_be.Services.Implements
 
             User createdUser = CUser.CreateUser(user);
 
-            return new ApiRespone { Success = true, Data = createdUser , StatusCode = System.Net.HttpStatusCode.Created};
+            return new ApiRespone { Success = true, Data = createdUser, StatusCode = System.Net.HttpStatusCode.Created };
         }
 
         public object? GetProfile(string? userId)
