@@ -15,6 +15,37 @@ namespace swp391_debo_be.Services.Implements
             _cBranch = cBranch;
         }
 
+        public async Task<ApiRespone> activeBranchAsync(int id)
+        {
+            var response = new ApiRespone();
+            try
+            {
+                var existingBranchs = await CBranch.getBranchAsync(id);
+                if (existingBranchs != null)
+                {
+                    await CBranch.activeBranchAsync(id);
+                    response.StatusCode = HttpStatusCode.OK;
+                    response.Data = existingBranchs;
+                    response.Success = true;
+                    response.Message = "Branch data is activated successfully.";
+                }
+                else
+                {
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.Success = false;
+                    response.Message = "Branch not found.";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
         public async Task<ApiRespone> addBranchAsync(BranchDto branch)
         {
             var response = new ApiRespone();
@@ -81,7 +112,7 @@ namespace swp391_debo_be.Services.Implements
             {
                 var data = await CBranch.getAllBranchAsync(page, limit);
                 response.StatusCode = HttpStatusCode.OK;
-                response.Data = data;
+                response.Data = new { list = data, total = limit };
                 response.Success = true;
                 response.Message = "Branch data is retrieved successfully";
             }
@@ -123,14 +154,28 @@ namespace swp391_debo_be.Services.Implements
                 {
                     response.StatusCode = HttpStatusCode.NotFound;
                     response.Success = false;
-                    response.Message = "This Branch does not exist in system";
+                    response.Message = "Branch ID mismatch";
+                }
+                var data = await CBranch.getBranchAsync(id);
+                if (data == null)
+                {
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.Success = false;
+                    response.Message = "Branch not found or inactive.";
                 }
                 await CBranch.updateBranchAsync(id, branch);
-                var data = await CBranch.getBranchAsync(id);
+                var updBranch = await CBranch.getBranchAsync(id);
                 response.StatusCode = HttpStatusCode.OK;
-                response.Data = data;
+                response.Data = updBranch;
                 response.Success = true;
-                response.Message = "Branch data updated successfully";
+                response.Message = "Branch data updated successfully.";
+
+            }
+            catch (InvalidOperationException ex)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.Success = false;
+                response.Message = ex.Message;
             }
             catch (Exception ex)
             {
@@ -140,5 +185,6 @@ namespace swp391_debo_be.Services.Implements
             }
             return response;
         }
+
     }
 }

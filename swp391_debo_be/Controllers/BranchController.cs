@@ -17,7 +17,7 @@ namespace swp391_debo_be.Controllers
             _branchService = branchService;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllBranch([FromQuery] int page = 1, [FromQuery] int limit = 5)
+        public async Task<IActionResult> GetAllBranch([FromQuery] int page = 0, [FromQuery] int limit = 5)
         {
             var response = await _branchService.getAllBranchAsync(page, limit);
             return new ObjectResult(response)
@@ -57,7 +57,7 @@ namespace swp391_debo_be.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBranch(int id, BranchDto model)
+        public async Task<IActionResult> UpdateBranch(int id, [FromBody] BranchDto model)
         {
             var response = await _branchService.updateBranchAsync(id, model);
             return new ObjectResult(response)
