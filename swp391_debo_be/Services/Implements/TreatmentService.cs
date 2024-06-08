@@ -112,7 +112,7 @@ namespace swp391_debo_be.Services.Implements
             {
                 var data = await CTreatment.getAllTreatmentAsync(page, limit);
                 response.StatusCode = HttpStatusCode.OK;
-                response.Data = data;
+                response.Data = new { list = data, total = limit };
                 response.Success = true;
                 response.Message = "Treatment data retrieved successfully.";
             }
