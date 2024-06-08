@@ -97,7 +97,9 @@ public partial class DeboDev02Context : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
             entity.Property(e => e.AdminId).HasColumnName("Admin_ID");
+            entity.Property(e => e.Email).HasMaxLength(200);
             entity.Property(e => e.MngId).HasColumnName("Mng_ID");
+            entity.Property(e => e.Phone).HasMaxLength(10);
 
             entity.HasOne(d => d.Admin).WithMany(p => p.ClinicBranchAdmins)
                 .HasForeignKey(d => d.AdminId)
