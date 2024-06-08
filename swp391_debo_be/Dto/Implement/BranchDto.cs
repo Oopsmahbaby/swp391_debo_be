@@ -6,14 +6,15 @@
 
         public Guid? MngId { get; set; }
 
-        //public Guid? AdminId { get; set; }
-
         public string? Name { get; set; }
 
         public string? Address { get; set; }
 
+        public string? Phone { get; set; }
+
+        public string? Email { get; set; }
+
         public string? Avt { get; set; }
 
-        //public bool? Status { get; set; }
     }
 }

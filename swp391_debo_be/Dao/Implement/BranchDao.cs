@@ -35,6 +35,8 @@ namespace swp391_debo_be.Dao.Implement
                 Id = branch.Id,
                 Name = branch.Name,
                 Address = branch.Address,
+                Phone = branch.Phone,
+                Email = branch.Email,
                 Avt = branch.Avt,
                 Status = true,
             };
@@ -70,6 +72,8 @@ namespace swp391_debo_be.Dao.Implement
                 Id = b.Id,
                 Name = b.Name,
                 Address = b.Address,
+                Phone = b.Phone,
+                Email = b.Email,
                 Avt = b.Avt,
             }).ToList();
             return branchsDto;
@@ -87,6 +91,8 @@ namespace swp391_debo_be.Dao.Implement
                 Id = branch.Id,
                 Name = branch.Name,
                 Address = branch.Address,
+                Phone = branch.Phone,
+                Email = branch.Email,
                 Avt = branch.Avt,
             };
 
@@ -102,8 +108,14 @@ namespace swp391_debo_be.Dao.Implement
             }
             else
             {
+                if (branch.Phone.Length > 10 || branch.Phone.Any(char.IsLetter))
+                {
+                    throw new InvalidOperationException("Phone number cannot be more than 10 digits or contain alphabetic characters.");
+                }
                 existingBranch.Name = branch.Name;
                 existingBranch.Address = branch.Address;
+                existingBranch.Phone = branch.Phone;
+                existingBranch.Email = branch.Email;
                 existingBranch.Avt = branch.Avt;
 
                 _context.ClinicBranches.Update(existingBranch);
