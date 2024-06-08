@@ -311,7 +311,6 @@ public partial class DeboDev02Context : DbContext
 
             entity.HasKey(e => e.Id).HasName("PK__Treatmen__3214EC27AC47EE49");
 
-
             entity.ToTable("Treatment_Category");
 
             entity.Property(e => e.Id)
