@@ -7,5 +7,6 @@ namespace swp391_debo_be.Services.Interfaces
     {
         public ApiRespone GetAppointmentByPagination(string page, string limit, string userId);
         public ApiRespone GetAppointmentsByStartDateAndEndDate(string startDate,string endDate ,string userId);
+        public Task<ApiRespone> GetHistoryAppointmentByUserID(Guid userId);
     }
 }

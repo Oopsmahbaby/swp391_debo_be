@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using swp391_debo_be.Constants;
+using swp391_debo_be.Entity.Implement;
 using swp391_debo_be.Services.Interfaces;
 
 namespace swp391_debo_be.Controllers
@@ -72,6 +73,16 @@ namespace swp391_debo_be.Controllers
             }
 
             return _appointmentService.GetAppointmentByPagination(page, limit, userId);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetHistoryAppointmentByUserID(Guid id)
+        {
+            var response = await _appointmentService.GetHistoryAppointmentByUserID(id);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
         }
     }
 }

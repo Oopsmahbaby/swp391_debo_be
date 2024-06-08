@@ -1,4 +1,5 @@
 ﻿using Azure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using swp391_debo_be.Constants;
@@ -26,6 +27,7 @@ namespace swp391_debo_be.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> GetAllTreatment([FromQuery] int page = 1, [FromQuery] int limit = 5)
         {
             var response = await _treatService.getAllTreatmentAsync(page,limit);
