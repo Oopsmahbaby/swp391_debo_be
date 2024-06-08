@@ -44,7 +44,7 @@ namespace swp391_debo_be.Controllers
                 return new ApiRespone { Data = null, Message = "Invalid token", Success = false };
             }
 
-            return _appointmentService.GetAppointmentsByStartDateAndEndDate(startDate, endDate ,userId);
+            return _appointmentService.GetAppointmentsByStartDateAndEndDate(start, end ,userId);
 
         }
 

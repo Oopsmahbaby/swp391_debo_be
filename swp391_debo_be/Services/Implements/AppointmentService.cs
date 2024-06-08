@@ -10,10 +10,10 @@ namespace swp391_debo_be.Services.Implements
 {
     public class AppointmentService : IAppointmentService
     {
-        public ActionResult<ApiRespone> CreateAppointment(AppointmentDto dto, object result)
-        {
-            
-        }
+        //public ActionResult<ApiRespone> CreateAppointment(AppointmentDto dto, object result)
+        //{
+        //    //return //AppointmentDto.CreateAppointment(dto, result);
+        //}
 
         public ApiRespone GetAppointmentByPagination(string page, string limit, string userId)
         {
