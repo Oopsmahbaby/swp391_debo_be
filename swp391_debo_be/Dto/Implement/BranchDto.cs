@@ -14,5 +14,6 @@
 
         public string? Avt { get; set; }
 
+        //public bool? Status { get; set; }
     }
 }

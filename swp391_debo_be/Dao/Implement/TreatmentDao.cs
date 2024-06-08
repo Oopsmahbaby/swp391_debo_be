@@ -62,7 +62,7 @@ namespace swp391_debo_be.Dao.Implement
 
             if (limit > 0)
             {
-                query = query.Skip((page - 1) * limit)
+                query = query.Skip(page * limit)
                              .Take(limit);
             }
 

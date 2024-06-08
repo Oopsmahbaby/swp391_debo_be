@@ -1,4 +1,5 @@
 ﻿using swp391_debo_be.Dto.Implement;
+using swp391_debo_be.Entity.Implement;
 
 namespace swp391_debo_be.Dao.Interface
 {
@@ -9,5 +10,6 @@ namespace swp391_debo_be.Dao.Interface
         public Task<int> addBranchAsync(BranchDto branch);
         public Task updateBranchAsync(int id, BranchDto branch);
         public Task deleteBranchAsync(int id);
+        public Task activeBranchAsync(int id);
     }
 }

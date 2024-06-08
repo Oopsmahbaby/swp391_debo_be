@@ -25,6 +25,11 @@ namespace swp391_debo_be.Cores
             return _branchRepo.deleteBranchAsync(id);
         }
 
+        public static Task activeBranchAsync(int id)
+        {
+            return _branchRepo.activeBranchAsync(id);
+        }
+
         public static Task<List<BranchDto>> getAllBranchAsync(int page, int limit)
         {
             return _branchRepo.getAllBranchAsync(page, limit);
