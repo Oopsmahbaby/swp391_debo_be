@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using swp391_debo_be.Constants;
+using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Services.Interfaces;
 
 namespace swp391_debo_be.Controllers
@@ -15,7 +16,7 @@ namespace swp391_debo_be.Controllers
 
         public AppointmentController(IAppointmentService appointmentService, ITokenService tokenService)
         {
-            this._appointmentService = appointmentService;
+            _appointmentService = appointmentService;
             _tokenService = tokenService;
         }
 
@@ -43,11 +44,42 @@ namespace swp391_debo_be.Controllers
                 return new ApiRespone { Data = null, Message = "Invalid token", Success = false };
             }
 
-            return _appointmentService.GetAppointmentsByStartDateAndEndDate(startDate, endDate ,userId);
+            return _appointmentService.GetAppointmentsByStartDateAndEndDate(startDate, endDate, userId);
         }
 
         [HttpGet("patient/appointments")]
         public ActionResult<ApiRespone> GetAppointmentsByPagination([FromQuery] string page, [FromQuery] string limit)
+        {
+            var result = CheckAuthorizationHeader();
+
+            if (result is ActionResult<ApiRespone>)
+            {
+                return (ActionResult<ApiRespone>)result;
+            }
+
+            return _appointmentService.GetAppointmentByPagination(page, limit, (string)result);
+        }
+
+        [HttpGet("slot")]
+        public ActionResult<ApiRespone> GetApppointmentsByDentistIdAndDate([FromQuery] string dentist, [FromQuery] string date)
+        {
+            return _appointmentService.GetApppointmentsByDentistIdAndDate(dentist, date);
+        }
+
+        [HttpPost("appointment")]
+        public ActionResult<ApiRespone> CreateAppointment([FromBody] AppointmentDto dto)
+        {
+            var result = CheckAuthorizationHeader();
+
+            if (result is ActionResult<ApiRespone>)
+            {
+                return (ActionResult<ApiRespone>)result;
+            }
+
+            return _appointmentService.CreateAppointment(dto, result);
+        }
+
+        private object CheckAuthorizationHeader()
         {
             var authHeader = _tokenService.GetAuthorizationHeader(Request);
 
@@ -70,7 +102,7 @@ namespace swp391_debo_be.Controllers
                 return new ApiRespone { Data = null, Message = "Invalid token", Success = false };
             }
 
-            return _appointmentService.GetAppointmentByPagination(page, limit, userId);
+            return userId;
         }
     }
 }

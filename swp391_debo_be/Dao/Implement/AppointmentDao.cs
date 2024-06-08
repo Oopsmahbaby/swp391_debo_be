@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using swp391_debo_be.Dao.Interface;
+using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
+using swp391_debo_be.Helpers;
 
 namespace swp391_debo_be.Dao.Implement
 {
@@ -9,6 +11,28 @@ namespace swp391_debo_be.Dao.Implement
     {
         private readonly DeboDev02Context _context = new DeboDev02Context(new Microsoft.EntityFrameworkCore.DbContextOptions<DeboDev02Context>());
         public AppointmentDao() { }
+
+        public bool CreateAppointment(AppointmentDto dto, Guid userId)
+        {
+            Appointment addedAppointment = new Appointment
+            {
+                Id = Guid.NewGuid(),
+                CusId = userId,
+                CreatorId = userId,
+                DentId = dto.DentId,
+                TreatId = dto.TreatId,
+                StartDate = dto.StartDate,
+                TimeSlot = dto.TimeSlot,
+                Status = "pending",
+                Description = dto.Description,
+                Note = dto.Note,
+                IsCreatedByStaff = false
+            };
+
+            _context.Appointments.Add(addedAppointment);
+            _context.SaveChanges();
+            return true;
+        }
 
         public object GetAppointmentByPagination(string page, string limit, Guid userId)
         {
@@ -78,6 +102,24 @@ namespace swp391_debo_be.Dao.Implement
             }
 
             return result;
+        }
+
+        public List<int> GetApppointmentsByDentistIdAndDate(Guid dentistId, DateOnly date)
+        {
+            List<int> nonAvailableSlots = new List<int>();
+
+            var appointments = _context.Appointments
+                .Where(a => a.DentId == dentistId && a.StartDate == date)
+                .ToList();
+
+            foreach (Appointment appointment in appointments)
+            {
+                nonAvailableSlots.Add((int)appointment.TimeSlot);
+            }
+
+            List<int> availableSlots = Slot.GetSlots(nonAvailableSlots);
+
+            return availableSlots;
         }
     }
 }

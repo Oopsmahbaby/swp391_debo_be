@@ -29,6 +29,17 @@ namespace swp391_debo_be.Cores
             {
                 throw;
             }
-        }   
+        }
+        
+        public static List<int> GetApppointmentsByDentistIdAndDate(Guid dentistId, DateOnly date)
+        {
+            try
+            {
+                return appointmentRepository.GetApppointmentsByDentistIdAndDate(dentistId, date);
+            } catch
+            {
+                throw;
+            }
+        }
     }
 }

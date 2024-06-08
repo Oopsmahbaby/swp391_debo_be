@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
 
 namespace swp391_debo_be.Dao.Interface
@@ -7,5 +8,9 @@ namespace swp391_debo_be.Dao.Interface
     {
         public object GetAppointmentByPagination(string page, string limit, Guid userId);
         public List<object> GetAppointmentsByStartDateAndEndDate(DateOnly startDate,DateOnly endDate, Guid Id);
+
+        public List<int> GetApppointmentsByDentistIdAndDate(Guid dentistId, DateOnly date);
+
+        public bool CreateAppointment(AppointmentDto dto, Guid userId);
     }
 }
