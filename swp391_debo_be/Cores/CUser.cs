@@ -77,5 +77,18 @@ namespace swp391_debo_be.Cores
         {
             return _userRepository.CreateNewManager(employee);
         }
+
+        public static Task<List<EmployeeDto>> ViewStaffList(int page, int limit)
+        {
+            return _userRepository.ViewStaffList(page, limit);
+        }
+        public static Task<List<EmployeeDto>> ViewDentList(int page, int limit)
+        {
+            return _userRepository.ViewDentList(page, limit);
+        }
+        public static Task<List<EmployeeDto>> ViewManagerList(int page, int limit)
+        {
+            return _userRepository.ViewManagerList(page, limit);
+        }
     }
 }

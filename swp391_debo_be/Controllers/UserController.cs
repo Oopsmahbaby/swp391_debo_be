@@ -53,5 +53,33 @@ namespace swp391_debo_be.Controllers
                 StatusCode = (int)response.StatusCode
             };
         }
+
+        [Microsoft.AspNetCore.Mvc.HttpGet("stafflist")]
+        public async Task<IActionResult> ViewStaffList([FromQuery] int page = 0, [FromQuery] int limit = 5)
+        {
+            var response = await _userService.ViewStaffList(page, limit);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+        [Microsoft.AspNetCore.Mvc.HttpGet("dentistlist")]
+        public async Task<IActionResult> ViewDentList([FromQuery] int page = 0, [FromQuery] int limit = 5)
+        {
+            var response = await _userService.ViewDentList(page, limit);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+        [Microsoft.AspNetCore.Mvc.HttpGet("managerlist")]
+        public async Task<IActionResult> ViewManagerList([FromQuery] int page = 0, [FromQuery] int limit = 5)
+        {
+            var response = await _userService.ViewManagerList(page, limit);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
     }
 }
