@@ -6,7 +6,8 @@ namespace swp391_debo_be.Services.Interfaces
 {
     public interface IAppointmentService
     {
-        ActionResult<ApiRespone> CreateAppointment(AppointmentDto dto, object result);
+        public ApiRespone CancelAppointment(string id);
+        public ApiRespone CreateAppointment(AppointmentDto dto, string userId, string role);
         public ApiRespone GetAppointmentByPagination(string page, string limit, string userId);
         public ApiRespone GetAppointmentsByStartDateAndEndDate(string startDate,string endDate ,string userId);
         public ApiRespone GetApppointmentsByDentistIdAndDate(string dentistId, string date);

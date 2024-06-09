@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
 using swp391_debo_be.Repository.Implement;
 using swp391_debo_be.Repository.Interface;
@@ -36,6 +37,28 @@ namespace swp391_debo_be.Cores
             try
             {
                 return appointmentRepository.GetApppointmentsByDentistIdAndDate(dentistId, date);
+            } catch
+            {
+                throw;
+            }
+        }
+
+        public static bool CreateAppointment(AppointmentDto appointment)
+        {
+            try
+            {
+                return appointmentRepository.CreateAppointment(appointment);
+            } catch
+            {
+                throw;
+            }
+        }
+
+        public static Appointment CancelAppointment(Guid appointmentId)
+        {
+            try
+            {
+                return appointmentRepository.CancelAppointment(appointmentId);
             } catch
             {
                 throw;

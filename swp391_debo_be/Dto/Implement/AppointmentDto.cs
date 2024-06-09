@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace swp391_debo_be.Dto.Implement
 {
@@ -15,15 +16,23 @@ namespace swp391_debo_be.Dto.Implement
 
         public Guid? TempDentId { get; set; }
 
-        public DateOnly? CreatedDate { get; set; } = new DateOnly();
+        public Guid? CusId { get; set; }
 
-        public DateOnly? StartDate { get; set; } = new DateOnly();
+        public Guid? CreatorId { get; set; }
+
+        public bool? IsCreatedByStaff { get; set; }
+
+        [JsonIgnore]
+        public DateOnly? CreatedDate { get; set; }
+
+        [JsonIgnore]
+        public DateOnly? StartDate { get; set; }
 
         [Required]
         public int? TimeSlot { get; set; }
 
         [Required]
-        [RegularExpression("^(pending|future|on-going|done)$", ErrorMessage = "Invalid status value")]
+        [RegularExpression("^(cancelled|pending|future|on-going|done)$", ErrorMessage = "Invalid status value")]
         public string? Status { get; set; }
 
         public string? Description { get; set; }

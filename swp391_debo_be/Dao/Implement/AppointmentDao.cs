@@ -12,13 +12,31 @@ namespace swp391_debo_be.Dao.Implement
         private readonly DeboDev02Context _context = new DeboDev02Context(new Microsoft.EntityFrameworkCore.DbContextOptions<DeboDev02Context>());
         public AppointmentDao() { }
 
-        public bool CreateAppointment(AppointmentDto dto, Guid userId)
+        public Appointment CancelAppointment(Guid appointmentId)
+        {
+            Appointment appointment = _context.Appointments
+                .Where(a => a.Id == appointmentId)
+                .FirstOrDefault();
+
+            if (appointment == null)
+            {
+                return null;
+            }
+
+            appointment.Status = "cancelled";
+            _context.Update(appointment);
+            _context.SaveChanges();
+
+            return appointment;
+        }
+
+        public bool CreateAppointment(AppointmentDto dto)
         {
             Appointment addedAppointment = new Appointment
             {
                 Id = Guid.NewGuid(),
-                CusId = userId,
-                CreatorId = userId,
+                CusId = dto.CusId,
+                CreatorId = dto.CreatorId,
                 DentId = dto.DentId,
                 TreatId = dto.TreatId,
                 StartDate = dto.StartDate,
@@ -26,7 +44,8 @@ namespace swp391_debo_be.Dao.Implement
                 Status = "pending",
                 Description = dto.Description,
                 Note = dto.Note,
-                IsCreatedByStaff = false
+                IsCreatedByStaff = dto.IsCreatedByStaff,
+                CreatedDate = dto.CreatedDate
             };
 
             _context.Appointments.Add(addedAppointment);

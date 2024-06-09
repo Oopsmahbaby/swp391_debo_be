@@ -11,6 +11,7 @@ namespace swp391_debo_be.Dao.Interface
 
         public List<int> GetApppointmentsByDentistIdAndDate(Guid dentistId, DateOnly date);
 
-        public bool CreateAppointment(AppointmentDto dto, Guid userId);
+        public bool CreateAppointment(AppointmentDto dto);
+        public Appointment CancelAppointment(Guid appointmentId);
     }
 }
