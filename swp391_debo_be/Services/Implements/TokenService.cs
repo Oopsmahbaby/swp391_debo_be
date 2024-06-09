@@ -32,15 +32,16 @@ namespace swp391_debo_be.Services.Implements
                     return new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Message = "Invalid Request", Success = false };
                 }
 
+                if (foundUser == null)
+                {
+                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.NotFound, Message = UserNotFoundErrorMessage, Success = false };
+                }
+
                 if (!CUser.IsPasswordExist(user.Password, foundUser))
                 {
                     return new ApiRespone { StatusCode = System.Net.HttpStatusCode.NotFound, Message = "Invalid Password", Success = false };
                 }
 
-                if (foundUser == null)
-                {
-                    return new ApiRespone {StatusCode = System.Net.HttpStatusCode.NotFound ,Message =  UserNotFoundErrorMessage , Success = false };
-                }
 
                 Role role = CRole.GetRoleById((int)foundUser.Role);
 

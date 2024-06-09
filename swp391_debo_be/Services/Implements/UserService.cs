@@ -27,7 +27,7 @@ namespace swp391_debo_be.Services.Implements
                 Phone = createUserDto.PhoneNumber,
                 // Role = 5 la Customer -> dua tren database moi
                 Role = 5,
-                Password = Helper.HashPassword(createUserDto.password)
+                Password = HashPasswordHelper.HashPassword(createUserDto.password)
             };
 
             User createdUser = CUser.CreateUser(user);

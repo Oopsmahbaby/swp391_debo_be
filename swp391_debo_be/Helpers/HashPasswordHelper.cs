@@ -3,7 +3,7 @@ using System.Text;
 
 namespace swp391_debo_be.Helpers
 {
-    public class Helper
+    public class HashPasswordHelper
     {
         public static string HashPassword(string password)
         {

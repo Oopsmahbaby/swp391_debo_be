@@ -21,6 +21,11 @@ namespace swp391_debo_be.Repository.Implement
             _appointmentDao = appointmentDao;
         }
 
+        public bool CreateAppointment(AppointmentDto appointment)
+        {
+            return appointmentDao.CreateAppointment(appointment);
+        }
+
         public object GetAppointmentByPagination(string page, string limit, Guid userId)
         {
             return appointmentDao.GetAppointmentByPagination(page, limit, userId);
@@ -31,6 +36,14 @@ namespace swp391_debo_be.Repository.Implement
            return appointmentDao.GetAppointmentsByStartDateAndEndDate(startDate, endDate ,Id);
         }
 
+        public List<int> GetApppointmentsByDentistIdAndDate(Guid dentistId, DateOnly date)
+        {
+            return appointmentDao.GetApppointmentsByDentistIdAndDate(dentistId, date);
+        }
+
+        public Appointment CancelAppointment(Guid appointmentId)
+        {
+            return appointmentDao.CancelAppointment(appointmentId);
         public Task<List<AppointmentHistoryDto>> GetHistoryAppointmentByUserID(Guid id)
         {
             return _appointmentDao.GetHistoryAppointmentByUserID (id);

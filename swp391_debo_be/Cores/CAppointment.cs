@@ -41,6 +41,39 @@ namespace swp391_debo_be.Cores
                 throw;
             }
         }
+        
+        public static List<int> GetApppointmentsByDentistIdAndDate(Guid dentistId, DateOnly date)
+        {
+            try
+            {
+                return appointmentRepository.GetApppointmentsByDentistIdAndDate(dentistId, date);
+            } catch
+            {
+                throw;
+            }
+        }
+
+        public static bool CreateAppointment(AppointmentDto appointment)
+        {
+            try
+            {
+                return appointmentRepository.CreateAppointment(appointment);
+            } catch
+            {
+                throw;
+            }
+        }
+
+        public static Appointment CancelAppointment(Guid appointmentId)
+        {
+            try
+            {
+                return appointmentRepository.CancelAppointment(appointmentId);
+            } catch
+            {
+                throw;
+            }
+
 
         public static Task<List<AppointmentHistoryDto>> GetHistoryAppointmentByUserID(Guid id)
         {

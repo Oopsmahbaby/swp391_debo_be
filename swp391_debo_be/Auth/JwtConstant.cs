@@ -26,6 +26,8 @@
             public const string Username = nameof(Username);
             public const string Email = nameof(Email);
             public const string Password = nameof(Password);
+            public const string Role = nameof(Role);
+            public const string nameId = nameof(nameId);
         }
     }
 }

@@ -50,7 +50,7 @@ namespace swp391_debo_be.Cores
 
         public static bool IsPasswordExist(string password, User user)
         {
-            string hashedPassword = Helper.HashPassword(password);
+            string hashedPassword = HashPasswordHelper.HashPassword(password);
             return _userRepository.IsPasswordExist(hashedPassword, user);
         }
     }
