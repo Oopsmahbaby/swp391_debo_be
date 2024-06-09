@@ -1,4 +1,5 @@
 ﻿using Microsoft.Owin.Security;
+using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
 
 namespace swp391_debo_be.Dao.Interface
@@ -28,5 +29,8 @@ namespace swp391_debo_be.Dao.Interface
         public bool IsPasswordExist(string password, User user);
         public bool IsRefreshTokenExist(User user);
 
+        public Task<Guid> CreateNewStaff(EmployeeDto employee);
+        public Task<Guid> CreateNewDentist(EmployeeDto employee);
+        public Task<Guid> CreateNewManager(EmployeeDto employee);
     }
 }
