@@ -112,7 +112,7 @@ namespace swp391_debo_be.Services.Implements
             {
                 var data = await CBranch.getAllBranchAsync(page, limit);
                 response.StatusCode = HttpStatusCode.OK;
-                response.Data = new { list = data, total = limit };
+                response.Data = new { list = data, total = data.Count };
                 response.Success = true;
                 response.Message = "Branch data is retrieved successfully";
             }

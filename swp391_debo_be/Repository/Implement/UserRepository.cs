@@ -95,5 +95,18 @@ namespace swp391_debo_be.Repository.Implement
         {
             return _userDao.CreateNewManager(employee);
         }
+
+        public Task<List<EmployeeDto>> ViewStaffList(int page, int limit)
+        {
+            return _userDao.ViewStaffList(page, limit);
+        }
+        public Task<List<EmployeeDto>> ViewDentList(int page, int limit)
+        {
+            return _userDao.ViewDentList(page, limit);
+        }
+        public Task<List<EmployeeDto>> ViewManagerList(int page, int limit)
+        {
+            return _userDao.ViewManagerList(page, limit);
+        }
     }
 }

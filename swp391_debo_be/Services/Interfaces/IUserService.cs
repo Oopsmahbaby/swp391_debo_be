@@ -14,5 +14,8 @@ namespace swp391_debo_be.Services.Interfaces
         public Task<ApiRespone> CreateNewStaff(EmployeeDto employee);
         public Task<ApiRespone> CreateNewDent(EmployeeDto employee);
         public Task<ApiRespone> CreateNewManager(EmployeeDto employee);
+        public Task<ApiRespone> ViewStaffList(int page, int limit);
+        public Task<ApiRespone> ViewDentList(int page, int limit);
+        public Task<ApiRespone> ViewManagerList(int page, int limit);
     }
 }

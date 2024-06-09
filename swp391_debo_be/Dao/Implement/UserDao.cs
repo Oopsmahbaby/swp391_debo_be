@@ -1,8 +1,10 @@
-﻿using swp391_debo_be.Dao.Interface;
+﻿using Microsoft.EntityFrameworkCore;
+using swp391_debo_be.Dao.Interface;
 using swp391_debo_be.DBContext;
 using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
 using swp391_debo_be.Helpers;
+using System.Collections.Generic;
 
 namespace swp391_debo_be.Dao.Implement
 {
@@ -204,6 +206,97 @@ namespace swp391_debo_be.Dao.Implement
             _context.Users.Add(newManager);
             await _context.SaveChangesAsync();
             return newManager.Id;
+        }
+
+        public async Task<List<EmployeeDto>> ViewStaffList(int page, int limit)
+        {
+            IQueryable<User> query = _context.Users.Where(t => t.Role == 3);
+            if (limit > 0)
+            {
+                query = query.Skip(page * limit)
+                             .Take(limit);
+            }
+            var staffList = await query.ToListAsync();
+
+            var staff = staffList.Select(t => new EmployeeDto
+            {
+                Id = t.Id,
+                Role = (int)t.Role,
+                Username = t.Username,
+                Email = t.Email,
+                Password = t.Password,
+                FirstName = t.FirstName,
+                LastName = t.LastName,
+                Gender = (bool)t.Gender,
+                Phone = t.Phone,
+                Address = t.Address,
+                DateOfBirthday = t.DateOfBirthday,
+                MedRec = t.MedRec,
+                Avt = t.Avt,
+            }).ToList();
+
+            return staff;
+        }
+
+        public async Task<List<EmployeeDto>> ViewDentList(int page, int limit)
+        {
+            IQueryable<User> query = _context.Users.Where(t => t.Role == 4);
+            if (limit > 0)
+            {
+                query = query.Skip(page * limit)
+                             .Take(limit);
+            }
+            var dentList = await query.ToListAsync();
+
+            var dentist = dentList.Select(t => new EmployeeDto
+            {
+                Id = t.Id,
+                Role = (int)t.Role,
+                Username = t.Username,
+                Email = t.Email,
+                Password = t.Password,
+                FirstName = t.FirstName,
+                LastName = t.LastName,
+                Gender = (bool)t.Gender,
+                Phone = t.Phone,
+                Address = t.Address,
+                DateOfBirthday = t.DateOfBirthday,
+                MedRec = t.MedRec,
+                Avt = t.Avt,
+            }).ToList();
+
+            return dentist;
+        }
+
+        public async Task<List<EmployeeDto>> ViewManagerList(int page, int limit)
+        {
+            IQueryable<User> query = _context.Users.Where(t => t.Role == 2);
+            if (limit > 0)
+            {
+                query = query.Skip(page * limit)
+                             .Take(limit);
+            }
+            var mngList = await query.ToListAsync();
+
+            var manager = mngList.Select(t => new EmployeeDto
+            {
+                Id = t.Id,
+                Role = (int)t.Role,
+                Username = t.Username,
+                Email = t.Email,
+                Password = t.Password,
+                FirstName = t.FirstName,
+                LastName = t.LastName,
+                Gender = (bool)t.Gender,
+                Phone = t.Phone,
+                Address = t.Address,
+                DateOfBirthday = t.DateOfBirthday,
+                MedRec = t.MedRec,
+                Avt = t.Avt,
+            }).ToList();
+
+            return manager;
+
         }
     }
 }

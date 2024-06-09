@@ -134,5 +134,63 @@ namespace swp391_debo_be.Services.Implements
             }
             return response;
         }
+
+        public async Task<ApiRespone> ViewStaffList(int page, int limit)
+        {
+            var response = new ApiRespone();
+            try
+            {
+                var data = await CUser.ViewStaffList(page, limit);
+                response.StatusCode = HttpStatusCode.OK;
+                response.Data = new { list = data, total = data.Count };
+                response.Success = true;
+                response.Message = "Staff list data retrieved successfully.";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+        public async Task<ApiRespone> ViewDentList(int page, int limit)
+        {
+            var response = new ApiRespone();
+            try
+            {
+                var data = await CUser.ViewDentList(page, limit);
+                response.StatusCode = HttpStatusCode.OK;
+                response.Data = new { list = data, total = data.Count };
+                response.Success = true;
+                response.Message = "Dentist list data retrieved successfully.";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+        public async Task<ApiRespone> ViewManagerList(int page, int limit)
+        {
+            var response = new ApiRespone();
+            try
+            {
+                var data = await CUser.ViewManagerList(page, limit);
+                response.StatusCode = HttpStatusCode.OK;
+                response.Data = new { list = data, total = data.Count };
+                response.Success = true;
+                response.Message = "Manager list data retrieved successfully.";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
     }
 }
