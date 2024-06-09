@@ -150,11 +150,12 @@ namespace swp391_debo_be.Services.Implements
                     return new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Data = null, Message = "Invalid dentist id or date", Success = false };
                 }
 
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
-
+        }
         public async Task<ApiRespone> GetHistoryAppointmentByUserID(Guid userId)
         {
             var response = new ApiRespone();
