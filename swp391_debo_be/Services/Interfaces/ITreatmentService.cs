@@ -11,6 +11,7 @@ namespace swp391_debo_be.Services.Interfaces
         public Task<ApiRespone> addTreatmentAsync(TreatmentDto treatment);
         public Task<ApiRespone> updateTreatmentAsync(int id, TreatmentDto treatment);
         public Task<ApiRespone> deleteTreatmentAsync(int id);
+        public Task<ApiRespone> activeTreatmentAsync(int id);
         public ActionResult<ApiRespone> GetTreatmentsBasedBranchId(int branchId);
     }
 }

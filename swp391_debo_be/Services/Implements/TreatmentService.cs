@@ -74,6 +74,37 @@ namespace swp391_debo_be.Services.Implements
             return response;
         }
 
+        public async Task<ApiRespone> activeTreatmentAsync(int id)
+        {
+            var response = new ApiRespone();
+            try
+            {
+                var existingTreatments = await CTreatment.getTreatmentAsync(id);
+                if (existingTreatments != null)
+                {
+                    await CTreatment.activeTreatmentAsync(id);
+                    response.StatusCode = HttpStatusCode.OK;
+                    response.Data = existingTreatments;
+                    response.Success = true;
+                    response.Message = "Treatment data is activated successfully.";
+                }
+                else
+                {
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.Success = false;
+                    response.Message = "Treatment not found.";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
         public async Task<ApiRespone> getAllTreatmentAsync(int page, int limit)
         {
             var response = new ApiRespone();
@@ -81,7 +112,7 @@ namespace swp391_debo_be.Services.Implements
             {
                 var data = await CTreatment.getAllTreatmentAsync(page, limit);
                 response.StatusCode = HttpStatusCode.OK;
-                response.Data = data;
+                response.Data = new { list = data, total = limit };
                 response.Success = true;
                 response.Message = "Treatment data retrieved successfully.";
             }
@@ -136,7 +167,8 @@ namespace swp391_debo_be.Services.Implements
 
                 return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = data, Success = true, Message = "Fetched treatments within constraints successfully" };
 
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
             }
@@ -151,14 +183,28 @@ namespace swp391_debo_be.Services.Implements
                 {
                     response.StatusCode = HttpStatusCode.NotFound;
                     response.Success = false;
-                    response.Message = "This Treatment does not exist in system";
+                    response.Message = "Treatment ID mismatch";
+                }
+                var data = await CTreatment.getTreatmentAsync(id);
+                if (data == null)
+                {
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.Success = false;
+                    response.Message = "Treatment not found or inactive.";
                 }
                 await CTreatment.updateTreatmentAsync(id, treatment);
-                var data = await CTreatment.getTreatmentAsync(id);
+                var updTreat = await CTreatment.getTreatmentAsync(id);
                 response.StatusCode = HttpStatusCode.OK;
-                response.Data = data;
+                response.Data = updTreat;
                 response.Success = true;
                 response.Message = "Treatment data updated successfully.";
+
+            }
+            catch (InvalidOperationException ex)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.Success = false;
+                response.Message = ex.Message;
             }
             catch (Exception ex)
             {

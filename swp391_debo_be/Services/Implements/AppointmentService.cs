@@ -5,6 +5,7 @@ using swp391_debo_be.Cores;
 using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
 using swp391_debo_be.Services.Interfaces;
+using System.Net;
 
 namespace swp391_debo_be.Services.Implements
 {
@@ -128,6 +129,7 @@ namespace swp391_debo_be.Services.Implements
             }
         }
 
+
         public ApiRespone GetApppointmentsByDentistIdAndDate(string dentistId, string date)
         {
             try
@@ -152,6 +154,25 @@ namespace swp391_debo_be.Services.Implements
             {
                 return new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
+
+        public async Task<ApiRespone> GetHistoryAppointmentByUserID(Guid userId)
+        {
+            var response = new ApiRespone();
+            try
+            {
+                var data = await CAppointment.GetHistoryAppointmentByUserID(userId);
+                response.StatusCode = HttpStatusCode.OK;
+                response.Data = data;
+                response.Success = true;
+                response.Message = "Treatment data retrieved successfully.";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
         }
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using swp391_debo_be.Auth;
 using swp391_debo_be.Constants;
 using swp391_debo_be.Dto.Implement;
+using swp391_debo_be.Entity.Implement;
 using swp391_debo_be.Services.Interfaces;
 
 namespace swp391_debo_be.Controllers
@@ -23,7 +24,7 @@ namespace swp391_debo_be.Controllers
         }
 
         [HttpGet("patient/calendar")]
-        public ActionResult<ApiRespone> GetAppointmentsByStartDateAndEndDate([FromQuery] string start, [FromQuery] string end, [FromQuery] string view)
+        public ActionResult<ApiRespone> GetAppointmentsByStartDateAndEndDate([FromQuery] string startDate, [FromQuery] string endDate, [FromQuery] string view)
         {
             string? userId = JwtProvider.GetUserId(Request);
 
@@ -101,6 +102,16 @@ namespace swp391_debo_be.Controllers
             }
 
             return userId;
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetHistoryAppointmentByUserID(Guid id)
+        {
+            var response = await _appointmentService.GetHistoryAppointmentByUserID(id);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
         }
     }
 }

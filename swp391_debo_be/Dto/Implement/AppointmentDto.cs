@@ -12,6 +12,7 @@ namespace swp391_debo_be.Dto.Implement
         public int? TreatId { get; set; }
 
         [Required]
+
         public Guid? DentId { get; set; }
 
         public Guid? TempDentId { get; set; }
@@ -33,6 +34,7 @@ namespace swp391_debo_be.Dto.Implement
 
         [Required]
         [RegularExpression("^(cancelled|pending|future|on-going|done)$", ErrorMessage = "Invalid status value")]
+
         public string? Status { get; set; }
 
         public string? Description { get; set; }

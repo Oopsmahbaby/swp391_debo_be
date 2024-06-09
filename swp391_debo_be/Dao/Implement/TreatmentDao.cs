@@ -26,6 +26,7 @@ namespace swp391_debo_be.Dao.Implement
                 Name = treatment.Name,
                 Description = treatment.Description,
                 Price = treatment.Price,
+                Status = true,
             };
             _context.ClinicTreatments.Add(newTreat);
             await _context.SaveChangesAsync();
@@ -37,27 +38,35 @@ namespace swp391_debo_be.Dao.Implement
             var deleteTreat = _context.ClinicTreatments!.SingleOrDefault(u => u.Id == id);
             if (deleteTreat != null)
             {
-                _context.ClinicTreatments.Remove(deleteTreat);
+                deleteTreat.Status = false;
+                _context.ClinicTreatments.Update(deleteTreat);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task activeTreatmentAsync(int id)
+        {
+            var activeTreat = _context.ClinicTreatments!.SingleOrDefault(u => u.Id == id);
+            if (activeTreat != null)
+            {
+                activeTreat.Status = true;
+                _context.ClinicTreatments.Update(activeTreat);
                 await _context.SaveChangesAsync();
             }
         }
 
         public async Task<List<TreatmentDto>> getAllTreatmentAsync(int page, int limit)
         {
-            var treatments = new List<ClinicTreatment>();
-            if (limit < 0)
+            IQueryable<ClinicTreatment> query = _context.ClinicTreatments
+                                                         .Where(t => t.Status == true);
+
+            if (limit > 0)
             {
-                treatments = await _context.ClinicTreatments
-                                           .ToListAsync();
-            }
-            else
-            {
-                treatments = await _context.ClinicTreatments
-                                           .Skip((page - 1) * limit)
-                                           .Take(limit)
-                                           .ToListAsync();
+                query = query.Skip(page * limit)
+                             .Take(limit);
             }
 
+            var treatments = await query.ToListAsync();
 
             var treatmentDtos = treatments.Select(t => new TreatmentDto
             {
@@ -71,6 +80,7 @@ namespace swp391_debo_be.Dao.Implement
             return treatmentDtos;
         }
 
+
         public List<ClinicTreatment> GetDentistsBasedOnBranchId(int branchId)
         {
             var treatments = _context.ClinicBranches
@@ -81,12 +91,12 @@ namespace swp391_debo_be.Dao.Implement
                 .ToList();
             return treatments;
 
-         }
+        }
 
         public async Task<TreatmentDto> getTreatmentAsync(int id)
         {
             var treatment = await _context.ClinicTreatments.FindAsync(id);
-            if (treatment == null)
+            if (treatment == null || treatment.Status != true)
             {
                 return null; // or throw an appropriate exception
             }
@@ -103,19 +113,22 @@ namespace swp391_debo_be.Dao.Implement
 
         public async Task updateTreatmentAsync(int id, TreatmentDto treatment)
         {
-            if (id == treatment.Id)
-            {
-                var existingTreat = await _context.ClinicTreatments.FindAsync(id);
-                if (existingTreat != null)
-                {
-                    existingTreat.Category = treatment.Category;
-                    existingTreat.Name = treatment.Name;
-                    existingTreat.Description = treatment.Description;
-                    existingTreat.Price = treatment.Price;
+            var existingTreat = await _context.ClinicTreatments.FindAsync(id);
 
-                    _context.ClinicTreatments.Update(existingTreat);
-                    await _context.SaveChangesAsync();
-                }
+            if (existingTreat == null || existingTreat.Status != true || id != treatment.Id)
+            {
+                // Handle the case when the treatment is not found or status is not true, or IDs do not match
+                throw new InvalidOperationException("Treatment not found, inactive, or ID mismatch.");
+            }
+            else
+            {
+                existingTreat.Category = treatment.Category;
+                existingTreat.Name = treatment.Name;
+                existingTreat.Description = treatment.Description;
+                existingTreat.Price = treatment.Price;
+
+                _context.ClinicTreatments.Update(existingTreat);
+                await _context.SaveChangesAsync();
             }
         }
     }

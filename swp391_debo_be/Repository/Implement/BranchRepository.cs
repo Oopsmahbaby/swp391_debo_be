@@ -1,4 +1,5 @@
-﻿using swp391_debo_be.Dao.Interface;
+﻿using swp391_debo_be.Dao.Implement;
+using swp391_debo_be.Dao.Interface;
 using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Repository.Interface;
 
@@ -21,6 +22,11 @@ namespace swp391_debo_be.Repository.Implement
         public Task deleteBranchAsync(int id)
         {
             return _branchDao.deleteBranchAsync(id);
+        }
+
+        public Task activeBranchAsync(int id)
+        {
+            return _branchDao.activeBranchAsync(id);
         }
 
         public Task<List<BranchDto>> getAllBranchAsync(int page, int limit)

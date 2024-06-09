@@ -1,4 +1,5 @@
 ﻿using Azure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using swp391_debo_be.Constants;
@@ -26,7 +27,8 @@ namespace swp391_debo_be.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllTreatment([FromQuery] int page = 1, [FromQuery] int limit = 5)
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> GetAllTreatment([FromQuery] int page = 0, [FromQuery] int limit = 5)
         {
             var response = await _treatService.getAllTreatmentAsync(page,limit);
             return new ObjectResult(response)
@@ -66,7 +68,7 @@ namespace swp391_debo_be.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTreatment(int id, TreatmentDto model)
+        public async Task<IActionResult> UpdateTreatment(int id, [FromBody] TreatmentDto model)
         {
             var response = await _treatService.updateTreatmentAsync(id,model);
             return new ObjectResult(response)

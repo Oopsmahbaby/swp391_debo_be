@@ -10,6 +10,16 @@ namespace swp391_debo_be.Repository.Implement
     public class AppointmentRepository : IAppointmentRepository
     {
         private readonly IAppointmentDao appointmentDao = new AppointmentDao();
+        private readonly IAppointmentDao _appointmentDao;
+
+        public AppointmentRepository()
+        {
+        }
+
+        public AppointmentRepository(IAppointmentDao appointmentDao)
+        {
+            _appointmentDao = appointmentDao;
+        }
 
         public bool CreateAppointment(AppointmentDto appointment)
         {
@@ -34,6 +44,9 @@ namespace swp391_debo_be.Repository.Implement
         public Appointment CancelAppointment(Guid appointmentId)
         {
             return appointmentDao.CancelAppointment(appointmentId);
+        public Task<List<AppointmentHistoryDto>> GetHistoryAppointmentByUserID(Guid id)
+        {
+            return _appointmentDao.GetHistoryAppointmentByUserID (id);
         }
     }
 }

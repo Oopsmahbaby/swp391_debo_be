@@ -139,6 +139,19 @@ namespace swp391_debo_be.Dao.Implement
             List<int> availableSlots = Slot.GetSlots(nonAvailableSlots);
 
             return availableSlots;
+
+        public async Task<List<AppointmentHistoryDto>> GetHistoryAppointmentByUserID(Guid id)
+        {
+            var appointments = await (from a in _context.Appointments
+                               join ct in _context.ClinicTreatments on a.TreatId equals ct.Id
+                               where a.CusId == id
+                               select new AppointmentHistoryDto
+                               {
+                                   TreatmentName = ct.Name,
+                                   CreatedDate = a.CreatedDate,
+                                   StartDate = a.StartDate
+                               }).ToListAsync();
+            return appointments;
         }
     }
 }
