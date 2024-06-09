@@ -12,6 +12,11 @@ namespace swp391_debo_be.Dao.Implement
         private readonly DeboDev02Context _context = new DeboDev02Context(new Microsoft.EntityFrameworkCore.DbContextOptions<DeboDev02Context>());
         public AppointmentDao() { }
 
+        public AppointmentDao(DeboDev02Context context)
+        {
+            _context = context;
+        }
+
         public Appointment CancelAppointment(Guid appointmentId)
         {
             Appointment appointment = _context.Appointments
@@ -139,7 +144,7 @@ namespace swp391_debo_be.Dao.Implement
             List<int> availableSlots = Slot.GetSlots(nonAvailableSlots);
 
             return availableSlots;
-
+        }
         public async Task<List<AppointmentHistoryDto>> GetHistoryAppointmentByUserID(Guid id)
         {
             var appointments = await (from a in _context.Appointments

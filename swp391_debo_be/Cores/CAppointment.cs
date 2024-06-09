@@ -69,12 +69,12 @@ namespace swp391_debo_be.Cores
             try
             {
                 return appointmentRepository.CancelAppointment(appointmentId);
-            } catch
+            }
+            catch
             {
                 throw;
             }
-
-
+        }
         public static Task<List<AppointmentHistoryDto>> GetHistoryAppointmentByUserID(Guid id)
         {
                 return _appointmentRepo.GetHistoryAppointmentByUserID(id);

@@ -44,6 +44,7 @@ namespace swp391_debo_be.Repository.Implement
         public Appointment CancelAppointment(Guid appointmentId)
         {
             return appointmentDao.CancelAppointment(appointmentId);
+        }
         public Task<List<AppointmentHistoryDto>> GetHistoryAppointmentByUserID(Guid id)
         {
             return _appointmentDao.GetHistoryAppointmentByUserID (id);
