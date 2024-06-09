@@ -1,4 +1,7 @@
-﻿using swp391_debo_be.Entity.Implement;
+﻿using Microsoft.EntityFrameworkCore;
+using swp391_debo_be.Dao.Implement;
+using swp391_debo_be.Dto.Implement;
+using swp391_debo_be.Entity.Implement;
 using swp391_debo_be.Helpers;
 using swp391_debo_be.Repository.Implement;
 using swp391_debo_be.Repository.Interface;
@@ -8,6 +11,12 @@ namespace swp391_debo_be.Cores
     public class CUser
     {
         protected static IUserRepository _userRepository = new UserRepository();
+
+        static CUser()
+        {
+            var context = new DeboDev02Context(new DbContextOptions<DeboDev02Context>());
+            _userRepository = new UserRepository(new UserDao(context));
+        }
 
         public static User GetUserByPhoneNumber(string phoneNumber)
         {
@@ -52,6 +61,21 @@ namespace swp391_debo_be.Cores
         {
             string hashedPassword = Helper.HashPassword(password);
             return _userRepository.IsPasswordExist(hashedPassword, user);
+        }
+
+        public static Task<Guid> CreateNewStaff(EmployeeDto employee)
+        {
+            return _userRepository.CreateNewStaff(employee);
+        }
+
+        public static Task<Guid> CreateNewDent(EmployeeDto employee)
+        {
+            return _userRepository.CreateNewDent(employee);
+        }
+
+        public static Task<Guid> CreateNewManager(EmployeeDto employee)
+        {
+            return _userRepository.CreateNewManager(employee);
         }
     }
 }

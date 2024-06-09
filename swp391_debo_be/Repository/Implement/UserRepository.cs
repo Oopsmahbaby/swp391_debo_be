@@ -1,5 +1,6 @@
 ﻿using swp391_debo_be.Dao.Implement;
 using swp391_debo_be.Dao.Interface;
+using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
 using swp391_debo_be.Repository.Interface;
 
@@ -12,6 +13,11 @@ namespace swp391_debo_be.Repository.Implement
         public UserRepository()
         {
             this._userDao = new UserDao();
+        }
+
+        public UserRepository(IUserDao userDao)
+        {
+            _userDao = userDao;
         }
 
         public User CreateUser(User user)
@@ -73,6 +79,21 @@ namespace swp391_debo_be.Repository.Implement
         public bool IsPasswordExist(string password, User user)
         {
             return _userDao.IsPasswordExist(password, user);
+        }
+
+        public Task<Guid> CreateNewStaff(EmployeeDto employee)
+        {
+            return _userDao.CreateNewStaff(employee);
+        }
+
+        public Task<Guid> CreateNewDent(EmployeeDto employee)
+        {
+            return _userDao.CreateNewDentist(employee);
+        }
+
+        public Task<Guid> CreateNewManager(EmployeeDto employee)
+        {
+            return _userDao.CreateNewManager(employee);
         }
     }
 }

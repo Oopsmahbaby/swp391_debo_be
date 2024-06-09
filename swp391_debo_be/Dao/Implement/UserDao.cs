@@ -1,6 +1,8 @@
 ﻿using swp391_debo_be.Dao.Interface;
 using swp391_debo_be.DBContext;
+using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
+using swp391_debo_be.Helpers;
 
 namespace swp391_debo_be.Dao.Implement
 {
@@ -133,6 +135,75 @@ namespace swp391_debo_be.Dao.Implement
             }
 
             return false;
+        }
+
+        public async Task<Guid> CreateNewStaff(EmployeeDto employee)
+        {
+            var newStaff = new User
+            {
+                Id = new Guid(Guid.NewGuid().ToString()),
+                Role = 3,
+                Username = employee.Username,
+                Email = employee.Email,
+                Password = Helper.HashPassword(employee.Password),
+                FirstName = employee.FirstName,
+                LastName = employee.LastName,
+                Gender = employee.Gender,
+                Phone = employee.Phone,
+                Address = employee.Address,
+                DateOfBirthday = employee.DateOfBirthday,
+                MedRec = employee.MedRec,
+                Avt = employee.Avt,
+            };
+            _context.Users.Add(newStaff);
+            await _context.SaveChangesAsync();
+            return newStaff.Id;
+        }
+
+        public async Task<Guid> CreateNewDentist(EmployeeDto employee)
+        {
+            var newDent = new User
+            {
+                Id = new Guid(Guid.NewGuid().ToString()),
+                Role = 4,
+                Username = employee.Username,
+                Email = employee.Email,
+                Password = Helper.HashPassword(employee.Password),
+                FirstName = employee.FirstName,
+                LastName = employee.LastName,
+                Gender = employee.Gender,
+                Phone = employee.Phone,
+                Address = employee.Address,
+                DateOfBirthday = employee.DateOfBirthday,
+                MedRec = employee.MedRec,
+                Avt = employee.Avt,
+            };
+            _context.Users.Add(newDent);
+            await _context.SaveChangesAsync();
+            return newDent.Id;
+        }
+
+        public async Task<Guid> CreateNewManager(EmployeeDto employee)
+        {
+            var newManager = new User
+            {
+                Id = new Guid(Guid.NewGuid().ToString()),
+                Role = 2,
+                Username = employee.Username,
+                Email = employee.Email,
+                Password = Helper.HashPassword(employee.Password),
+                FirstName = employee.FirstName,
+                LastName = employee.LastName,
+                Gender = employee.Gender,
+                Phone = employee.Phone,
+                Address = employee.Address,
+                DateOfBirthday = employee.DateOfBirthday,
+                MedRec = employee.MedRec,
+                Avt = employee.Avt,
+            };
+            _context.Users.Add(newManager);
+            await _context.SaveChangesAsync();
+            return newManager.Id;
         }
     }
 }

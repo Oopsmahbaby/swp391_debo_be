@@ -1,4 +1,5 @@
 ﻿using Microsoft.Owin.Security;
+using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
 
 namespace swp391_debo_be.Repository.Interface
@@ -26,5 +27,9 @@ namespace swp391_debo_be.Repository.Interface
         public bool SaveRefreshToken(Guid userId, string refreshToken);
         public bool DeleteRefreshToken(Guid userId);
         public bool IsPasswordExist(string password, User user);
+
+        public Task<Guid> CreateNewStaff(EmployeeDto employee);
+        public Task<Guid> CreateNewDent(EmployeeDto employee);
+        public Task<Guid> CreateNewManager(EmployeeDto employee);
     }
 }

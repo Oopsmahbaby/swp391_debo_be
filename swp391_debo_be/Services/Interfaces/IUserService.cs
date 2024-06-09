@@ -10,5 +10,9 @@ namespace swp391_debo_be.Services.Interfaces
         public ApiRespone CreateUser(CreateUserDto createUserDto);
         public List<User> GetUsers();
         object? GetProfile(string? userId);
+
+        public Task<ApiRespone> CreateNewStaff(EmployeeDto employee);
+        public Task<ApiRespone> CreateNewDent(EmployeeDto employee);
+        public Task<ApiRespone> CreateNewManager(EmployeeDto employee);
     }
 }
