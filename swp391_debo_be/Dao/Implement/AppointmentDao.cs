@@ -133,7 +133,7 @@ namespace swp391_debo_be.Dao.Implement
             List<int> nonAvailableSlots = new List<int>();
 
             var appointments = _context.Appointments
-                .Where(a => a.DentId == dentistId && a.StartDate == date)
+                .Where(a => Guid.Equals(a.DentId, dentistId) && a.StartDate == date)
                 .ToList();
 
             foreach (Appointment appointment in appointments)
