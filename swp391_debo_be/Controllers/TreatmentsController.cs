@@ -78,7 +78,7 @@ namespace swp391_debo_be.Controllers
 
         }
 
-        [HttpGet("treatments")]
+        [HttpGet]
         public ActionResult<ApiRespone> GetTreatmentBasedBranchId([FromQuery] int branchId)
         {
             var response = _treatService.GetTreatmentsBasedBranchId(branchId);
