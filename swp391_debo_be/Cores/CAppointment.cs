@@ -53,7 +53,7 @@ namespace swp391_debo_be.Cores
             }
         }
 
-        public static bool CreateAppointment(AppointmentDto appointment)
+        public static Appointment CreateAppointment(Appointment appointment)
         {
             try
             {

@@ -21,7 +21,7 @@ namespace swp391_debo_be.Repository.Implement
             _appointmentDao = appointmentDao;
         }
 
-        public bool CreateAppointment(AppointmentDto appointment)
+        public Appointment CreateAppointment(Appointment appointment)
         {
             return appointmentDao.CreateAppointment(appointment);
         }
