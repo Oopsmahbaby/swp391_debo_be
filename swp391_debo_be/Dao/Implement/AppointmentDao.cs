@@ -89,7 +89,7 @@ namespace swp391_debo_be.Dao.Implement
 
             return new
             {
-                Count = totalCount,
+                Total = totalCount,
                 Appointments = result
             };
         }
