@@ -175,5 +175,24 @@ namespace swp391_debo_be.Services.Implements
             }
             return response;
         }
+
+        public async Task<ApiRespone> ViewAllAppointment(int page, int limit)
+        {
+            var response = new ApiRespone();
+            try
+            {
+                var data = await CAppointment.ViewAllAppointment(page, limit);
+                response.StatusCode = HttpStatusCode.OK;
+                response.Data = new { list = data, total = data.Count };
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
     }
 }

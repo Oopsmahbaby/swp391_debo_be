@@ -79,5 +79,10 @@ namespace swp391_debo_be.Cores
         {
                 return _appointmentRepo.GetHistoryAppointmentByUserID(id);
         }
+
+        public static Task<List<AppointmentDto>> ViewAllAppointment(int page, int limit)
+        {
+            return _appointmentRepo.ViewAllAppointment(page, limit);
+        }
     }
 }

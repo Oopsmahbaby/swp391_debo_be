@@ -12,5 +12,6 @@ namespace swp391_debo_be.Dao.Interface
         public bool CreateAppointment(AppointmentDto dto);
         public Appointment CancelAppointment(Guid appointmentId);
         public Task<List<AppointmentHistoryDto>> GetHistoryAppointmentByUserID(Guid id);
+        public Task<List<AppointmentDto>> ViewAllAppointment(int page, int limit);
     }
 }

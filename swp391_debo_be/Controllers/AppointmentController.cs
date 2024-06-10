@@ -104,10 +104,20 @@ namespace swp391_debo_be.Controllers
             return userId;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("viewhistoryappoinment")]
         public async Task<IActionResult> GetHistoryAppointmentByUserID(Guid id)
         {
             var response = await _appointmentService.GetHistoryAppointmentByUserID(id);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+
+        [HttpGet("viewallappointment")]
+        public async Task<IActionResult> ViewAllAppointment([FromQuery] int page = 0, [FromQuery] int limit = 5)
+        {
+            var response = await _appointmentService.ViewAllAppointment(page, limit);
             return new ObjectResult(response)
             {
                 StatusCode = (int)response.StatusCode

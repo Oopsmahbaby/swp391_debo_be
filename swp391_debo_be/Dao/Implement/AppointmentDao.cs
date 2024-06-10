@@ -158,5 +158,38 @@ namespace swp391_debo_be.Dao.Implement
                                }).ToListAsync();
             return appointments;
         }
+
+        public async Task<List<AppointmentDto>> ViewAllAppointment(int page, int limit)
+        {
+            IQueryable<AppointmentDto> query = from a in _context.Appointments
+                                               join ct in _context.ClinicTreatments on a.TreatId equals ct.Id
+                                               select new AppointmentDto
+                                               {
+                                                   Id = a.Id,
+                                                   TreatName = ct.Name,
+                                                   PaymentId = (Guid)a.PaymentId,
+                                                   DentId = a.DentId,
+                                                   TempDentId = a.TempDentId,
+                                                   CusId = a.CusId,
+                                                   CreatorId = a.CreatorId,
+                                                   IsCreatedByStaff = a.IsCreatedByStaff,
+                                                   CreatedDate = a.CreatedDate,
+                                                   StartDate = a.StartDate,
+                                                   TimeSlot = a.TimeSlot,
+                                                   Status = a.Status,
+                                                   Description = a.Description,
+                                                   Note = a.Note,
+                                               };
+
+            if (limit > 0)
+            {
+                query = query.Skip(page * limit).Take(limit);
+            }
+
+            var appointments = await query.ToListAsync();
+            return appointments;
+        }
+
+
     }
 }
