@@ -59,9 +59,9 @@ namespace swp391_debo_be.Controllers
         [HttpPost("appointment")]
         public ActionResult<ApiRespone> CreateAppointment([FromBody] AppointmentDto dto)
         {
-            string role = JwtProvider.GetRole("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJjNDkyZDI4MC02NTAwLTRlYmUtYjM0MS01ZGJiMDYxMjk4NWIiLCJlbWFpbCI6Im5ndXllbjIyQGdtYWlsLmNvbSIsInVuaXF1ZV9uYW1lIjoiIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiIwOTAxMjM0MjIyIiwicm9sZSI6IkN1c3RvbWVyIiwibmJmIjoxNzE4MDMwODYzLCJleHAiOjE3MTgwMzQ0NjMsImlhdCI6MTcxODAzMDg2M30.WEDFtyZZn8Wm1x5-qZ_WevIsJk9TsuRzZcSsJ_FzQ1w");
+            string role = JwtProvider.GetRole(Request);
 
-            string? userId = JwtProvider.GetUserId("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJjNDkyZDI4MC02NTAwLTRlYmUtYjM0MS01ZGJiMDYxMjk4NWIiLCJlbWFpbCI6Im5ndXllbjIyQGdtYWlsLmNvbSIsInVuaXF1ZV9uYW1lIjoiIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiIwOTAxMjM0MjIyIiwicm9sZSI6IkN1c3RvbWVyIiwibmJmIjoxNzE4MDMwODYzLCJleHAiOjE3MTgwMzQ0NjMsImlhdCI6MTcxODAzMDg2M30.WEDFtyZZn8Wm1x5-qZ_WevIsJk9TsuRzZcSsJ_FzQ1w");
+            string? userId = JwtProvider.GetUserId(Request);
 
             if (string.IsNullOrEmpty(userId) && string.IsNullOrEmpty(role))
             {
