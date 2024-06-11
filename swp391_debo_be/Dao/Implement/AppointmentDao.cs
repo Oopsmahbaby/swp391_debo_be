@@ -194,9 +194,10 @@ namespace swp391_debo_be.Dao.Implement
         public List<object> GetAppointmentsByStartDateAndEndDateOfDentist(DateOnly startDate, DateOnly endDate, Guid Id)
         {
             var appointments = _context.Appointments
-                                .Where(a => a.StartDate <= endDate &&
-                                            (a.TempDentId == Id || a.DentId == Id)).ToList();
-            if (appointments == null)
+                        .Where(a => a.StartDate >= startDate && a.StartDate <= endDate &&
+                                    (a.TempDentId == Id || a.DentId == Id) &&
+                                    a.Status != "pending" && a.Status != "canceled").ToList();
+            if (appointments == null || appointments.Count == 0)
             {
                 return new List<object>();
             }
@@ -206,7 +207,13 @@ namespace swp391_debo_be.Dao.Implement
             foreach (Appointment appointment in appointments)
             {
                 var treatmeant = _context.ClinicTreatments.Where(t => t.Id == appointment.TreatId).FirstOrDefault();
-                result.Add(new { Id = appointment.Id, start = (DateOnly)appointment.StartDate, TimeSlot = appointment.TimeSlot, name = treatmeant?.Name });
+                result.Add(new 
+                { 
+                    Id = appointment.Id, 
+                    start = (DateOnly)appointment.StartDate, 
+                    TimeSlot = appointment.TimeSlot, 
+                    name = treatmeant?.Name 
+                });
             }
 
             return result;
