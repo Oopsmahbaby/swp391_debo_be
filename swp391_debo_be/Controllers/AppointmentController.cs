@@ -123,5 +123,19 @@ namespace swp391_debo_be.Controllers
                 StatusCode = (int)response.StatusCode
             };
         }
+
+        [HttpGet("dentist/calendar")]
+        public ActionResult<ApiRespone> GetAppointmentsByStartDateAndEndDateOfDentist([FromQuery] string startDate, [FromQuery] string endDate, [FromQuery] string view)
+        {
+            string? userId = JwtProvider.GetUserId(Request);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return new ApiRespone { Data = null, Message = "Authorization header is required", Success = false };
+            }
+
+            return _appointmentService.GetAppointmentsByStartDateAndEndDateOfDentist(startDate, endDate, userId);
+
+        }
     }
 }

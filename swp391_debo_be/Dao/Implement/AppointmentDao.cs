@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using swp391_debo_be.Dao.Interface;
 using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
@@ -85,7 +86,7 @@ namespace swp391_debo_be.Dao.Implement
 
             foreach (Appointment appointment in appointments)
             {
-                var treatment =  _context.ClinicTreatments
+                var treatment = _context.ClinicTreatments
                     .Where(t => t.Id == appointment.TreatId)
                     .FirstOrDefaultAsync();
 
@@ -109,7 +110,7 @@ namespace swp391_debo_be.Dao.Implement
 
         public List<object> GetAppointmentsByStartDateAndEndDate(DateOnly startDate, DateOnly endDate, Guid Id)
         {
-          var appointments = _context.Appointments.Where(a => a.StartDate >= startDate && a.StartDate <= endDate && Guid.Equals(a.CusId, Id)).ToList();
+            var appointments = _context.Appointments.Where(a => a.StartDate >= startDate && a.StartDate <= endDate && Guid.Equals(a.CusId, Id)).ToList();
 
 
             if (appointments == null)
@@ -148,14 +149,14 @@ namespace swp391_debo_be.Dao.Implement
         public async Task<List<AppointmentHistoryDto>> GetHistoryAppointmentByUserID(Guid id)
         {
             var appointments = await (from a in _context.Appointments
-                               join ct in _context.ClinicTreatments on a.TreatId equals ct.Id
-                               where a.CusId == id
-                               select new AppointmentHistoryDto
-                               {
-                                   TreatmentName = ct.Name,
-                                   CreatedDate = a.CreatedDate,
-                                   StartDate = a.StartDate
-                               }).ToListAsync();
+                                      join ct in _context.ClinicTreatments on a.TreatId equals ct.Id
+                                      where a.CusId == id
+                                      select new AppointmentHistoryDto
+                                      {
+                                          TreatmentName = ct.Name,
+                                          CreatedDate = a.CreatedDate,
+                                          StartDate = a.StartDate
+                                      }).ToListAsync();
             return appointments;
         }
 
@@ -190,6 +191,25 @@ namespace swp391_debo_be.Dao.Implement
             return appointments;
         }
 
+        public List<object> GetAppointmentsByStartDateAndEndDateOfDentist(DateOnly startDate, DateOnly endDate, Guid Id)
+        {
+            var appointments = _context.Appointments
+                                .Where(a => a.StartDate <= endDate &&
+                                            (a.TempDentId == Id || a.DentId == Id)).ToList();
+            if (appointments == null)
+            {
+                return new List<object>();
+            }
 
+            List<object> result = new List<object>();
+
+            foreach (Appointment appointment in appointments)
+            {
+                var treatmeant = _context.ClinicTreatments.Where(t => t.Id == appointment.TreatId).FirstOrDefault();
+                result.Add(new { Id = appointment.Id, start = (DateOnly)appointment.StartDate, TimeSlot = appointment.TimeSlot, name = treatmeant?.Name });
+            }
+
+            return result;
+        }
     }
 }

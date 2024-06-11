@@ -129,6 +129,33 @@ namespace swp391_debo_be.Services.Implements
             }
         }
 
+        public ApiRespone GetAppointmentsByStartDateAndEndDateOfDentist(string startDate, string endDate, string userId)
+        {
+            try
+            {
+                if (DateOnly.TryParse(startDate, out DateOnly start) && DateOnly.TryParse(endDate, out DateOnly end) && Guid.TryParse(userId, out Guid Id))
+                {
+
+                    ActionResult<List<object>> appointments = CAppointment.GetAppointmentsByStartDateAndEndDateOfDentist(start, end, Id);
+
+
+                    if (appointments.Value.Count == 0)
+                    {
+                        return new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Data = null, Message = "No appointment found", Success = false };
+                    }
+
+                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.OK, Data = appointments, Message = "Get appointments successfully", Success = true };
+                }
+                else
+                {
+                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Data = null, Message = "Invalid date format", Success = false };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
+            }
+        }
 
         public ApiRespone GetApppointmentsByDentistIdAndDate(string dentistId, string date)
         {

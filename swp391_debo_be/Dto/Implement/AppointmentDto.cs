@@ -12,7 +12,7 @@ namespace swp391_debo_be.Dto.Implement
         public int? TreatId { get; set; }
 
         [Required]
-        public string TreatName { get; set; }
+        public string? TreatName { get; set; }
 
         public Guid? PaymentId { get; set; }
 

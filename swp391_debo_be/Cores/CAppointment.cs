@@ -84,5 +84,17 @@ namespace swp391_debo_be.Cores
         {
             return _appointmentRepo.ViewAllAppointment(page, limit);
         }
+
+        public static List<object> GetAppointmentsByStartDateAndEndDateOfDentist(DateOnly startDate, DateOnly endDate, Guid Id)
+        {
+            try
+            {
+                return appointmentRepository.GetAppointmentsByStartDateAndEndDateOfDentist(startDate, endDate, Id);
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }
