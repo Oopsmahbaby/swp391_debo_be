@@ -296,7 +296,58 @@ namespace swp391_debo_be.Dao.Implement
             }).ToList();
 
             return manager;
+        }
 
+        public async Task<List<EmployeeDto>> ViewCustomerList(int page, int limit)
+        {
+            IQueryable<User> query = _context.Users.Where(t => t.Role == 5);
+            if (limit > 0)
+            {
+                query = query.Skip(page * limit)
+                             .Take(limit);
+            }
+            var cusList = await query.ToListAsync();
+            var customer = cusList.Select(t => new EmployeeDto
+            {
+                Id = t.Id,
+                Role = (int)t.Role,
+                Username = t.Username,
+                Email = t.Email,
+                Password = t.Password,
+                FirstName = t.FirstName,
+                LastName = t.LastName,
+                Gender = (bool)t.Gender,
+                Phone = t.Phone,
+                Address = t.Address,
+                DateOfBirthday = t.DateOfBirthday,
+                MedRec = t.MedRec,
+                Avt = t.Avt,
+            }).ToList();
+            return customer;
+        }
+
+        public async Task<EmployeeDto> GetUserById2(Guid id)
+        {
+            var user = await (from u in _context.Users
+                              join r in _context.Roles on u.Role equals r.RoleId
+                              where u.Id == id
+                              select new EmployeeDto
+                              {
+                                  Id = u.Id,
+                                  Role = (int)u.Role,
+                                  RoleName = r.Role1,
+                                  Username = u.Username,
+                                  Email = u.Email,
+                                  FirstName = u.FirstName,
+                                  LastName = u.LastName,
+                                  Gender = (bool)u.Gender,
+                                  Phone = u.Phone,
+                                  Address = u.Address,
+                                  DateOfBirthday = u.DateOfBirthday,
+                                  MedRec = u.MedRec,
+                                  Avt = u.Avt,
+                              }).FirstOrDefaultAsync();
+            return user;
         }
     }
 }

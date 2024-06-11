@@ -36,5 +36,8 @@ namespace swp391_debo_be.Dao.Interface
         public Task<List<EmployeeDto>> ViewStaffList(int page, int limit);
         public Task<List<EmployeeDto>> ViewDentList(int page, int limit);
         public Task<List<EmployeeDto>> ViewManagerList(int page, int limit);
+        public Task<List<EmployeeDto>> ViewCustomerList(int page, int limit);
+        public Task<EmployeeDto> GetUserById2(Guid id);
+
     }
 }

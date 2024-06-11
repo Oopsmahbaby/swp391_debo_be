@@ -90,5 +90,13 @@ namespace swp391_debo_be.Cores
         {
             return _userRepository.ViewManagerList(page, limit);
         }
+        public static Task<List<EmployeeDto>> ViewCustomerList(int page, int limit)
+        {
+            return _userRepository.ViewCustomerList(page, limit);
+        }
+        public static Task<EmployeeDto> GetUserById2(Guid id)
+        {
+            return _userRepository.GetUserById2(id);
+        }
     }
 }
