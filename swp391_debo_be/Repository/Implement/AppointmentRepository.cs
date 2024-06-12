@@ -59,5 +59,10 @@ namespace swp391_debo_be.Repository.Implement
         {
             return appointmentDao.GetAppointmentsByStartDateAndEndDateOfDentist (startDate, endDate, id);
         }
+
+        public Task<List<AppointmentHistoryDto>> GetAppointmentByDentistId(int page, int limit, Guid dentistId)
+        {
+            return _appointmentDao.GetAppointmentByDentistId (page, limit, dentistId);
+        }
     }
 }

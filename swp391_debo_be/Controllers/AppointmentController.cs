@@ -135,7 +135,16 @@ namespace swp391_debo_be.Controllers
             }
 
             return _appointmentService.GetAppointmentsByStartDateAndEndDateOfDentist(start, end, userId);
+        }
 
+        [HttpGet("dentist/appointments")]
+        public async Task<IActionResult> GetAppointmentByDentistId(Guid dentistId, [FromQuery] int page = 0, [FromQuery] int limit = 5)
+        {
+            var response = await _appointmentService.GetAppointmentByDentistId(page, limit, dentistId);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
         }
     }
 }

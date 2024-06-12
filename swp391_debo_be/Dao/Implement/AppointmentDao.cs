@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using Microsoft.Extensions.Logging;
 using swp391_debo_be.Dao.Interface;
 using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
 using swp391_debo_be.Helpers;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace swp391_debo_be.Dao.Implement
 {
@@ -204,6 +206,28 @@ namespace swp391_debo_be.Dao.Implement
             }
 
             return result;
+        }
+
+        public async Task<List<AppointmentHistoryDto>> GetAppointmentByDentistId(int page, int limit, Guid dentistId)
+        {
+            var query = from a in _context.Appointments
+                                      join ct in _context.ClinicTreatments on a.TreatId equals ct.Id
+                                      where (a.TempDentId == dentistId || (a.TempDentId == null && a.DentId == dentistId))
+                                      select new AppointmentHistoryDto
+                                      {
+                                          Id = a.Id,
+                                          TreatName = ct.Name,
+                                          StartDate = a.StartDate,
+                                          CusId = a.CusId,
+                                          Status = a.Status,
+                                      };
+            if (limit > 0)
+            {
+                query = query.Skip(page * limit)
+                             .Take(limit);
+            }
+            var appointments = await query.ToListAsync();
+            return appointments;
         }
     }
 }
