@@ -40,26 +40,25 @@ namespace swp391_debo_be.Services.Implements
                     return new ApiRespone { StatusCode = System.Net.HttpStatusCode.Unauthorized, Data = null, Message = "You are not allowed to create appointment", Success = false };
                 }
 
-                if (Guid.TryParse(userId, out var id))
+                if (Guid.TryParse(userId, out var id) && Guid.TryParse(dto.DentId, out Guid dentId) && DateOnly.TryParse(dto.Date, out DateOnly startDate))
                 {
-                    AppointmentDto appointment = new AppointmentDto
+                    Appointment appointment = new Appointment
                     {
+                        Id = Guid.NewGuid(),
                         CusId = id,
                         CreatorId = id,
-                        DentId = dto.DentId,
-                        Status = "pending",
-                        Description = dto.Description,
-                        Note = dto.Note,
-                        IsCreatedByStaff = false,
-                        StartDate = DateOnly.FromDateTime(DateTime.Now),
-                        CreatedDate = DateOnly.FromDateTime(DateTime.Now),
+                        DentId = dentId,
+                        TreatId = dto.TreateId,
+                        StartDate = startDate,
+                        CreatedDate = startDate,
                         TimeSlot = dto.TimeSlot,
-                        TreatId = dto.TreatId
+                        IsCreatedByStaff = false,
+                        Status = "pending"
                     };
 
                     var result = CAppointment.CreateAppointment(appointment);
 
-                    return result ? new ApiRespone { StatusCode = System.Net.HttpStatusCode.Created, Data = result, Message = "Created appointment successfully", Success = true } 
+                    return result != null ? new ApiRespone { StatusCode = System.Net.HttpStatusCode.Created, Data = result,  Message = "Created appointment successfully", Success = true } 
                     : new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Data = null, Message = "Failed to create appointment", Success = false };
                 } else
                 {

@@ -24,7 +24,7 @@ namespace swp391_debo_be.Controllers
         }
 
         [HttpGet("patient/calendar")]
-        public ActionResult<ApiRespone> GetAppointmentsByStartDateAndEndDate([FromQuery] string startDate, [FromQuery] string endDate, [FromQuery] string view)
+        public ActionResult<ApiRespone> GetAppointmentsByStartDateAndEndDate([FromQuery] string start, [FromQuery] string end, [FromQuery] string view)
         {
             string? userId = JwtProvider.GetUserId(Request);
 
@@ -33,7 +33,7 @@ namespace swp391_debo_be.Controllers
                 return new ApiRespone { Data = null, Message = "Authorization header is required", Success = false };
             }
 
-            return _appointmentService.GetAppointmentsByStartDateAndEndDate(startDate, endDate, userId);
+            return _appointmentService.GetAppointmentsByStartDateAndEndDate(start, end, userId);
 
         }
 
@@ -68,7 +68,7 @@ namespace swp391_debo_be.Controllers
                 return new ApiRespone { Data = null, Message = "Authorization header is required", Success = false };
             }
 
-            return _appointmentService.CreateAppointment(dto, role, userId);
+            return _appointmentService.CreateAppointment(dto, userId, role);
         }
 
         [HttpDelete("appointment/{id}")]

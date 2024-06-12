@@ -6,6 +6,10 @@
 
         public static List<int> GetSlots(List<int> nonAvailableSlots) 
         {
+            if (nonAvailableSlots == null)
+            {
+                return new List<int>();
+            }
             List<int> availableSlots = definedSlot;
             foreach (int slot in nonAvailableSlots)
             {

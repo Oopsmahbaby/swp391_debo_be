@@ -21,7 +21,7 @@ namespace swp391_debo_be.Repository.Implement
             _appointmentDao = appointmentDao;
         }
 
-        public bool CreateAppointment(AppointmentDto appointment)
+        public Appointment CreateAppointment(Appointment appointment)
         {
             return appointmentDao.CreateAppointment(appointment);
         }
@@ -50,7 +50,7 @@ namespace swp391_debo_be.Repository.Implement
             return _appointmentDao.GetHistoryAppointmentByUserID (id);
         }
 
-        public Task<List<AppointmentDto>> ViewAllAppointment(int page, int limit)
+        public Task<List<AppointmentHistoryDto>> ViewAllAppointment(int page, int limit)
         {
             return _appointmentDao.ViewAllAppointment(page, limit);
         }

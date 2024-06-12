@@ -53,7 +53,7 @@ namespace swp391_debo_be.Cores
             }
         }
 
-        public static bool CreateAppointment(AppointmentDto appointment)
+        public static Appointment CreateAppointment(Appointment appointment)
         {
             try
             {
@@ -80,7 +80,7 @@ namespace swp391_debo_be.Cores
                 return _appointmentRepo.GetHistoryAppointmentByUserID(id);
         }
 
-        public static Task<List<AppointmentDto>> ViewAllAppointment(int page, int limit)
+        public static Task<List<AppointmentHistoryDto>> ViewAllAppointment(int page, int limit)
         {
             return _appointmentRepo.ViewAllAppointment(page, limit);
         }

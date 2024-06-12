@@ -36,27 +36,11 @@ namespace swp391_debo_be.Dao.Implement
             return appointment;
         }
 
-        public bool CreateAppointment(AppointmentDto dto)
-        {
-            Appointment addedAppointment = new Appointment
-            {
-                Id = Guid.NewGuid(),
-                CusId = dto.CusId,
-                CreatorId = dto.CreatorId,
-                DentId = dto.DentId,
-                TreatId = dto.TreatId,
-                StartDate = dto.StartDate,
-                TimeSlot = dto.TimeSlot,
-                Status = "pending",
-                Description = dto.Description,
-                Note = dto.Note,
-                IsCreatedByStaff = dto.IsCreatedByStaff,
-                CreatedDate = dto.CreatedDate
-            };
-
-            _context.Appointments.Add(addedAppointment);
+        public Appointment CreateAppointment(Appointment dto)
+        {   
+            _context.Appointments.Add(dto);
             _context.SaveChanges();
-            return true;
+            return dto;
         }
 
         public object GetAppointmentByPagination(string page, string limit, Guid userId)
@@ -92,19 +76,22 @@ namespace swp391_debo_be.Dao.Implement
 
                 result.Add(new
                 {
-                    Id = appointment.Id,
-                    Start = appointment.StartDate.HasValue ? (DateOnly)appointment.StartDate : default(DateOnly),
-                    TimeSlot = appointment.TimeSlot,
-                    Name = treatment?.Result.Name
-                });
+                    id = appointment.Id,
+                    start = appointment.StartDate.HasValue ? (DateOnly)appointment.StartDate : default(DateOnly),
+                    timeSlot = appointment.TimeSlot,
+                    name = treatment?.Result.Name,
+                    dentist = _context.Users.Where(u => u.Id == appointment.DentId).FirstOrDefault().FirstName + " " + _context.Users.Where(u => u.Id == appointment.DentId).FirstOrDefault().LastName,
+                    treatment = treatment?.Result.Name,
+                    status = appointment.Status
+                }); ;
             }
 
             int totalCount = _context.Appointments.Count(a => a.CusId == userId);
 
             return new
             {
-                Count = totalCount,
-                Appointments = result
+                Total = totalCount,
+                List = result
             };
         }
 
@@ -134,7 +121,7 @@ namespace swp391_debo_be.Dao.Implement
             List<int> nonAvailableSlots = new List<int>();
 
             var appointments = _context.Appointments
-                .Where(a => a.DentId == dentistId && a.StartDate == date)
+                .Where(a => Guid.Equals(a.DentId, dentistId) && a.StartDate == date)
                 .ToList();
 
             foreach (Appointment appointment in appointments)
@@ -153,18 +140,18 @@ namespace swp391_debo_be.Dao.Implement
                                       where a.CusId == id
                                       select new AppointmentHistoryDto
                                       {
-                                          TreatmentName = ct.Name,
+                                          TreatName = ct.Name,
                                           CreatedDate = a.CreatedDate,
                                           StartDate = a.StartDate
                                       }).ToListAsync();
             return appointments;
         }
 
-        public async Task<List<AppointmentDto>> ViewAllAppointment(int page, int limit)
+        public async Task<List<AppointmentHistoryDto>> ViewAllAppointment(int page, int limit)
         {
-            IQueryable<AppointmentDto> query = from a in _context.Appointments
+            IQueryable<AppointmentHistoryDto> query = from a in _context.Appointments
                                                join ct in _context.ClinicTreatments on a.TreatId equals ct.Id
-                                               select new AppointmentDto
+                                               select new AppointmentHistoryDto
                                                {
                                                    Id = a.Id,
                                                    TreatName = ct.Name,

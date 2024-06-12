@@ -30,7 +30,7 @@ namespace swp391_debo_be.Controllers
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> GetAllTreatment([FromQuery] int page = 0, [FromQuery] int limit = 5)
         {
-            var response = await _treatService.getAllTreatmentAsync(page,limit);
+            var response = await _treatService.getAllTreatmentAsync(page, limit);
             return new ObjectResult(response)
             {
                 StatusCode = (int)response.StatusCode
@@ -70,7 +70,7 @@ namespace swp391_debo_be.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTreatment(int id, [FromBody] TreatmentDto model)
         {
-            var response = await _treatService.updateTreatmentAsync(id,model);
+            var response = await _treatService.updateTreatmentAsync(id, model);
             return new ObjectResult(response)
             {
                 StatusCode = (int)response.StatusCode
@@ -78,8 +78,8 @@ namespace swp391_debo_be.Controllers
 
         }
 
-        [HttpGet("treatments")]
-        public ActionResult<ApiRespone> GetTreatmentBasedBranchId([FromQuery] int branchId)
+        [HttpGet("branch/{branchId}")]
+        public ActionResult<ApiRespone> GetTreatmentBasedBranchId(int branchId)
         {
             var response = _treatService.GetTreatmentsBasedBranchId(branchId);
             return response;

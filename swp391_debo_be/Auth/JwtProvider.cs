@@ -155,9 +155,9 @@ namespace swp391_debo_be.Auth
         /// <returns></returns>
         public static string? GetUserId(List<Claim> claims)
         {
-            if (claims.IsNullOrEmpty())
+            if (!claims.IsNullOrEmpty())
             {
-                Claim claim = claims.FirstOrDefault(c => c.Type == JwtConstant.KeyClaim.nameId);
+                Claim? claim = claims.FirstOrDefault(c => c.Type == "nameid");
 
                 if (claim != null)
                 {
@@ -208,9 +208,9 @@ namespace swp391_debo_be.Auth
 
         public static string GetRole(List<Claim> claims)
         {
-            if (claims.IsNullOrEmpty())
+            if (!claims.IsNullOrEmpty())
             {
-                Claim claim = claims.FirstOrDefault(c => c.Type == JwtConstant.KeyClaim.Role);
+                Claim claim = claims.FirstOrDefault(c => c.Type == "role");
 
                 if (claim != null)
                 {
