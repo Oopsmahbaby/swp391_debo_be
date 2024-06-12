@@ -12,5 +12,7 @@ namespace swp391_debo_be.Repository.Interface
         public List<int> GetApppointmentsByDentistIdAndDate(Guid dentistId, DateOnly date);
         public Appointment CancelAppointment(Guid appointmentId);
         public Task<List<AppointmentHistoryDto>> GetHistoryAppointmentByUserID(Guid id);
+        public Task<List<AppointmentHistoryDto>> ViewAllAppointment(int page, int limit);
+        public List<object> GetAppointmentsByStartDateAndEndDateOfDentist(DateOnly startDate, DateOnly endDate, Guid id);
     }
 }

@@ -108,5 +108,14 @@ namespace swp391_debo_be.Repository.Implement
         {
             return _userDao.ViewManagerList(page, limit);
         }
+        public Task<List<EmployeeDto>> ViewCustomerList(int page, int limit)
+        {
+            return _userDao.ViewCustomerList(page, limit);
+        }
+        public Task<EmployeeDto> GetUserById2(Guid id)
+        {
+            return _userDao.GetUserById2(id);
+        }
+
     }
 }

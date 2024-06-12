@@ -104,7 +104,7 @@ namespace swp391_debo_be.Controllers
             return userId;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("viewhistoryappoinment")]
         public async Task<IActionResult> GetHistoryAppointmentByUserID(Guid id)
         {
             var response = await _appointmentService.GetHistoryAppointmentByUserID(id);
@@ -112,6 +112,30 @@ namespace swp391_debo_be.Controllers
             {
                 StatusCode = (int)response.StatusCode
             };
+        }
+
+        [HttpGet("viewallappointment")]
+        public async Task<IActionResult> ViewAllAppointment([FromQuery] int page = 0, [FromQuery] int limit = 5)
+        {
+            var response = await _appointmentService.ViewAllAppointment(page, limit);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+
+        [HttpGet("dentist/calendar")]
+        public ActionResult<ApiRespone> GetAppointmentsByStartDateAndEndDateOfDentist([FromQuery] string start, [FromQuery] string end, [FromQuery] string view)
+        {
+            string? userId = JwtProvider.GetUserId(Request);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return new ApiRespone { Data = null, Message = "Authorization header is required", Success = false };
+            }
+
+            return _appointmentService.GetAppointmentsByStartDateAndEndDateOfDentist(start, end, userId);
+
         }
     }
 }

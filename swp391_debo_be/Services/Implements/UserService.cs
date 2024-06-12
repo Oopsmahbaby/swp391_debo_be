@@ -192,5 +192,46 @@ namespace swp391_debo_be.Services.Implements
             }
             return response;
         }
+
+        public async Task<ApiRespone> ViewCustomerList(int page, int limit)
+        {
+            var response = new ApiRespone();
+            try
+            {
+                var data = await CUser.ViewCustomerList(page, limit);
+                response.StatusCode = HttpStatusCode.OK;
+                response.Data = new { list = data, total = data.Count };
+                response.Success = true;
+                response.Message = "Manager list data retrieved successfully.";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<ApiRespone> GetUserById2(Guid id)
+        {
+            var response = new ApiRespone();
+            try
+            {
+                var existingUser = await CUser.GetUserById2(id);
+                var role = existingUser.RoleName;
+                response.StatusCode = HttpStatusCode.OK;
+                response.Data = existingUser;
+                response.Success = true;
+                response.Message = role +" data retrieved successfully.";
+            }
+            catch(Exception ex)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
     }
 }

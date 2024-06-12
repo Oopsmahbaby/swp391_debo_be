@@ -81,5 +81,23 @@ namespace swp391_debo_be.Controllers
                 StatusCode = (int)response.StatusCode
             };
         }
+        [Microsoft.AspNetCore.Mvc.HttpGet("customerlist")]
+        public async Task<IActionResult> ViewCustomerList([FromQuery] int page = 0, [FromQuery] int limit = 5)
+        {
+            var response = await _userService.ViewCustomerList(page, limit);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+        [Microsoft.AspNetCore.Mvc.HttpGet("userdetail")]
+        public async Task<IActionResult> GetUserById2(Guid id)
+        {
+            var response = await _userService.GetUserById2(id);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
     }
 }
