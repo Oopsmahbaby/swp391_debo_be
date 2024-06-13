@@ -10,7 +10,7 @@ namespace swp391_debo_be.Dao.Implement
 {
     public class UserDao : IUserDao
     {
-        private readonly DeboDev02Context _context = new DeboDev02Context (new Microsoft.EntityFrameworkCore.DbContextOptions<DeboDev02Context>());
+        private readonly DeboDev02Context _context = new DeboDev02Context(new Microsoft.EntityFrameworkCore.DbContextOptions<DeboDev02Context>());
 
         public UserDao()
         {
@@ -22,7 +22,7 @@ namespace swp391_debo_be.Dao.Implement
         }
 
         public User CreateUser(User user)
-        { 
+        {
             _context.Users.Add(user);
             _context.SaveChanges();
 
@@ -348,6 +348,33 @@ namespace swp391_debo_be.Dao.Implement
                                   Avt = u.Avt,
                               }).FirstOrDefaultAsync();
             return user;
+        }
+
+        public async Task UpdateUser(Guid id, EmployeeDto emp)
+        {
+            var existingUser = await _context.Users.FindAsync(id);
+            if (existingUser == null || id != emp.Id)
+            {
+                throw new InvalidOperationException("User not found, or ID mismatch.");
+            }
+            else
+            {
+                existingUser.Username = emp.Username;
+                existingUser.Email = emp.Email;
+                existingUser.Password = HashPasswordHelper.HashPassword(emp.Password);
+                existingUser.FirstName = emp.FirstName;
+                existingUser.LastName = emp.LastName;
+                existingUser.Gender = (bool)emp.Gender;
+                existingUser.Phone = emp.Phone;
+                existingUser.Address = emp.Address;
+                existingUser.DateOfBirthday = emp.DateOfBirthday;
+                existingUser.MedRec = emp.MedRec;
+                existingUser.Avt = emp.Avt;
+                _context.Users.Update(existingUser);
+                await _context.SaveChangesAsync();
+            }
+
+
         }
     }
 }

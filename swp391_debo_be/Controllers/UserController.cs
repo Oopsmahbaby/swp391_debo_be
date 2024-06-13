@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure;
+using Microsoft.AspNetCore.Mvc;
 using swp391_debo_be.Constants;
 using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Services.Interfaces;
@@ -90,10 +91,20 @@ namespace swp391_debo_be.Controllers
                 StatusCode = (int)response.StatusCode
             };
         }
-        [Microsoft.AspNetCore.Mvc.HttpGet("userdetail")]
+        [Microsoft.AspNetCore.Mvc.HttpGet("userdetail/{id}")]
         public async Task<IActionResult> GetUserById2(Guid id)
         {
             var response = await _userService.GetUserById2(id);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+
+        [Microsoft.AspNetCore.Mvc.HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(Guid id, EmployeeDto emp)
+        {
+            var response = await _userService.UpdateUser(id, emp);
             return new ObjectResult(response)
             {
                 StatusCode = (int)response.StatusCode
