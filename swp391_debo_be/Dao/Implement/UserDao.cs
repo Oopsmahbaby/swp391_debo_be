@@ -1,10 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using swp391_debo_be.Dao.Interface;
-using swp391_debo_be.DBContext;
 using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
 using swp391_debo_be.Helpers;
-using System.Collections.Generic;
+using swp391_debo_be.Services.Implements;
 
 namespace swp391_debo_be.Dao.Implement
 {
@@ -141,6 +140,7 @@ namespace swp391_debo_be.Dao.Implement
 
         public async Task<Guid> CreateNewStaff(EmployeeDto employee)
         {
+            
             var newStaff = new User
             {
                 Id = new Guid(Guid.NewGuid().ToString()),

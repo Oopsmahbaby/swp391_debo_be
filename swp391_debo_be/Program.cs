@@ -2,6 +2,7 @@ using Amazon.S3;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -66,10 +67,15 @@ builder.Services.AddDbContext<DeboDev02Context>(options =>
 );
 
 // Corrected line for Identity setup
-
+builder.Services.AddScoped<IAmazonS3, AmazonS3Client>(sp =>
+{
+    var awsOptions = builder.Configuration.GetAWSOptions("AWS");
+    return (AmazonS3Client)awsOptions.CreateServiceClient<IAmazonS3>();
+});
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IRoleDao, RoleDao>();
 builder.Services.AddScoped<IBranchDao, BranchDao>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBranchRepository, BranchRepository>();
 builder.Services.AddScoped<IUserDao, UserDao>();
