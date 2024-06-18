@@ -1,11 +1,14 @@
-﻿namespace swp391_debo_be.Dto.Implement
+﻿using System.Text.Json.Serialization;
+
+namespace swp391_debo_be.Dto.Implement
 {
     public class EmployeeDto
     {
-        public Guid Id { get; set; }
+        [JsonIgnore]
+        public Guid? Id { get; set; } = Guid.NewGuid();
 
         public int? Role { get; set; }
-        public string RoleName { get; set; }
+        public string? RoleName { get; set; }
         public string? Username { get; set; }
 
         public string? Email { get; set; }

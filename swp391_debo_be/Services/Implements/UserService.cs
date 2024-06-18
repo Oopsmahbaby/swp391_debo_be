@@ -233,5 +233,40 @@ namespace swp391_debo_be.Services.Implements
             }
             return response;
         }
+
+        public async Task<ApiRespone> UpdateUser(Guid id, EmployeeDto emp)
+        {
+            var response = new ApiRespone();
+            try
+            {
+                if (id != emp.Id)
+                {
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.Success = false;
+                    response.Message = "User ID mismatch";
+                }
+                var data = await CUser.GetUserById2(id);
+                if (data == null)
+                {
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.Success = false;
+                    response.Message = "User not found.";
+                }
+                await CUser.UpdateUser(id, emp);
+                var updUser = await CUser.GetUserById2(id);
+                response.StatusCode = HttpStatusCode.OK;
+                response.Data = updUser;
+                response.Success = true;
+                response.Message = "User data updated successfully.";
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
     }
 }

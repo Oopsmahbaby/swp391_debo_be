@@ -26,10 +26,8 @@ namespace swp391_debo_be.Dto.Implement
 
         public bool? IsCreatedByStaff { get; set; }
 
-        [JsonIgnore]
         public DateOnly? CreatedDate { get; set; }
 
-        [JsonIgnore]
         public DateOnly? StartDate { get; set; }
 
         [Required]

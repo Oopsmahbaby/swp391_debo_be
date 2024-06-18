@@ -86,16 +86,22 @@ namespace swp391_debo_be.Dao.Implement
             {
                 return null;
             }
-            return new BranchDto
+            var query = from cb in _context.ClinicBranches
+                        join u in _context.Users on cb.MngId equals u.Id
+                        where cb.Id == id
+                        select new BranchDto
             {
-                Id = branch.Id,
-                Name = branch.Name,
-                Address = branch.Address,
-                Phone = branch.Phone,
-                Email = branch.Email,
-                Avt = branch.Avt,
+                Id = cb.Id,
+                MngName = u.FirstName + " " + u.LastName,
+                Name = cb.Name,
+                Address = cb.Address,
+                Phone = cb.Phone,
+                Email = cb.Email,
+                Avt = cb.Avt,
             };
+            var branchDto = await query.FirstOrDefaultAsync();
 
+            return branchDto;
         }
 
         public async Task updateBranchAsync(int id, BranchDto branch)
