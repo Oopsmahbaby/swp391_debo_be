@@ -43,7 +43,7 @@ namespace swp391_debo_be.Controllers
 
         [HttpPost]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> AddNewBranch(IFormFile? file, BranchDto model)
+        public async Task<IActionResult> AddNewBranch(IFormFile? file, [FromForm] BranchDto model)
         {
             string bucketName = "swp391-bucket";
 

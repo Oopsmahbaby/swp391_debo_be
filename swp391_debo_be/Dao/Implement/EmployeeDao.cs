@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using swp391_debo_be.Dao.Interface;
+using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
 using System.Linq;
 
@@ -19,6 +20,43 @@ namespace swp391_debo_be.Dao.Implement
                                   .ToList();
 
             return resultEmployees;
+        }
+
+        public async Task<CreateEmployeeDto> GetEmployeeById(Guid id)
+        {
+            var result = await(from u in _context.Users
+                               join e in _context.Employees on u.Id equals e.Id
+                               where u.Id == id
+                               select new CreateEmployeeDto
+                               {
+                                   Id = e.Id,
+                                   Name = u.FirstName + " " + u.LastName,
+                                   BrId = e.BrId,
+                                   Type = e.Type,
+                                   Salary = e.Salary
+                               }).SingleOrDefaultAsync();
+
+            return result;
+        }
+
+        public async Task<List<CreateEmployeeDto>> GetEmployeeWithBranch(int page, int limit)
+        {
+            var result = await (from u in _context.Users
+                                join e in _context.Employees on u.Id equals e.Id
+                                select new CreateEmployeeDto
+                                {
+                                    Name = u.FirstName + " " + u.LastName,
+                                    BrId = e.BrId,
+                                    Type = e.Type,
+                                    Salary = e.Salary
+                                }).Skip(page * limit).Take(limit).ToListAsync();
+
+            return result;
+        }
+
+        public Task<List<CreateEmployeeDto>> GetEmployeeWithoutBranch(int page, int limit)
+        {
+            throw new NotImplementedException();
         }
     }
 }

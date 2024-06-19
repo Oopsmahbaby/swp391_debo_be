@@ -1,4 +1,5 @@
-﻿using swp391_debo_be.Entity.Implement;
+﻿using swp391_debo_be.Dto.Implement;
+using swp391_debo_be.Entity.Implement;
 using swp391_debo_be.Repository.Implement;
 using swp391_debo_be.Repository.Interface;
 
@@ -11,6 +12,14 @@ namespace swp391_debo_be.Cores
         public static List<User> GetDentistBasedOnTreamentId(int treatmentId)
         {
             return _employeeRepo.GetDentistBasedOnTreamentId(treatmentId);
+        }
+        public static Task<List<CreateEmployeeDto>> GetEmployeeWithBranch(int page, int limit)
+        {
+            return _employeeRepo.GetEmployeeWithBranch(page, limit);
+        }
+        public static Task<CreateEmployeeDto> GetEmployeeById(Guid id)
+        {
+            return _employeeRepo.GetEmployeeById(id);
         }
     }
 }
