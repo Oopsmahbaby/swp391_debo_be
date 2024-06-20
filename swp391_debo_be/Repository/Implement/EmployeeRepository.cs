@@ -25,5 +25,10 @@ namespace swp391_debo_be.Repository.Implement
         {
             return employeeDao.GetEmployeeWithBranch(page, limit);
         }
+
+        public Task UpdateBranchForEmployee(Guid id, CreateEmployeeDto employee)
+        {
+            return employeeDao.UpdateBranchForEmployee(id, employee);
+        }
     }
 }

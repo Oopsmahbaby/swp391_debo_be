@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using swp391_debo_be.Constants;
+using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Services.Interfaces;
 
 namespace swp391_debo_be.Controllers
@@ -34,6 +35,16 @@ namespace swp391_debo_be.Controllers
         public async Task<IActionResult> GetEmployeeById(Guid id)
         {
             var response = await _employeeService.GetEmployeeById(id);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBranchForEmployee(Guid id, CreateEmployeeDto employee)
+        {
+            var response = await _employeeService.UpdateBranchForEmployee(id, employee);
             return new ObjectResult(response)
             {
                 StatusCode = (int)response.StatusCode

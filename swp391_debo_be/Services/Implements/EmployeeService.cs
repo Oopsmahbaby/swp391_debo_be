@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using swp391_debo_be.Constants;
 using swp391_debo_be.Cores;
+using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Services.Interfaces;
 using System.Net;
 
@@ -62,6 +63,41 @@ namespace swp391_debo_be.Services.Implements
                 response.Data = new { list = data, total = data.Count };
                 response.Success = true;
                 response.Message = "Employee data retrieved successfully.";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<ApiRespone> UpdateBranchForEmployee(Guid id, CreateEmployeeDto employee)
+        {
+            var response = new ApiRespone();
+            try
+            {
+                if (id != employee.Id)
+                {
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.Success = false;
+                    response.Message = "Employee ID not found";
+                    return response;
+                }
+                var data = await CEmployee.GetEmployeeById(id);
+                if (data == null)
+                {
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.Success = false;
+                    response.Message = "Employee not found";
+                }
+                await CEmployee.UpdateBranchForEmployee(id, employee);
+                var updEmp = await CEmployee.GetEmployeeById(id);
+                response.StatusCode = HttpStatusCode.OK;
+                response.Data = updEmp;
+                response.Success = true;
+                response.Message = "Employee data updated successfully.";
             }
             catch (Exception ex)
             {

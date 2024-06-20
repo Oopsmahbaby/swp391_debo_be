@@ -54,9 +54,21 @@ namespace swp391_debo_be.Dao.Implement
             return result;
         }
 
-        public Task<List<CreateEmployeeDto>> GetEmployeeWithoutBranch(int page, int limit)
+        public async Task UpdateBranchForEmployee(Guid id, CreateEmployeeDto employee)
         {
-            throw new NotImplementedException();
+            var existingEmp = await _context.Employees.FindAsync(id);
+            if (existingEmp == null)
+            {
+                throw new InvalidOperationException("Employee not found or ID mismatch.");
+            }
+            else
+            {
+                existingEmp.BrId = employee.BrId;
+                existingEmp.Salary = employee.Salary;
+
+                _context.Employees.Update(existingEmp);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

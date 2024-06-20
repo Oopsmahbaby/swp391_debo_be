@@ -21,5 +21,10 @@ namespace swp391_debo_be.Cores
         {
             return _employeeRepo.GetEmployeeById(id);
         }
+
+        public static Task UpdateBranchForEmployee(Guid id, CreateEmployeeDto employee)
+        {
+            return _employeeRepo.UpdateBranchForEmployee(id, employee);
+        }
     }
 }
