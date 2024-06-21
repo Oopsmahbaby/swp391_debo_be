@@ -22,6 +22,22 @@ namespace swp391_debo_be.Dao.Implement
             return resultEmployees;
         }
 
+        public async Task<List<CreateEmployeeDto>> GetEmployee(int page, int limit)
+        {
+            var result = await(from u in _context.Users
+                               join e in _context.Employees on u.Id equals e.Id
+                               where e.Type != 2
+                               select new CreateEmployeeDto
+                               {
+                                   Id = e.Id,
+                                   Name = u.FirstName + " " + u.LastName,
+                                   BrId = e.BrId,
+                                   Type = e.Type,
+                                   Salary = e.Salary
+                               }).Skip(page * limit).Take(limit).ToListAsync();
+            return result;
+        }
+
         public async Task<CreateEmployeeDto> GetEmployeeById(Guid id)
         {
             var result = await(from u in _context.Users
@@ -45,11 +61,29 @@ namespace swp391_debo_be.Dao.Implement
                                 join e in _context.Employees on u.Id equals e.Id
                                 select new CreateEmployeeDto
                                 {
+                                    Id = e.Id,
                                     Name = u.FirstName + " " + u.LastName,
                                     BrId = e.BrId,
                                     Type = e.Type,
                                     Salary = e.Salary
                                 }).Skip(page * limit).Take(limit).ToListAsync();
+
+            return result;
+        }
+
+        public async Task<List<CreateEmployeeDto>> GetEmployeeWithBranchId(int id , int page, int limit)
+        {
+            var result = await(from u in _context.Users
+                               join e in _context.Employees on u.Id equals e.Id
+                               where e.BrId == id
+                               select new CreateEmployeeDto
+                               {
+                                   Id = e.Id,
+                                   Name = u.FirstName + " " + u.LastName,
+                                   BrId = e.BrId,
+                                   Type = e.Type,
+                                   Salary = e.Salary
+                               }).Skip(page * limit).Take(limit).ToListAsync();
 
             return result;
         }
@@ -70,5 +104,7 @@ namespace swp391_debo_be.Dao.Implement
                 await _context.SaveChangesAsync();
             }
         }
+
+
     }
 }

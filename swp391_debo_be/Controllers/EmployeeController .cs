@@ -31,10 +31,30 @@ namespace swp391_debo_be.Controllers
                 StatusCode = (int)response.StatusCode
             };
         }
-        [HttpGet("{id}")]
+        [HttpGet("getempbyid/{id}")]
         public async Task<IActionResult> GetEmployeeById(Guid id)
         {
             var response = await _employeeService.GetEmployeeById(id);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+
+        [HttpGet("getempwithbranchid/{id}")]
+        public async Task<IActionResult> GetEmployeeWithBranchId(int id, int page, int limit)
+        {
+            var response = await _employeeService.GetEmployeeWithBranchId(id, page, limit);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+
+        [HttpGet("dentandstaff")]
+        public async Task<IActionResult> GetEmployee(int page, int limit)
+        {
+            var response = await _employeeService.GetEmployee(page, limit);
             return new ObjectResult(response)
             {
                 StatusCode = (int)response.StatusCode

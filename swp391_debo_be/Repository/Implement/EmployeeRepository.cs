@@ -16,6 +16,11 @@ namespace swp391_debo_be.Repository.Implement
             return employeeDao.GetDentistBasedOnTreamentId(treatmentId);
         }
 
+        public Task<List<CreateEmployeeDto>> GetEmployee(int page, int limit)
+        {
+            return employeeDao.GetEmployee(page, limit);
+        }
+
         public Task<CreateEmployeeDto> GetEmployeeById(Guid id)
         {
             return employeeDao.GetEmployeeById(id);
@@ -24,6 +29,11 @@ namespace swp391_debo_be.Repository.Implement
         public Task<List<CreateEmployeeDto>> GetEmployeeWithBranch(int page, int limit)
         {
             return employeeDao.GetEmployeeWithBranch(page, limit);
+        }
+
+        public Task<List<CreateEmployeeDto>> GetEmployeeWithBranchId(int id, int page, int limit)
+        {
+            return employeeDao.GetEmployeeWithBranchId(id, page, limit);
         }
 
         public Task UpdateBranchForEmployee(Guid id, CreateEmployeeDto employee)

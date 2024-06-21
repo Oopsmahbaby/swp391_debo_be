@@ -26,5 +26,15 @@ namespace swp391_debo_be.Cores
         {
             return _employeeRepo.UpdateBranchForEmployee(id, employee);
         }
+
+        public static Task<List<CreateEmployeeDto>> GetEmployee(int page, int limit)
+        {
+            return _employeeRepo.GetEmployee(page, limit);
+        }
+
+        public static Task<List<CreateEmployeeDto>> GetEmployeeWithBranchId(int id, int page, int limit)
+        {
+            return _employeeRepo.GetEmployeeWithBranchId(id, page, limit);
+        }
     }
 }

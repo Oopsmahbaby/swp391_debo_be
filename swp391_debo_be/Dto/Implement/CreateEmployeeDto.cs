@@ -10,5 +10,6 @@
         public int? Type { get; set; }
 
         public double? Salary { get; set; }
+        public int? TreatId { get; set; }
     }
 }
