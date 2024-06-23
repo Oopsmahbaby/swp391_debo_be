@@ -93,6 +93,10 @@ public partial class DeboDev02Context : DbContext
 
             entity.ToTable("Clinic_Branch");
 
+            entity.HasIndex(e => e.Email, "UQ_Email").IsUnique();
+
+            entity.HasIndex(e => e.Phone, "UQ_Phone").IsUnique();
+
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
@@ -285,7 +289,7 @@ public partial class DeboDev02Context : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK__User__3214EC27259B5854");
 
-            entity.ToTable("User");
+            entity.ToTable("User", tb => tb.HasTrigger("trgAfterInsertUser"));
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()

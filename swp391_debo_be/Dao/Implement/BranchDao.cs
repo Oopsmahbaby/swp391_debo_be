@@ -87,18 +87,20 @@ namespace swp391_debo_be.Dao.Implement
                 return null;
             }
             var query = from cb in _context.ClinicBranches
-                        join u in _context.Users on cb.MngId equals u.Id
+                        join u in _context.Users on cb.MngId equals u.Id into cb_u
+                        from u in cb_u.DefaultIfEmpty()
                         where cb.Id == id
                         select new BranchDto
-            {
-                Id = cb.Id,
-                MngName = u.FirstName + " " + u.LastName,
-                Name = cb.Name,
-                Address = cb.Address,
-                Phone = cb.Phone,
-                Email = cb.Email,
-                Avt = cb.Avt,
-            };
+                        {
+                            Id = cb.Id,
+                            MngId = cb.MngId,
+                            MngName = cb.MngId != null ? (u.FirstName + " " + u.LastName) : null,
+                            Name = cb.Name,
+                            Address = cb.Address,
+                            Phone = cb.Phone,
+                            Email = cb.Email,
+                            Avt = cb.Avt,
+                        };
             var branchDto = await query.FirstOrDefaultAsync();
 
             return branchDto;

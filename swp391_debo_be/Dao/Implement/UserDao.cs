@@ -150,7 +150,7 @@ namespace swp391_debo_be.Dao.Implement
                 Password = HashPasswordHelper.HashPassword(employee.Password),
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
-                Gender = employee.Gender,
+                Gender = employee.Gender ?? true,
                 Phone = employee.Phone,
                 Address = employee.Address,
                 DateOfBirthday = employee.DateOfBirthday,
@@ -173,7 +173,7 @@ namespace swp391_debo_be.Dao.Implement
                 Password = HashPasswordHelper.HashPassword(employee.Password),
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
-                Gender = employee.Gender,
+                Gender = employee.Gender ?? true,
                 Phone = employee.Phone,
                 Address = employee.Address,
                 DateOfBirthday = employee.DateOfBirthday,
@@ -196,7 +196,7 @@ namespace swp391_debo_be.Dao.Implement
                 Password = HashPasswordHelper.HashPassword(employee.Password),
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
-                Gender = employee.Gender,
+                Gender = employee.Gender ?? true,
                 Phone = employee.Phone,
                 Address = employee.Address,
                 DateOfBirthday = employee.DateOfBirthday,
@@ -221,13 +221,13 @@ namespace swp391_debo_be.Dao.Implement
             var staff = staffList.Select(t => new EmployeeDto
             {
                 Id = t.Id,
-                Role = (int)t.Role,
+                Role = t.Role,
                 Username = t.Username,
                 Email = t.Email,
                 Password = t.Password,
                 FirstName = t.FirstName,
                 LastName = t.LastName,
-                Gender = (bool)t.Gender,
+                Gender = t.Gender,
                 Phone = t.Phone,
                 Address = t.Address,
                 DateOfBirthday = t.DateOfBirthday,
@@ -251,13 +251,13 @@ namespace swp391_debo_be.Dao.Implement
             var dentist = dentList.Select(t => new EmployeeDto
             {
                 Id = t.Id,
-                Role = (int)t.Role,
+                Role = t.Role,
                 Username = t.Username,
                 Email = t.Email,
                 Password = t.Password,
                 FirstName = t.FirstName,
                 LastName = t.LastName,
-                Gender = (bool)t.Gender,
+                Gender = t.Gender,
                 Phone = t.Phone,
                 Address = t.Address,
                 DateOfBirthday = t.DateOfBirthday,
@@ -281,13 +281,13 @@ namespace swp391_debo_be.Dao.Implement
             var manager = mngList.Select(t => new EmployeeDto
             {
                 Id = t.Id,
-                Role = (int)t.Role,
+                Role = t.Role,
                 Username = t.Username,
                 Email = t.Email,
                 Password = t.Password,
                 FirstName = t.FirstName,
                 LastName = t.LastName,
-                Gender = (bool)t.Gender,
+                Gender = t.Gender,
                 Phone = t.Phone,
                 Address = t.Address,
                 DateOfBirthday = t.DateOfBirthday,
@@ -310,13 +310,13 @@ namespace swp391_debo_be.Dao.Implement
             var customer = cusList.Select(t => new EmployeeDto
             {
                 Id = t.Id,
-                Role = (int)t.Role,
+                Role = t.Role,
                 Username = t.Username,
                 Email = t.Email,
                 Password = t.Password,
                 FirstName = t.FirstName,
                 LastName = t.LastName,
-                Gender = (bool)t.Gender,
+                Gender = t.Gender,
                 Phone = t.Phone,
                 Address = t.Address,
                 DateOfBirthday = t.DateOfBirthday,
@@ -334,13 +334,13 @@ namespace swp391_debo_be.Dao.Implement
                               select new EmployeeDto
                               {
                                   Id = u.Id,
-                                  Role = (int)u.Role,
+                                  Role = u.Role,
                                   RoleName = r.Role1,
                                   Username = u.Username,
                                   Email = u.Email,
                                   FirstName = u.FirstName,
                                   LastName = u.LastName,
-                                  Gender = (bool)u.Gender,
+                                  Gender = u.Gender,
                                   Phone = u.Phone,
                                   Address = u.Address,
                                   DateOfBirthday = u.DateOfBirthday,
@@ -364,7 +364,7 @@ namespace swp391_debo_be.Dao.Implement
                 existingUser.Password = HashPasswordHelper.HashPassword(emp.Password);
                 existingUser.FirstName = emp.FirstName;
                 existingUser.LastName = emp.LastName;
-                existingUser.Gender = (bool)emp.Gender;
+                existingUser.Gender = emp.Gender;
                 existingUser.Phone = emp.Phone;
                 existingUser.Address = emp.Address;
                 existingUser.DateOfBirthday = emp.DateOfBirthday;

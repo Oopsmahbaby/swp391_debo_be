@@ -28,6 +28,7 @@ namespace swp391_debo_be.Services.Implements
                 Phone = createUserDto.PhoneNumber,
                 // Role = 5 la Customer -> dua tren database moi
                 Role = 5,
+                Gender = true,
                 Password = HashPasswordHelper.HashPassword(createUserDto.password)
             };
 
@@ -123,7 +124,7 @@ namespace swp391_debo_be.Services.Implements
                 response.StatusCode = HttpStatusCode.OK;
                 response.Success = true;
                 response.Data = newStaff;
-                response.Message = "Create New Staff Successfully";
+                response.Message = "Create New Manager Successfully";
 
             }
             catch (Exception ex)
@@ -202,7 +203,7 @@ namespace swp391_debo_be.Services.Implements
                 response.StatusCode = HttpStatusCode.OK;
                 response.Data = new { list = data, total = data.Count };
                 response.Success = true;
-                response.Message = "Manager list data retrieved successfully.";
+                response.Message = "Customer list data retrieved successfully.";
             }
             catch (Exception ex)
             {
