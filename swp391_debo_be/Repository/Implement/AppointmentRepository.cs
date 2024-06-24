@@ -64,5 +64,15 @@ namespace swp391_debo_be.Repository.Implement
         {
             return _appointmentDao.GetAppointmentByDentistId (page, limit, dentistId);
         }
+
+        public Task<List<AppointmentDetailsDto>> GetAppointmentetail(Guid id, int page, int limit)
+        {
+            return _appointmentDao.GetAppointmentetail (id, page, limit);
+        }
+
+        public Task<AppointmentDetailsDto> ViewAppointmentDetail(Guid id)
+        {
+            return _appointmentDao.ViewAppointmentDetail (id);
+        }
     }
 }

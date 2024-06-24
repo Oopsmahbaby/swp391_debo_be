@@ -65,9 +65,10 @@ namespace swp391_debo_be.Services.Implements
                     return response;
                 }
                 var newStaff = await CUser.CreateNewStaff(employee);
+                var staff = await CUser.GetUserById2(newStaff);
                 response.StatusCode = HttpStatusCode.OK;
                 response.Success = true;
-                response.Data = newStaff;
+                response.Data = staff;
                 response.Message = "Create New Staff Successfully";
 
             }

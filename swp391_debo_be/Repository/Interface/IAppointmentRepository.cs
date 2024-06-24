@@ -15,5 +15,7 @@ namespace swp391_debo_be.Repository.Interface
         public Task<List<AppointmentHistoryDto>> ViewAllAppointment(int page, int limit);
         public List<object> GetAppointmentsByStartDateAndEndDateOfDentist(DateOnly startDate, DateOnly endDate, Guid id);
         public Task<List<AppointmentHistoryDto>> GetAppointmentByDentistId(int page, int limit, Guid dentistId);
+        public Task<List<AppointmentDetailsDto>> GetAppointmentetail(Guid id, int page, int limit);
+        public Task<AppointmentDetailsDto> ViewAppointmentDetail(Guid id);
     }
 }
