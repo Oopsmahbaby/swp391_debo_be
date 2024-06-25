@@ -64,6 +64,13 @@ namespace swp391_debo_be.Services.Implements
                     response.Message = "Email is already exist";
                     return response;
                 }
+                if (CUser.GetUserByPhoneNumber(employee.Phone) != null)
+                {
+                    response.StatusCode = HttpStatusCode.BadRequest;
+                    response.Success = false;
+                    response.Message = "Phone Number is already exist";
+                    return response;
+                }
                 var newStaff = await CUser.CreateNewStaff(employee);
                 var staff = await CUser.GetUserById2(newStaff);
                 response.StatusCode = HttpStatusCode.OK;
@@ -92,6 +99,13 @@ namespace swp391_debo_be.Services.Implements
                     response.Message = "Email is already exist";
                     return response;
                 }
+                if (CUser.GetUserByPhoneNumber(employee.Phone) != null)
+                {
+                    response.StatusCode = HttpStatusCode.BadRequest;
+                    response.Success = false;
+                    response.Message = "Phone Number is already exist";
+                    return response;
+                }
                 var newStaff = await CUser.CreateNewDent(employee);
                 response.StatusCode = HttpStatusCode.OK;
                 response.Success = true;
@@ -118,6 +132,13 @@ namespace swp391_debo_be.Services.Implements
                     response.StatusCode = HttpStatusCode.BadRequest;
                     response.Success = false;
                     response.Message = "Email is already exist";
+                    return response;
+                }
+                if (CUser.GetUserByPhoneNumber(employee.Phone) != null)
+                {
+                    response.StatusCode = HttpStatusCode.BadRequest;
+                    response.Success = false;
+                    response.Message = "Phone Number is already exist";
                     return response;
                 }
                 var newStaff = await CUser.CreateNewManager(employee);
@@ -252,6 +273,13 @@ namespace swp391_debo_be.Services.Implements
                     response.StatusCode = HttpStatusCode.BadRequest;
                     response.Success = false;
                     response.Message = "Email is already exist";
+                    return response;
+                }
+                if (CUser.GetUserByPhoneNumber(emp.Phone) != null)
+                {
+                    response.StatusCode = HttpStatusCode.BadRequest;
+                    response.Success = false;
+                    response.Message = "Phone Number is already exist";
                     return response;
                 }
                 var data = await CUser.GetUserById2(id);
