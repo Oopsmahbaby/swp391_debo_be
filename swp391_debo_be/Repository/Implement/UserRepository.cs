@@ -136,5 +136,10 @@ namespace swp391_debo_be.Repository.Implement
         {
             return _userDao.GetUserByAvt(avt);
         }
+
+        public Task UpdatePassword(Guid id, EmployeeDto emp)
+        {
+            return _userDao.UpdatePassword(id, emp);
+        }
     }
 }

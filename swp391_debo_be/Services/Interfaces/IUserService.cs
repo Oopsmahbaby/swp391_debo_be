@@ -22,5 +22,6 @@ namespace swp391_debo_be.Services.Interfaces
         public Task<ApiRespone> UpdateUser(Guid id, EmployeeDto emp);
         public Task<ApiRespone> UploadAvatarUser(Guid id, EmployeeDto emp);
         public Task<ApiRespone> UploadMedRecPatient(Guid id, EmployeeDto emp);
+        public Task<ApiRespone> UpdatePassword(Guid id, EmployeeDto emp);
     }
 }

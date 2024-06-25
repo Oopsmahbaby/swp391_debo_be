@@ -147,7 +147,7 @@ namespace swp391_debo_be.Dao.Implement
 
         public async Task<Guid> CreateNewStaff(EmployeeDto employee)
         {
-            
+
             var newStaff = new User
             {
                 Id = new Guid(Guid.NewGuid().ToString()),
@@ -409,6 +409,26 @@ namespace swp391_debo_be.Dao.Implement
             else
             {
                 existingUser.MedRec = emp.MedRec;
+                _context.Users.Update(existingUser);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpdatePassword(Guid id, EmployeeDto emp)
+        {
+            var existingUser = await _context.Users.FindAsync(id);
+            if (existingUser == null || id != emp.Id)
+            {
+                throw new InvalidOperationException("User not found, or ID mismatch.");
+            }
+
+            if (existingUser.Password != HashPasswordHelper.HashPassword(emp.Password))
+            {
+                throw new InvalidOperationException("Old password is not valid");
+            }
+            else
+            {
+                existingUser.Password = HashPasswordHelper.HashPassword(emp.NewPassword);
                 _context.Users.Update(existingUser);
                 await _context.SaveChangesAsync();
             }

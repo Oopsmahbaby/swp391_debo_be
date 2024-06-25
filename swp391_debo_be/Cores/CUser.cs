@@ -118,5 +118,10 @@ namespace swp391_debo_be.Cores
         {
             return _userRepository.UploadMedRecPatient(id, emp);
         }
+
+        public static Task UpdatePassword(Guid id, EmployeeDto emp)
+        {
+            return _userRepository.UpdatePassword(id, emp);
+        }
     }
 }

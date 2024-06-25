@@ -265,5 +265,16 @@ namespace swp391_debo_be.Controllers
                 StatusCode = (int)response.StatusCode
             };
         }
+
+        [Microsoft.AspNetCore.Mvc.HttpPut("updatepassword/{id}")]
+        public async Task<IActionResult> UpdatePassword(Guid id, EmployeeDto emp)
+        {
+            var response = await _userService.UpdatePassword(id, emp);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+
     }
 }
