@@ -368,7 +368,7 @@ namespace swp391_debo_be.Dao.Implement
             {
                 existingUser.Username = emp.Username;
                 existingUser.Email = emp.Email;
-                existingUser.Password = HashPasswordHelper.HashPassword(emp.Password);
+                //existingUser.Password = HashPasswordHelper.HashPassword(emp.Password);
                 existingUser.FirstName = emp.FirstName;
                 existingUser.LastName = emp.LastName;
                 existingUser.Gender = emp.Gender;

@@ -70,7 +70,6 @@ namespace swp391_debo_be.Services.Implements
                 response.Success = true;
                 response.Data = staff;
                 response.Message = "Create New Staff Successfully";
-
             }
             catch (Exception ex)
             {
@@ -246,6 +245,14 @@ namespace swp391_debo_be.Services.Implements
                     response.StatusCode = HttpStatusCode.NotFound;
                     response.Success = false;
                     response.Message = "User ID mismatch";
+                    return response;
+                }
+                if (CUser.GetUserByEmail(emp.Email) != null)
+                {
+                    response.StatusCode = HttpStatusCode.BadRequest;
+                    response.Success = false;
+                    response.Message = "Email is already exist";
+                    return response;
                 }
                 var data = await CUser.GetUserById2(id);
                 if (data == null)
@@ -253,6 +260,7 @@ namespace swp391_debo_be.Services.Implements
                     response.StatusCode = HttpStatusCode.NotFound;
                     response.Success = false;
                     response.Message = "User not found.";
+                    return response;
                 }
                 await CUser.UpdateUser(id, emp);
                 var updUser = await CUser.GetUserById2(id);
@@ -281,6 +289,7 @@ namespace swp391_debo_be.Services.Implements
                     response.StatusCode = HttpStatusCode.NotFound;
                     response.Success = false;
                     response.Message = "User ID mismatch";
+                    return response;
                 }
                 var data = await CUser.GetUserById2(id);
                 if (data == null)
@@ -288,6 +297,7 @@ namespace swp391_debo_be.Services.Implements
                     response.StatusCode = HttpStatusCode.NotFound;
                     response.Success = false;
                     response.Message = "User not found.";
+                    return response;
                 }
                 await CUser.UploadAvatarUser(id, emp);
                 var updUser = await CUser.GetUserById2(id);
@@ -316,6 +326,7 @@ namespace swp391_debo_be.Services.Implements
                     response.StatusCode = HttpStatusCode.NotFound;
                     response.Success = false;
                     response.Message = "User ID mismatch";
+                    return response;
                 }
                 var data = await CUser.GetUserById2(id);
                 if (data == null)
@@ -323,6 +334,7 @@ namespace swp391_debo_be.Services.Implements
                     response.StatusCode = HttpStatusCode.NotFound;
                     response.Success = false;
                     response.Message = "User not found.";
+                    return response;
                 }
                 await CUser.UploadMedRecPatient(id, emp);
                 var updUser = await CUser.GetUserById2(id);
@@ -351,6 +363,7 @@ namespace swp391_debo_be.Services.Implements
                     response.StatusCode = HttpStatusCode.NotFound;
                     response.Success = false;
                     response.Message = "User ID mismatch";
+                    return response;
                 }
                 var data = await CUser.GetUserById2(id);
                 if (data == null)
@@ -358,6 +371,7 @@ namespace swp391_debo_be.Services.Implements
                     response.StatusCode = HttpStatusCode.NotFound;
                     response.Success = false;
                     response.Message = "User not found.";
+                    return response;
                 }
                 await CUser.UpdatePassword(id, emp);
                 var updUser = await CUser.GetUserById2(id);
