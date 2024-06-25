@@ -70,6 +70,13 @@ namespace swp391_debo_be.Dao.Implement
             return user;
         }
 
+        public User GetUserByAvt(string avt)
+        {
+            User? user = _context.Users.FirstOrDefault(u => u.Avt == avt);
+
+            return user;
+        }
+
         public bool IsRefreshTokenExist(User user)
         {
             User foundUser = GetUserById(user.Id);
@@ -154,8 +161,8 @@ namespace swp391_debo_be.Dao.Implement
                 Phone = employee.Phone,
                 Address = employee.Address,
                 DateOfBirthday = employee.DateOfBirthday,
-                MedRec = employee.MedRec,
-                Avt = employee.Avt,
+                //MedRec = employee.MedRec,
+                //Avt = employee.Avt,
             };
             _context.Users.Add(newStaff);
             await _context.SaveChangesAsync();
@@ -375,6 +382,36 @@ namespace swp391_debo_be.Dao.Implement
             }
 
 
+        }
+
+        public async Task UploadAvatarUser(Guid id, EmployeeDto emp)
+        {
+            var existingUser = await _context.Users.FindAsync(id);
+            if (existingUser == null || id != emp.Id)
+            {
+                throw new InvalidOperationException("User not found, or ID mismatch.");
+            }
+            else
+            {
+                existingUser.Avt = emp.Avt;
+                _context.Users.Update(existingUser);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task UploadMedRecPatient(Guid id, EmployeeDto emp)
+        {
+            var existingUser = await _context.Users.FindAsync(id);
+            if (existingUser == null || id != emp.Id)
+            {
+                throw new InvalidOperationException("User not found, or ID mismatch.");
+            }
+            else
+            {
+                existingUser.MedRec = emp.MedRec;
+                _context.Users.Update(existingUser);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

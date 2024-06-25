@@ -9,6 +9,7 @@ namespace swp391_debo_be.Repository.Interface
         public User GetUserById(Guid id);
 
         public User GetUserByEmail(string email);
+        public User GetUserByAvt(string avt);
 
         public User CreateUser(User user);
 
@@ -37,5 +38,7 @@ namespace swp391_debo_be.Repository.Interface
         public Task<List<EmployeeDto>> ViewCustomerList(int page, int limit);
         public Task<EmployeeDto> GetUserById2(Guid id);
         public Task UpdateUser(Guid id, EmployeeDto emp);
+        public Task UploadAvatarUser(Guid id, EmployeeDto emp);
+        public Task UploadMedRecPatient(Guid id, EmployeeDto emp);
     }
 }

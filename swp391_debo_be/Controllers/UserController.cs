@@ -3,6 +3,7 @@ using Amazon.S3.Model;
 using Azure;
 using Microsoft.AspNetCore.Mvc;
 using swp391_debo_be.Constants;
+using swp391_debo_be.Cores;
 using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Services.Interfaces;
 using System.Web.Http;
@@ -29,17 +30,66 @@ namespace swp391_debo_be.Controllers
             return Ok(_userService.GetUsers());
         }
 
-        [Microsoft.AspNetCore.Mvc.HttpPost("createstaff")]
-        [Consumes("multipart/form-data")]
-        public async Task<IActionResult> CreateNewStaff(IFormFile? file, [FromForm] EmployeeDto employee)
+        //[Microsoft.AspNetCore.Mvc.HttpPost("createstaff")]
+        //[Consumes("multipart/form-data")]
+        //public async Task<IActionResult> CreateNewStaff(IFormFile? file, [FromForm] EmployeeDto employee)
+        //{
+        //    string bucketName = "swp391-bucket";
+
+        //    // Check if bucket exists
+        //    //var bucketExists = await _s3Client.DoesS3BucketExistAsync(bucketName);
+        //    //if (!bucketExists) return NotFound($"Bucket {bucketName} does not exist.");
+        //    if (file != null && file.Length > 0)
+        //    {
+        //        // Upload the file to S3
+        //        var request = new PutObjectRequest()
+        //        {
+        //            BucketName = bucketName,
+        //            Key = file.FileName,
+        //            InputStream = file.OpenReadStream(),
+        //            ContentType = file.ContentType
+        //        };
+        //        await _s3Client.PutObjectAsync(request);
+
+        //        // Generate the URL for the uploaded file
+        //        string fileUrl = $"https://{bucketName}.s3.amazonaws.com/{file.FileName}";
+
+        //        // Set the avatar URL in the employee DTO
+        //        employee.Avt = fileUrl;
+        //    }
+
+        //    if (!employee.Id.HasValue)
+        //    {
+        //        employee.Id = new Guid(Guid.NewGuid().ToString());
+        //    }
+
+        //    // Save the new staff information
+        //    var response = await _userService.CreateNewStaff(employee);
+        //    return new ObjectResult(response)
+        //    {
+        //        StatusCode = (int)response.StatusCode
+        //    };
+        //}
+        [Microsoft.AspNetCore.Mvc.HttpPost("{id}/upload-avt")]
+        public async Task<IActionResult> UploadAvatarUser(Guid id, [FromForm] EmployeeDto emp, IFormFile? file)
         {
             string bucketName = "swp391-bucket";
-
-            // Check if bucket exists
-            var bucketExists = await _s3Client.DoesS3BucketExistAsync(bucketName);
-            if (!bucketExists) return NotFound($"Bucket {bucketName} does not exist.");
+            var currentUser = await CUser.GetUserById2(id);
             if (file != null && file.Length > 0)
             {
+                if (!string.IsNullOrEmpty(currentUser.Avt))
+                {
+                    // Extract the existing file key from the URL
+                    var existingFileKey = new Uri(currentUser.Avt).AbsolutePath.TrimStart('/');
+
+                    // Delete the existing avatar file from S3
+                    var deleteRequest = new DeleteObjectRequest
+                    {
+                        BucketName = bucketName,
+                        Key = existingFileKey
+                    };
+                    await _s3Client.DeleteObjectAsync(deleteRequest);
+                }
                 // Upload the file to S3
                 var request = new PutObjectRequest()
                 {
@@ -49,20 +99,90 @@ namespace swp391_debo_be.Controllers
                     ContentType = file.ContentType
                 };
                 await _s3Client.PutObjectAsync(request);
-
                 // Generate the URL for the uploaded file
                 string fileUrl = $"https://{bucketName}.s3.amazonaws.com/{file.FileName}";
 
                 // Set the avatar URL in the employee DTO
-                employee.Avt = fileUrl;
+                emp.Avt = fileUrl;
             }
-
-            if (!employee.Id.HasValue)
+            else
             {
-                employee.Id = new Guid(Guid.NewGuid().ToString());
-            }
+                var existingFileKey = new Uri(currentUser.Avt).AbsolutePath.TrimStart('/');
 
-            // Save the new staff information
+                // Delete the existing avatar file from S3
+                var deleteRequest = new DeleteObjectRequest
+                {
+                    BucketName = bucketName,
+                    Key = existingFileKey
+                };
+                await _s3Client.DeleteObjectAsync(deleteRequest);
+                emp.Avt = null;
+            }
+            var response = await _userService.UploadAvatarUser(id, emp);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+
+        [Microsoft.AspNetCore.Mvc.HttpPost("{id}/upload-medrec")]
+        public async Task<IActionResult> UploadMedRecPatient(Guid id, [FromForm] EmployeeDto emp, IFormFile? file)
+        {
+            string bucketName = "swp391-bucket";
+            var currentUser = await CUser.GetUserById2(id);
+            if (file != null && file.Length > 0)
+            {
+                if (!string.IsNullOrEmpty(currentUser.MedRec))
+                {
+                    // Extract the existing file key from the URL
+                    var existingFileKey = new Uri(currentUser.MedRec).AbsolutePath.TrimStart('/');
+
+                    // Delete the existing avatar file from S3
+                    var deleteRequest = new DeleteObjectRequest
+                    {
+                        BucketName = bucketName,
+                        Key = existingFileKey
+                    };
+                    await _s3Client.DeleteObjectAsync(deleteRequest);
+                }
+                // Upload the file to S3
+                var request = new PutObjectRequest()
+                {
+                    BucketName = bucketName,
+                    Key = file.FileName,
+                    InputStream = file.OpenReadStream(),
+                    ContentType = file.ContentType
+                };
+                await _s3Client.PutObjectAsync(request);
+                // Generate the URL for the uploaded file
+                string fileUrl = $"https://{bucketName}.s3.amazonaws.com/{file.FileName}";
+
+                // Set the avatar URL in the employee DTO
+                emp.MedRec = fileUrl;
+            }
+            else
+            {
+                var existingFileKey = new Uri(currentUser.MedRec).AbsolutePath.TrimStart('/');
+
+                // Delete the existing avatar file from S3
+                var deleteRequest = new DeleteObjectRequest
+                {
+                    BucketName = bucketName,
+                    Key = existingFileKey
+                };
+                await _s3Client.DeleteObjectAsync(deleteRequest);
+                emp.MedRec = null;
+            }
+            var response = await _userService.UploadMedRecPatient(id, emp);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+
+        [Microsoft.AspNetCore.Mvc.HttpPost("createstaff")]
+        public async Task<IActionResult> CreateNewStaff(EmployeeDto employee)
+        {
             var response = await _userService.CreateNewStaff(employee);
             return new ObjectResult(response)
             {
