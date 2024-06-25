@@ -368,8 +368,8 @@ namespace swp391_debo_be.Dao.Implement
                 existingUser.Phone = emp.Phone;
                 existingUser.Address = emp.Address;
                 existingUser.DateOfBirthday = emp.DateOfBirthday;
-                existingUser.MedRec = emp.MedRec;
-                existingUser.Avt = emp.Avt;
+                //existingUser.MedRec = emp.MedRec;
+                //existingUser.Avt = emp.Avt;
                 _context.Users.Update(existingUser);
                 await _context.SaveChangesAsync();
             }

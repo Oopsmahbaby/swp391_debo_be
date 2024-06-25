@@ -126,7 +126,7 @@ namespace swp391_debo_be.Controllers
                 StatusCode = (int)response.StatusCode
             };
         }
-        [Microsoft.AspNetCore.Mvc.HttpGet("userdetail/{id}")]
+        [Microsoft.AspNetCore.Mvc.HttpGet("{id}")]
         public async Task<IActionResult> GetUserById2(Guid id)
         {
             var response = await _userService.GetUserById2(id);
