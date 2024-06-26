@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Amazon.S3;
+using Amazon.S3.Model;
+using Azure;
+using Microsoft.AspNetCore.Mvc;
 using swp391_debo_be.Auth;
 using swp391_debo_be.Constants;
 using swp391_debo_be.Dto.Implement;
@@ -12,10 +15,12 @@ namespace swp391_debo_be.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IAmazonS3 _s3Client;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IAmazonS3 s3Client)
         {
             _userService = userService;
+            _s3Client = s3Client;
         }
 
         [Microsoft.AspNetCore.Mvc.HttpGet("profile")]
@@ -26,8 +31,39 @@ namespace swp391_debo_be.Controllers
         }
 
         [Microsoft.AspNetCore.Mvc.HttpPost("createstaff")]
-        public async Task<IActionResult> CreateNewStaff(EmployeeDto employee)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> CreateNewStaff(IFormFile? file, [FromForm] EmployeeDto employee)
         {
+            string bucketName = "swp391-bucket";
+
+            // Check if bucket exists
+            var bucketExists = await _s3Client.DoesS3BucketExistAsync(bucketName);
+            if (!bucketExists) return NotFound($"Bucket {bucketName} does not exist.");
+            if (file != null && file.Length > 0)
+            {
+                // Upload the file to S3
+                var request = new PutObjectRequest()
+                {
+                    BucketName = bucketName,
+                    Key = file.FileName,
+                    InputStream = file.OpenReadStream(),
+                    ContentType = file.ContentType
+                };
+                await _s3Client.PutObjectAsync(request);
+
+                // Generate the URL for the uploaded file
+                string fileUrl = $"https://{bucketName}.s3.amazonaws.com/{file.FileName}";
+
+                // Set the avatar URL in the employee DTO
+                employee.Avt = fileUrl;
+            }
+
+            if (!employee.Id.HasValue)
+            {
+                employee.Id = new Guid(Guid.NewGuid().ToString());
+            }
+
+            // Save the new staff information
             var response = await _userService.CreateNewStaff(employee);
             return new ObjectResult(response)
             {
@@ -91,7 +127,7 @@ namespace swp391_debo_be.Controllers
                 StatusCode = (int)response.StatusCode
             };
         }
-        [Microsoft.AspNetCore.Mvc.HttpGet("userdetail")]
+        [Microsoft.AspNetCore.Mvc.HttpGet("userdetail/{id}")]
         public async Task<IActionResult> GetUserById2(Guid id)
         {
             var response = await _userService.GetUserById2(id);
@@ -100,15 +136,15 @@ namespace swp391_debo_be.Controllers
                 StatusCode = (int)response.StatusCode
             };
         }
-        [Microsoft.AspNetCore.Mvc.HttpGet("patient/isFirstTime")]
-        public ActionResult<ApiRespone> firstTimeBooking()
+
+        [Microsoft.AspNetCore.Mvc.HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(Guid id, EmployeeDto emp)
         {
-           var userId = JwtProvider.GetUserId(Request);
-            if (string.IsNullOrEmpty(userId))
+            var response = await _userService.UpdateUser(id, emp);
+            return new ObjectResult(response)
             {
-                return new ApiRespone { Data = null, Message = "Authorization header is required", Success = false };
-            }
-            return Ok(_userService.firstTimeBooking(userId));
+                StatusCode = (int)response.StatusCode
+            };
         }
     }
 }

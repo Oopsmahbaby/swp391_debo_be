@@ -96,5 +96,10 @@ namespace swp391_debo_be.Cores
                 throw;
             }
         }
+
+        public static Task<List<AppointmentHistoryDto>> GetAppointmentByDentistId(int page, int limit, Guid dentistId)
+        {
+            return _appointmentRepo.GetAppointmentByDentistId(page, limit, dentistId);
+        }
     }
 }

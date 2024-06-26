@@ -38,6 +38,7 @@ namespace swp391_debo_be.Dao.Interface
         public Task<List<EmployeeDto>> ViewManagerList(int page, int limit);
         public Task<List<EmployeeDto>> ViewCustomerList(int page, int limit);
         public Task<EmployeeDto> GetUserById2(Guid id);
+        public Task UpdateUser(Guid id, EmployeeDto emp);
 
         public object firstTimeBooking(Guid userId);
 

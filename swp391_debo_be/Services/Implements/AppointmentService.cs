@@ -57,6 +57,27 @@ namespace swp391_debo_be.Services.Implements
             }
         }
 
+        public async Task<ApiRespone> GetAppointmentByDentistId(int page, int limit, Guid dentistId)
+        {
+            var response = new ApiRespone();
+            try
+            {
+                var data = await CAppointment.GetAppointmentByDentistId(page, limit, dentistId);
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                response.Data = new { list = data, total = data.Count };
+                response.Success = true;
+                response.Message = "Fetched appointment list successfully";
+                return response;
+            }
+            catch (System.Exception ex)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
         //public ActionResult<ApiRespone> CreateAppointment(AppointmentDto dto, object result)
         //{
         //    //return //AppointmentDto.CreateAppointment(dto, result);

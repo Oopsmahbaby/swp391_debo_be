@@ -276,7 +276,7 @@ public partial class DeboDev02Context : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK__User__3214EC27E79EA6B7");
 
-            entity.ToTable("User");
+            entity.ToTable("User", tb => tb.HasTrigger("trgAfterInsertUser"));
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()

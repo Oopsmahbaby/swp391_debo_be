@@ -117,6 +117,10 @@ namespace swp391_debo_be.Repository.Implement
             return _userDao.GetUserById2(id);
         }
 
+        public Task UpdateUser(Guid id, EmployeeDto emp)
+        {
+            return _userDao.UpdateUser(id, emp);
+        }
         public object firstTimeBooking(Guid userId)
         {
             return _userDao.firstTimeBooking(userId);
