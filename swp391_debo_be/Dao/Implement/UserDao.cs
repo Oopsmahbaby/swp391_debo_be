@@ -161,8 +161,7 @@ namespace swp391_debo_be.Dao.Implement
                 Phone = employee.Phone,
                 Address = employee.Address,
                 DateOfBirthday = employee.DateOfBirthday,
-                //MedRec = employee.MedRec,
-                //Avt = employee.Avt,
+                IsFirstTime = false,
             };
             _context.Users.Add(newStaff);
             await _context.SaveChangesAsync();
@@ -184,8 +183,7 @@ namespace swp391_debo_be.Dao.Implement
                 Phone = employee.Phone,
                 Address = employee.Address,
                 DateOfBirthday = employee.DateOfBirthday,
-                MedRec = employee.MedRec,
-                Avt = employee.Avt,
+                IsFirstTime = false,
             };
             _context.Users.Add(newDent);
             await _context.SaveChangesAsync();
@@ -207,8 +205,7 @@ namespace swp391_debo_be.Dao.Implement
                 Phone = employee.Phone,
                 Address = employee.Address,
                 DateOfBirthday = employee.DateOfBirthday,
-                MedRec = employee.MedRec,
-                Avt = employee.Avt,
+                IsFirstTime = false,
             };
             _context.Users.Add(newManager);
             await _context.SaveChangesAsync();
@@ -238,7 +235,6 @@ namespace swp391_debo_be.Dao.Implement
                 Phone = t.Phone,
                 Address = t.Address,
                 DateOfBirthday = t.DateOfBirthday,
-                MedRec = t.MedRec,
                 Avt = t.Avt,
             }).ToList();
 
@@ -268,7 +264,6 @@ namespace swp391_debo_be.Dao.Implement
                 Phone = t.Phone,
                 Address = t.Address,
                 DateOfBirthday = t.DateOfBirthday,
-                MedRec = t.MedRec,
                 Avt = t.Avt,
             }).ToList();
 
@@ -298,7 +293,6 @@ namespace swp391_debo_be.Dao.Implement
                 Phone = t.Phone,
                 Address = t.Address,
                 DateOfBirthday = t.DateOfBirthday,
-                MedRec = t.MedRec,
                 Avt = t.Avt,
             }).ToList();
 
@@ -368,15 +362,12 @@ namespace swp391_debo_be.Dao.Implement
             {
                 existingUser.Username = emp.Username;
                 existingUser.Email = emp.Email;
-                //existingUser.Password = HashPasswordHelper.HashPassword(emp.Password);
                 existingUser.FirstName = emp.FirstName;
                 existingUser.LastName = emp.LastName;
                 existingUser.Gender = emp.Gender;
                 existingUser.Phone = emp.Phone;
                 existingUser.Address = emp.Address;
                 existingUser.DateOfBirthday = emp.DateOfBirthday;
-                //existingUser.MedRec = emp.MedRec;
-                //existingUser.Avt = emp.Avt;
                 _context.Users.Update(existingUser);
                 await _context.SaveChangesAsync();
             }
