@@ -15,5 +15,7 @@ namespace swp391_debo_be.Services.Interfaces
         public Task<ApiRespone> ViewAllAppointment(int page, int limit);
         public ApiRespone GetAppointmentsByStartDateAndEndDateOfDentist(string startDate, string endDate, string userId);
         public Task<ApiRespone> GetAppointmentByDentistId(int page, int limit, Guid dentistId);
+        public Task<ApiRespone> GetAppointmentetail(Guid id, int page, int limit);
+        public Task<ApiRespone> ViewAppointmentDetail(Guid id);
     }
 }

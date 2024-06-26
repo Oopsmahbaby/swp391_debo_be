@@ -32,6 +32,12 @@ namespace swp391_debo_be.Cores
         {
             return _userRepository.GetUserByEmail(email);
         }
+
+        public static User GetUserByAvt(string avt)
+        {
+            return _userRepository.GetUserByAvt(avt);
+        }
+
         public static string[] GetRoleName(User user)
         {
            return _userRepository.getRolesName(user);
@@ -107,6 +113,20 @@ namespace swp391_debo_be.Cores
         public static Task UpdateUser(Guid id, EmployeeDto emp)
         {
             return _userRepository.UpdateUser(id, emp);
+        }
+
+        public static Task UploadAvatarUser(Guid id, EmployeeDto emp)
+        {
+            return _userRepository.UploadAvatarUser(id, emp);
+        }
+        public static Task UploadMedRecPatient(Guid id, EmployeeDto emp)
+        {
+            return _userRepository.UploadMedRecPatient(id, emp);
+        }
+
+        public static Task UpdatePassword(Guid id, EmployeeDto emp)
+        {
+            return _userRepository.UpdatePassword(id, emp);
         }
     }
 }

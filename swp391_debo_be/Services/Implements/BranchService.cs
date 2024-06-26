@@ -155,6 +155,7 @@ namespace swp391_debo_be.Services.Implements
                     response.StatusCode = HttpStatusCode.NotFound;
                     response.Success = false;
                     response.Message = "Branch ID mismatch";
+                    return response;
                 }
                 var data = await CBranch.getBranchAsync(id);
                 if (data == null)
@@ -162,6 +163,7 @@ namespace swp391_debo_be.Services.Implements
                     response.StatusCode = HttpStatusCode.NotFound;
                     response.Success = false;
                     response.Message = "Branch not found or inactive.";
+                    return response;
                 }
                 await CBranch.updateBranchAsync(id, branch);
                 var updBranch = await CBranch.getBranchAsync(id);

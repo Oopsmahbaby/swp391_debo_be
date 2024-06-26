@@ -70,6 +70,13 @@ namespace swp391_debo_be.Dao.Implement
             return user;
         }
 
+        public User GetUserByAvt(string avt)
+        {
+            User? user = _context.Users.FirstOrDefault(u => u.Avt == avt);
+
+            return user;
+        }
+
         public bool IsRefreshTokenExist(User user)
         {
             User foundUser = GetUserById(user.Id);
@@ -140,7 +147,7 @@ namespace swp391_debo_be.Dao.Implement
 
         public async Task<Guid> CreateNewStaff(EmployeeDto employee)
         {
-            
+
             var newStaff = new User
             {
                 Id = new Guid(Guid.NewGuid().ToString()),
@@ -154,8 +161,8 @@ namespace swp391_debo_be.Dao.Implement
                 Phone = employee.Phone,
                 Address = employee.Address,
                 DateOfBirthday = employee.DateOfBirthday,
-                MedRec = employee.MedRec,
-                Avt = employee.Avt,
+                //MedRec = employee.MedRec,
+                //Avt = employee.Avt,
             };
             _context.Users.Add(newStaff);
             await _context.SaveChangesAsync();
@@ -361,20 +368,70 @@ namespace swp391_debo_be.Dao.Implement
             {
                 existingUser.Username = emp.Username;
                 existingUser.Email = emp.Email;
-                existingUser.Password = HashPasswordHelper.HashPassword(emp.Password);
+                //existingUser.Password = HashPasswordHelper.HashPassword(emp.Password);
                 existingUser.FirstName = emp.FirstName;
                 existingUser.LastName = emp.LastName;
                 existingUser.Gender = emp.Gender;
                 existingUser.Phone = emp.Phone;
                 existingUser.Address = emp.Address;
                 existingUser.DateOfBirthday = emp.DateOfBirthday;
-                existingUser.MedRec = emp.MedRec;
-                existingUser.Avt = emp.Avt;
+                //existingUser.MedRec = emp.MedRec;
+                //existingUser.Avt = emp.Avt;
                 _context.Users.Update(existingUser);
                 await _context.SaveChangesAsync();
             }
 
 
+        }
+
+        public async Task UploadAvatarUser(Guid id, EmployeeDto emp)
+        {
+            var existingUser = await _context.Users.FindAsync(id);
+            if (existingUser == null || id != emp.Id)
+            {
+                throw new InvalidOperationException("User not found, or ID mismatch.");
+            }
+            else
+            {
+                existingUser.Avt = emp.Avt;
+                _context.Users.Update(existingUser);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task UploadMedRecPatient(Guid id, EmployeeDto emp)
+        {
+            var existingUser = await _context.Users.FindAsync(id);
+            if (existingUser == null || id != emp.Id)
+            {
+                throw new InvalidOperationException("User not found, or ID mismatch.");
+            }
+            else
+            {
+                existingUser.MedRec = emp.MedRec;
+                _context.Users.Update(existingUser);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpdatePassword(Guid id, EmployeeDto emp)
+        {
+            var existingUser = await _context.Users.FindAsync(id);
+            if (existingUser == null || id != emp.Id)
+            {
+                throw new InvalidOperationException("User not found, or ID mismatch.");
+            }
+
+            if (existingUser.Password != HashPasswordHelper.HashPassword(emp.Password))
+            {
+                throw new InvalidOperationException("Old password is not valid");
+            }
+            else
+            {
+                existingUser.Password = HashPasswordHelper.HashPassword(emp.NewPassword);
+                _context.Users.Update(existingUser);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public object firstTimeBooking(Guid userId)
