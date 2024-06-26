@@ -268,20 +268,20 @@ namespace swp391_debo_be.Services.Implements
                     response.Message = "User ID mismatch";
                     return response;
                 }
-                if (CUser.GetUserByEmail(emp.Email) != null)
-                {
-                    response.StatusCode = HttpStatusCode.BadRequest;
-                    response.Success = false;
-                    response.Message = "Email is already exist";
-                    return response;
-                }
-                if (CUser.GetUserByPhoneNumber(emp.Phone) != null)
-                {
-                    response.StatusCode = HttpStatusCode.BadRequest;
-                    response.Success = false;
-                    response.Message = "Phone Number is already exist";
-                    return response;
-                }
+                //if (CUser.GetUserByEmail(emp.Email) != null)
+                //{
+                //    response.StatusCode = HttpStatusCode.BadRequest;
+                //    response.Success = false;
+                //    response.Message = "Email is already exist";
+                //    return response;
+                //}
+                //if (CUser.GetUserByPhoneNumber(emp.Phone) != null)
+                //{
+                //    response.StatusCode = HttpStatusCode.BadRequest;
+                //    response.Success = false;
+                //    response.Message = "Phone Number is already exist";
+                //    return response;
+                //}
                 var data = await CUser.GetUserById2(id);
                 if (data == null)
                 {
@@ -416,6 +416,7 @@ namespace swp391_debo_be.Services.Implements
                 response.Message = ex.Message;
             }
             return response;
+        }
             
         public ApiRespone firstTimeBooking(string userId)
         {
