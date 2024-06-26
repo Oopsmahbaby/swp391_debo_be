@@ -103,7 +103,7 @@ namespace swp391_debo_be.Controllers
         [Microsoft.AspNetCore.Mvc.HttpGet("patient/isFirstTime")]
         public ActionResult<ApiRespone> firstTimeBooking()
         {
-           var userId = JwtProvider.GetUserId("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJjYzAyOWJlOC0yYzAwLTRhMTktOTU1Zi1mODhlZjQ0YWNhNWMiLCJlbWFpbCI6Im5ndXllbmxlQGdtYWlsLmNvbSIsInVuaXF1ZV9uYW1lIjoiIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiIwOTAxMjMyMTIzIiwicm9sZSI6IkN1c3RvbWVyIiwibmJmIjoxNzE5MzcyMDU5LCJleHAiOjE3MTkzNzU2NTksImlhdCI6MTcxOTM3MjA1OX0.pP4jh4AbH8d2RdyytZ48dTvAPXUPJhAuP_A0PCth4p8");
+           var userId = JwtProvider.GetUserId(Request);
             if (string.IsNullOrEmpty(userId))
             {
                 return new ApiRespone { Data = null, Message = "Authorization header is required", Success = false };
