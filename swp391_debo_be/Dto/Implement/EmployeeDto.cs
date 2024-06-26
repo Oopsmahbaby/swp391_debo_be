@@ -31,5 +31,6 @@ namespace swp391_debo_be.Dto.Implement
         public string? MedRec { get; set; }
 
         public string? Avt { get; set; }
+        public bool? IsFirstTime { get; set; }
     }
 }
