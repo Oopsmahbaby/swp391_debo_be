@@ -233,5 +233,24 @@ namespace swp391_debo_be.Services.Implements
             }
             return response;
         }
+
+        public ApiRespone firstTimeBooking(string userId)
+        {
+            try
+            {
+                if (Guid.TryParse(userId, out Guid id))
+                {
+                    var respone = CUser.firstTimeBooking(id);
+
+                    return new ApiRespone { StatusCode = HttpStatusCode.OK,Data = respone, Message = "Fetched first time booking successfully.", Success = true };
+                } else
+                {
+                       return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = "Invalid user id", Success = false };
+                }
+            } catch (Exception ex)
+            {
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
+            }
+        }
     }
 }

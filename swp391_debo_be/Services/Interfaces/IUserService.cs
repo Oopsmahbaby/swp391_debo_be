@@ -19,5 +19,6 @@ namespace swp391_debo_be.Services.Interfaces
         public Task<ApiRespone> ViewManagerList(int page, int limit);
         public Task<ApiRespone> ViewCustomerList(int page, int limit);
         public Task<ApiRespone> GetUserById2(Guid id);
+        ApiRespone firstTimeBooking(string userId);
     }
 }

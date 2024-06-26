@@ -19,6 +19,10 @@ public partial class ClinicTreatment
 
     public bool? Status { get; set; }
 
+    public int? RuleId { get; set; }
+
+    public int? NumOfApp { get; set; }
+
     public virtual User? Admin { get; set; }
 
     public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
@@ -26,6 +30,8 @@ public partial class ClinicTreatment
     public virtual TreatmentCategory? CategoryNavigation { get; set; }
 
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
+
+    public virtual Rule? Rule { get; set; }
 
     public virtual ICollection<Employee> Dents { get; set; } = new List<Employee>();
 }

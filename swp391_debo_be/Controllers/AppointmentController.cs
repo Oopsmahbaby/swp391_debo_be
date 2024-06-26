@@ -51,24 +51,24 @@ namespace swp391_debo_be.Controllers
         }
 
         [HttpGet("slot")]
-        public ActionResult<ApiRespone> GetApppointmentsByDentistIdAndDate([FromQuery] string dentist, [FromQuery] string date)
+        public ActionResult<ApiRespone> GetApppointmentsByDentistIdAndDate([FromQuery] string dentist, [FromQuery] string date, [FromQuery] string treatment)
         {
-            return _appointmentService.GetApppointmentsByDentistIdAndDate(dentist, date);
+            return _appointmentService.GetApppointmentsByDentistIdAndDate(dentist, date, treatment);
         }
 
         [HttpPost("appointment")]
         public ActionResult<ApiRespone> CreateAppointment([FromBody] AppointmentDto dto)
         {
-            string role = JwtProvider.GetRole(Request);
+            //string role = JwtProvider.GetRole(Request);
 
-            string? userId = JwtProvider.GetUserId(Request);
+            //string? userId = JwtProvider.GetUserId(Request);
 
-            if (string.IsNullOrEmpty(userId) && string.IsNullOrEmpty(role))
-            {
-                return new ApiRespone { Data = null, Message = "Authorization header is required", Success = false };
-            }
+            //if (string.IsNullOrEmpty(userId) && string.IsNullOrEmpty(role))
+            //{
+            //    return new ApiRespone { Data = null, Message = "Authorization header is required", Success = false };
+            //}
 
-            return _appointmentService.CreateAppointment(dto, userId, role);
+            return _appointmentService.CreateAppointment(dto, "8760F50A-3D40-4A79-B8F8-F794FDF36B37", "Customer");
         }
 
         [HttpDelete("appointment/{id}")]

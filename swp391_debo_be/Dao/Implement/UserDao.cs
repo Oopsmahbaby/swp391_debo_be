@@ -349,5 +349,36 @@ namespace swp391_debo_be.Dao.Implement
                               }).FirstOrDefaultAsync();
             return user;
         }
+
+        public object firstTimeBooking(Guid userId)
+        {
+            var user = GetUserById(userId);
+
+            if (user == null)
+            {
+                return new
+                {
+                    IsFirstTime = false,
+                    Treatment = new List<string>()
+                };
+            }
+
+            if (!(bool)user.IsFirstTime) 
+            {
+                return new
+                {
+                    IsFirstTime = false,
+                    Treatment = new List<string>()
+                };
+            } else
+            {
+                ClinicTreatment? clinicTreatment = _context.ClinicTreatments.Where(t => t.Id == 8).FirstOrDefault();
+                return new
+                {
+                    IsFirstTime = true,
+                    Treatment = clinicTreatment
+                };
+            }
+        }
     }
 }

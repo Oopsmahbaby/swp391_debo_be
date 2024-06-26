@@ -33,6 +33,8 @@ public partial class User
 
     public string? Avt { get; set; }
 
+    public bool? IsFirstTime { get; set; }
+
     public virtual ICollection<Appointment> AppointmentCreators { get; set; } = new List<Appointment>();
 
     public virtual ICollection<Appointment> AppointmentCus { get; set; } = new List<Appointment>();
@@ -50,8 +52,6 @@ public partial class User
     public virtual Employee? Employee { get; set; }
 
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
-
-    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
     public virtual Role? RoleNavigation { get; set; }
 }

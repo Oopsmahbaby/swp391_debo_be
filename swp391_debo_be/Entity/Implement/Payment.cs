@@ -7,17 +7,25 @@ public partial class Payment
 {
     public Guid Id { get; set; }
 
-    public Guid? CusId { get; set; }
+    public string? PaymentContent { get; set; }
 
-    public int? MethodId { get; set; }
+    public string? PaymentCurrency { get; set; }
 
-    public double? Amount { get; set; }
+    public string? PaymentRefId { get; set; }
 
-    public string? Status { get; set; }
+    public decimal? RequiredAmount { get; set; }
 
-    public string? Description { get; set; }
+    public DateTime? PaymentDate { get; set; }
 
-    public virtual User? Cus { get; set; }
+    public DateTime? ExpireDate { get; set; }
 
-    public virtual PaymentMethod? Method { get; set; }
+    public string? PaymentLanguage { get; set; }
+
+    public decimal? PaidAmount { get; set; }
+
+    public string? PaymentStatus { get; set; }
+
+    public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
+
+    public virtual ICollection<PaymentTransaction> PaymentTransactions { get; set; } = new List<PaymentTransaction>();
 }

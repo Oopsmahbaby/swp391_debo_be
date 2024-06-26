@@ -39,6 +39,8 @@ public partial class Appointment
 
     public virtual User? Dent { get; set; }
 
+    public virtual Payment? Payment { get; set; }
+
     public virtual User? TempDent { get; set; }
 
     public virtual ClinicTreatment? Treat { get; set; }

@@ -34,9 +34,9 @@ namespace swp391_debo_be.Repository.Implement
             return _treatmentDao.getAllTreatmentAsync(page, limit);
         }
 
-        public List<ClinicTreatment> GetClinicTreatmentsBasedBranchId(int branchId)
+        public List<object> GetClinicTreatmentsBasedBranchId(int branchId)
         {
-            return _treatmentDao.GetDentistsBasedOnBranchId(branchId);
+            return _treatmentDao.GetTreatmentsBasedOnBranchId(branchId);
         }
 
         public Task<TreatmentDto> getTreatmentAsync(int id)

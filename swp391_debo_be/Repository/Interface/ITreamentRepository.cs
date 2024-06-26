@@ -11,6 +11,6 @@ namespace swp391_debo_be.Repository.Interface
         public Task updateTreatmentAsync(int id, TreatmentDto treatment);
         public Task deleteTreatmentAsync(int id);
 
-        public List<ClinicTreatment> GetClinicTreatmentsBasedBranchId(int branchId);
+        public List<object> GetClinicTreatmentsBasedBranchId(int branchId);
     }
 }

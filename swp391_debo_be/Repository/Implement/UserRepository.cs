@@ -117,5 +117,9 @@ namespace swp391_debo_be.Repository.Implement
             return _userDao.GetUserById2(id);
         }
 
+        public object firstTimeBooking(Guid userId)
+        {
+            return _userDao.firstTimeBooking(userId);
+        }
     }
 }
