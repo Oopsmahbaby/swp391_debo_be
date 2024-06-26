@@ -146,5 +146,18 @@ namespace swp391_debo_be.Controllers
                 StatusCode = (int)response.StatusCode
             };
         }
+
+        [Microsoft.AspNetCore.Mvc.HttpGet("patient/isFirstTime")]
+        public ActionResult<ApiRespone> FirstTimeBooking()
+        {
+            string? userId = JwtProvider.GetUserId(Request);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return new ApiRespone { Data = null, Message = "Authorization header is required", Success = false };
+            }
+
+            return _userService.firstTimeBooking(userId);
+        }
     }
 }
