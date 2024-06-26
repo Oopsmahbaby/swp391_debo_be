@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using swp391_debo_be.Auth;
+using swp391_debo_be.Config.VnPay;
 using swp391_debo_be.Cores;
 using swp391_debo_be.Dao.Implement;
 using swp391_debo_be.Dao.Interface;
@@ -85,12 +86,15 @@ builder.Services.AddScoped<IAppointmentDao, AppointmentDao>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<ITreatmentService, TreatmentService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<BranchService>();
 builder.Services.AddScoped<CBranch>();
-
+builder.Services.AddScoped<PaymentDao>();
 builder.Services.AddScoped<CTreatment>();
 builder.Services.AddScoped<TreatmentService>();
 builder.Services.AddScoped<CAppointment>();
+builder.Services.Configure<VnpayConfig>(
+                builder.Configuration.GetSection(VnpayConfig.ConfigName));
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

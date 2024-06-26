@@ -2,6 +2,7 @@
 using Amazon.S3.Model;
 using Azure;
 using Microsoft.AspNetCore.Mvc;
+using swp391_debo_be.Auth;
 using swp391_debo_be.Constants;
 using swp391_debo_be.Cores;
 using swp391_debo_be.Dto.Implement;
@@ -266,6 +267,7 @@ namespace swp391_debo_be.Controllers
             };
         }
 
+
         [Microsoft.AspNetCore.Mvc.HttpPut("updatepassword/{id}")]
         public async Task<IActionResult> UpdatePassword(Guid id, EmployeeDto emp)
         {
@@ -276,5 +278,17 @@ namespace swp391_debo_be.Controllers
             };
         }
 
+        [Microsoft.AspNetCore.Mvc.HttpGet("patient/isFirstTime")]
+        public ActionResult<ApiRespone> FirstTimeBooking()
+        {
+            string? userId = JwtProvider.GetUserId(Request);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return new ApiRespone { Data = null, Message = "Authorization header is required", Success = false };
+            }
+
+            return _userService.firstTimeBooking(userId);
+        }
     }
 }

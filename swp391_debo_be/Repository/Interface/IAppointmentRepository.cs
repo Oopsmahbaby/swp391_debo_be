@@ -6,10 +6,10 @@ namespace swp391_debo_be.Repository.Interface
 {
     public interface IAppointmentRepository
     {
-        public Appointment CreateAppointment(Appointment appointment);
+        public List<Appointment> CreateAppointment(AppointmentDto appointment, Guid cusId);
         public object GetAppointmentByPagination(string page, string limit, Guid userId);
         public List<object> GetAppointmentsByStartDateAndEndDate(DateOnly startDate,DateOnly endDate ,Guid id);
-        public List<int> GetApppointmentsByDentistIdAndDate(Guid dentistId, DateOnly date);
+        public int[][] GetApppointmentsByDentistIdAndDate(Guid dentistId, DateOnly date, int treatmentId);
         public Appointment CancelAppointment(Guid appointmentId);
         public Task<List<AppointmentHistoryDto>> GetHistoryAppointmentByUserID(Guid id);
         public Task<List<AppointmentHistoryDto>> ViewAllAppointment(int page, int limit);

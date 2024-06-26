@@ -27,11 +27,11 @@ public partial class DeboDev02Context : DbContext
 
     public virtual DbSet<Payment> Payments { get; set; }
 
-    public virtual DbSet<PaymentMethod> PaymentMethods { get; set; }
-
-    public virtual DbSet<PaymentProvider> PaymentProviders { get; set; }
+    public virtual DbSet<PaymentTransaction> PaymentTransactions { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
+
+    public virtual DbSet<Rule> Rules { get; set; }
 
     public virtual DbSet<TreatmentCategory> TreatmentCategories { get; set; }
 
@@ -39,13 +39,13 @@ public partial class DeboDev02Context : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=debo_dev_02;Integrated Security=True;Encrypt=True;Trust Server Certificate=True");
+        => optionsBuilder.UseSqlServer("Server=DESKTOP-3MT3PF7;Database=debo_dev_02;TrustServerCertificate=True;Trusted_Connection=True;MultipleActiveResultSets=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Appointment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Appointm__3214EC277B6C5D7B");
+            entity.HasKey(e => e.Id).HasName("PK__Appointm__3214EC276D4ACAF0");
 
             entity.ToTable("Appointment");
 
@@ -78,6 +78,10 @@ public partial class DeboDev02Context : DbContext
                 .HasForeignKey(d => d.DentId)
                 .HasConstraintName("FK_Appointment.Dent_ID");
 
+            entity.HasOne(d => d.Payment).WithMany(p => p.Appointments)
+                .HasForeignKey(d => d.PaymentId)
+                .HasConstraintName("FK_Appointment.Payment_ID");
+
             entity.HasOne(d => d.TempDent).WithMany(p => p.AppointmentTempDents)
                 .HasForeignKey(d => d.TempDentId)
                 .HasConstraintName("FK_Appointment.Temp_Dent_ID");
@@ -89,7 +93,7 @@ public partial class DeboDev02Context : DbContext
 
         modelBuilder.Entity<ClinicBranch>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Clinic_B__3214EC27D1C78800");
+            entity.HasKey(e => e.Id).HasName("PK__Clinic_B__3214EC27B4691DEB");
 
             entity.ToTable("Clinic_Branch");
 
@@ -116,7 +120,7 @@ public partial class DeboDev02Context : DbContext
 
         modelBuilder.Entity<ClinicTreatment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Clinic_T__3214EC277F791234");
+            entity.HasKey(e => e.Id).HasName("PK__Clinic_T__3214EC277B0AB045");
 
             entity.ToTable("Clinic_Treatment");
 
@@ -125,6 +129,8 @@ public partial class DeboDev02Context : DbContext
                 .HasColumnName("ID");
             entity.Property(e => e.AdminId).HasColumnName("Admin_ID");
             entity.Property(e => e.Name).HasMaxLength(50);
+            entity.Property(e => e.NumOfApp).HasColumnName("Num_Of_App");
+            entity.Property(e => e.RuleId).HasColumnName("Rule_ID");
 
             entity.HasOne(d => d.Admin).WithMany(p => p.ClinicTreatments)
                 .HasForeignKey(d => d.AdminId)
@@ -133,11 +139,15 @@ public partial class DeboDev02Context : DbContext
             entity.HasOne(d => d.CategoryNavigation).WithMany(p => p.ClinicTreatments)
                 .HasForeignKey(d => d.Category)
                 .HasConstraintName("FK_Clinic Treatment.Category");
+
+            entity.HasOne(d => d.Rule).WithMany(p => p.ClinicTreatments)
+                .HasForeignKey(d => d.RuleId)
+                .HasConstraintName("FK_ClinicTreatment.Rule_ID");
         });
 
         modelBuilder.Entity<Employee>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Employee__3214EC274AA2C74F");
+            entity.HasKey(e => e.Id).HasName("PK__Employee__3214EC27ABA64456");
 
             entity.ToTable("Employee");
 
@@ -168,7 +178,7 @@ public partial class DeboDev02Context : DbContext
                         .HasConstraintName("FK_Dentist Major.Dent_ID"),
                     j =>
                     {
-                        j.HasKey("DentId", "TreatId").HasName("PK__Dentist___7EA262746BE0065F");
+                        j.HasKey("DentId", "TreatId").HasName("PK__Dentist___7EA26274216B17D9");
                         j.ToTable("Dentist_Major");
                         j.IndexerProperty<Guid>("DentId").HasColumnName("Dent_ID");
                         j.IndexerProperty<int>("TreatId").HasColumnName("Treat_ID");
@@ -177,7 +187,7 @@ public partial class DeboDev02Context : DbContext
 
         modelBuilder.Entity<Feedback>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Feedback__3214EC271E80042A");
+            entity.HasKey(e => e.Id).HasName("PK__Feedback__3214EC27239EE7DE");
 
             entity.ToTable("Feedback");
 
@@ -199,69 +209,38 @@ public partial class DeboDev02Context : DbContext
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Payment__3214EC27805006BC");
+            entity.HasKey(e => e.Id).HasName("PK__Payment__3214EC0761CD1DA9");
 
             entity.ToTable("Payment");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
-            entity.Property(e => e.CusId).HasColumnName("Cus_ID");
-            entity.Property(e => e.Description).HasMaxLength(200);
-            entity.Property(e => e.MethodId).HasColumnName("Method_ID");
-            entity.Property(e => e.Status).HasMaxLength(20);
-
-            entity.HasOne(d => d.Cus).WithMany(p => p.Payments)
-                .HasForeignKey(d => d.CusId)
-                .HasConstraintName("FK_Payment.Cus_ID");
-
-            entity.HasOne(d => d.Method).WithMany(p => p.Payments)
-                .HasForeignKey(d => d.MethodId)
-                .HasConstraintName("FK_Payment.Method_ID");
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.ExpireDate).HasColumnType("datetime");
+            entity.Property(e => e.PaidAmount).HasColumnType("decimal(19, 2)");
+            entity.Property(e => e.PaymentContent).HasMaxLength(250);
+            entity.Property(e => e.PaymentCurrency).HasMaxLength(10);
+            entity.Property(e => e.PaymentDate).HasColumnType("datetime");
+            entity.Property(e => e.PaymentLanguage).HasMaxLength(10);
+            entity.Property(e => e.PaymentRefId).HasMaxLength(50);
+            entity.Property(e => e.PaymentStatus).HasMaxLength(20);
+            entity.Property(e => e.RequiredAmount).HasColumnType("decimal(19, 2)");
         });
 
-        modelBuilder.Entity<PaymentMethod>(entity =>
+        modelBuilder.Entity<PaymentTransaction>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Payment___3214EC2778F5B051");
+            entity.ToTable("PaymentTransaction");
 
-            entity.ToTable("Payment_Method");
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.TranAmount).HasColumnType("decimal(19, 2)");
+            entity.Property(e => e.TranDate).HasColumnType("datetime");
+            entity.Property(e => e.TranMessage).HasMaxLength(250);
+            entity.Property(e => e.TranStatus).HasMaxLength(10);
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
-            entity.Property(e => e.IpnListenerLink).HasColumnName("Ipn_Listener_Link");
-            entity.Property(e => e.PaymentInfo)
-                .HasMaxLength(256)
-                .HasColumnName("Payment_Info");
-            entity.Property(e => e.PrivateKey)
-                .HasMaxLength(256)
-                .HasColumnName("Private_Key");
-            entity.Property(e => e.ProviderId).HasColumnName("Provider_ID");
-            entity.Property(e => e.PublicKey)
-                .HasMaxLength(256)
-                .HasColumnName("Public_Key");
-
-            entity.HasOne(d => d.Provider).WithMany(p => p.PaymentMethods)
-                .HasForeignKey(d => d.ProviderId)
-                .HasConstraintName("FK_Payment Method.Provider_ID");
-        });
-
-        modelBuilder.Entity<PaymentProvider>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Payment___3214EC272707E7F8");
-
-            entity.ToTable("Payment_Provider");
-
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
-            entity.Property(e => e.Desciption).HasMaxLength(200);
-            entity.Property(e => e.Name).HasMaxLength(20);
+            entity.HasOne(d => d.Payment).WithMany(p => p.PaymentTransactions).HasForeignKey(d => d.PaymentId);
         });
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.RoleId).HasName("PK__Role__D80AB49BB8E7C484");
+            entity.HasKey(e => e.RoleId).HasName("PK__Role__D80AB49B088FE79C");
 
             entity.ToTable("Role");
 
@@ -273,9 +252,17 @@ public partial class DeboDev02Context : DbContext
                 .HasColumnName("Role");
         });
 
+        modelBuilder.Entity<Rule>(entity =>
+        {
+            entity.ToTable("Rule");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Name).HasMaxLength(50);
+        });
+
         modelBuilder.Entity<TreatmentCategory>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Treatmen__3214EC27AC47EE49");
+            entity.HasKey(e => e.Id).HasName("PK__Treatmen__3214EC273652A7FC");
 
             entity.ToTable("Treatment_Category");
 
@@ -287,7 +274,7 @@ public partial class DeboDev02Context : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__User__3214EC27259B5854");
+            entity.HasKey(e => e.Id).HasName("PK__User__3214EC27E79EA6B7");
 
             entity.ToTable("User", tb => tb.HasTrigger("trgAfterInsertUser"));
 
@@ -298,6 +285,7 @@ public partial class DeboDev02Context : DbContext
             entity.Property(e => e.DateOfBirthday).HasColumnName("Date Of Birthday");
             entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.FirstName).HasMaxLength(30);
+            entity.Property(e => e.IsFirstTime).HasColumnName("Is_First_Time");
             entity.Property(e => e.LastName).HasMaxLength(30);
             entity.Property(e => e.MedRec).HasColumnName("Med_Rec");
             entity.Property(e => e.Phone).HasMaxLength(20);

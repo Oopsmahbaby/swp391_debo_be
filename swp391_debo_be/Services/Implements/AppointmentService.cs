@@ -42,23 +42,10 @@ namespace swp391_debo_be.Services.Implements
                     return new ApiRespone { StatusCode = System.Net.HttpStatusCode.Unauthorized, Data = null, Message = "You are not allowed to create appointment", Success = false };
                 }
 
-                if (Guid.TryParse(userId, out var id) && Guid.TryParse(dto.DentId, out Guid dentId) && DateOnly.TryParse(dto.Date, out DateOnly startDate))
+                if (Guid.TryParse(userId, out var id)  && DateOnly.TryParse(dto.Date, out DateOnly startDate))
                 {
-                    Appointment appointment = new Appointment
-                    {
-                        Id = Guid.NewGuid(),
-                        CusId = id,
-                        CreatorId = id,
-                        DentId = dentId,
-                        TreatId = dto.TreateId,
-                        StartDate = startDate,
-                        CreatedDate = startDate,
-                        TimeSlot = dto.TimeSlot,
-                        IsCreatedByStaff = false,
-                        Status = "pending"
-                    };
-
-                    var result = CAppointment.CreateAppointment(appointment);
+        
+                    var result = CAppointment.CreateAppointment(dto, id);
 
                     return result != null ? new ApiRespone { StatusCode = System.Net.HttpStatusCode.Created, Data = result, Message = "Created appointment successfully", Success = true }
                     : new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Data = null, Message = "Failed to create appointment", Success = false };
@@ -203,13 +190,13 @@ namespace swp391_debo_be.Services.Implements
             }
         }
 
-        public ApiRespone GetApppointmentsByDentistIdAndDate(string dentistId, string date)
+        public ApiRespone GetApppointmentsByDentistIdAndDate(string dentistId, string date, string treatmentId)
         {
             try
             {
-                if (Guid.TryParse(dentistId, out Guid dentist) && DateOnly.TryParse(date, out DateOnly dateOnly))
+                if (Guid.TryParse(dentistId, out Guid dentist) && DateOnly.TryParse(date, out DateOnly dateOnly) && int.TryParse(treatmentId, out int treatId))
                 {
-                    var result = CAppointment.GetApppointmentsByDentistIdAndDate(dentist, dateOnly);
+                    var result = CAppointment.GetApppointmentsByDentistIdAndDate(dentist, dateOnly,treatId);
 
                     if (result == null)
                     {

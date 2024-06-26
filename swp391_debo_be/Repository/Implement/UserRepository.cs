@@ -140,6 +140,9 @@ namespace swp391_debo_be.Repository.Implement
         public Task UpdatePassword(Guid id, EmployeeDto emp)
         {
             return _userDao.UpdatePassword(id, emp);
+        public object firstTimeBooking(Guid userId)
+        {
+            return _userDao.firstTimeBooking(userId);
         }
     }
 }

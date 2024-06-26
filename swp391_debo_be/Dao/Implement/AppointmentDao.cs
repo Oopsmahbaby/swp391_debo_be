@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using Microsoft.Extensions.Logging;
+using Microsoft.Identity.Client;
 using swp391_debo_be.Dao.Interface;
 using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
@@ -38,11 +39,44 @@ namespace swp391_debo_be.Dao.Implement
             return appointment;
         }
 
-        public Appointment CreateAppointment(Appointment dto)
-        {   
-            _context.Appointments.Add(dto);
-            _context.SaveChanges();
-            return dto;
+        public List<Appointment> CreateAppointment(AppointmentDto dto, Guid cusId)
+        {
+            int? ruleId = _context.ClinicTreatments
+                .Where(t => t.Id == dto.TreateId)
+                .Select(t => t.RuleId)
+                .FirstOrDefault();
+
+            int? numOfApp = _context.ClinicTreatments
+                .Where(t => t.Id == dto.TreateId)
+                .Select(t => t.NumOfApp)
+                .FirstOrDefault();
+
+            List<DateOnly> futureDates = GetFutureDate(DateOnly.Parse(dto.Date!), (int)numOfApp!, (int)ruleId!);
+
+            // List to view created appoinment will be deleted when it done
+            List<Appointment> createdAppointments = new List<Appointment>();
+
+            foreach(DateOnly date in futureDates)
+            {
+                Appointment appointment = new Appointment
+                {
+                    Id = Guid.NewGuid(),
+                    CusId = cusId,
+                    DentId = Guid.Parse(dto.DentId!),
+                    TreatId = dto.TreateId,
+                    StartDate = date,
+                    TimeSlot = dto.TimeSlot,
+                    Status = "pending",
+                    CreatedDate = DateOnly.FromDateTime(DateTime.Now),
+                    CreatorId = cusId,
+                    IsCreatedByStaff = false
+                };
+                createdAppointments.Add(appointment);
+                _context.Appointments.Add(appointment);
+                _context.SaveChanges();
+            }
+
+            return createdAppointments;
         }
 
         public object GetAppointmentByPagination(string page, string limit, Guid userId)
@@ -118,21 +152,73 @@ namespace swp391_debo_be.Dao.Implement
             return result;
         }
 
-        public List<int> GetApppointmentsByDentistIdAndDate(Guid dentistId, DateOnly date)
+        private static List<DateOnly> GetFutureDate(DateOnly date, int numOfApp, int rule)
         {
-            List<int> nonAvailableSlots = new List<int>();
-
-            var appointments = _context.Appointments
-                .Where(a => Guid.Equals(a.DentId, dentistId) && a.StartDate == date)
-                .ToList();
-
-            foreach (Appointment appointment in appointments)
+            List<DateOnly> futureDate = [date];
+            for (int i = 0; i < numOfApp - 1; i++)
             {
-                nonAvailableSlots.Add((int)appointment.TimeSlot);
+                switch (rule)
+                {
+                    case 1:
+                        date = date.AddDays(1);
+                        futureDate.Add(date);
+                        break;
+                    case 2:
+                        date = date.AddDays(7);
+                        futureDate.Add(date);
+                        break;
+                    case 3:
+                        date = date.AddMonths(1);
+                        futureDate.Add(date);
+                        break;
+                    case 4:
+                        date = date.AddYears(1);
+                        futureDate.Add(date);
+                        break;
+                    case 5:
+                        date = date.AddMonths(6);
+                        futureDate.Add(date);
+                        break;
+                }
+            }
+            return futureDate;
+        }
+
+        public int[][] GetApppointmentsByDentistIdAndDate(Guid dentistId, DateOnly date, int treatmentId)
+        {
+            int? rule = _context.Rules.Where(r => r.Id == treatmentId).Select(r => r.Id).FirstOrDefault();
+            int? numOfApp = _context.ClinicTreatments.Where(t => t.Id == treatmentId).Select(t => t.NumOfApp).FirstOrDefault();
+
+            List<DateOnly> futureDate = GetFutureDate(date, (int)numOfApp, (int)rule);
+            int[][] timeSlot = new int[futureDate.Count][];
+
+            for (int i = 0; i < futureDate.Count; i++)
+            {
+                timeSlot[i] = _context.Appointments
+                    .Where(a => a.DentId == dentistId && a.StartDate == futureDate[i] && (a.Status == "pending" || a.Status  == "future"))
+                    .Select(a => (int)a.TimeSlot)
+                    .ToArray();
             }
 
-            List<int> availableSlots = Slot.GetSlots(nonAvailableSlots);
+            int[][] availableSLots = GetAvailableSlots(timeSlot);
+            return availableSLots;
+        }
 
+        private static int[][] GetAvailableSlots(int[][] slots)
+        {
+            int[][] availableSlots = new int[slots.Length][];
+            for (int i = 0; i < slots.Length; i++)
+            {
+                List<int> availableSlot = new List<int>();
+                for (int j = 7; j <= 19 ; j++)
+                {
+                    if (!slots[i].Contains(j))
+                    {
+                        availableSlot.Add(j);
+                    }
+                }
+                availableSlots[i] = availableSlot.ToArray();
+            }
             return availableSlots;
         }
         public async Task<List<AppointmentHistoryDto>> GetHistoryAppointmentByUserID(Guid id)

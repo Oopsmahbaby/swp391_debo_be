@@ -41,6 +41,6 @@ namespace swp391_debo_be.Repository.Interface
         public Task UploadAvatarUser(Guid id, EmployeeDto emp);
         public Task UploadMedRecPatient(Guid id, EmployeeDto emp);
         public Task UpdatePassword(Guid id, EmployeeDto emp);
-
+        public object firstTimeBooking(Guid userId);
     }
 }

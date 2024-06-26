@@ -105,6 +105,11 @@ namespace swp391_debo_be.Cores
             return _userRepository.GetUserById2(id);
         }
 
+        public static object firstTimeBooking(Guid userId)
+        {
+            return _userRepository.firstTimeBooking(userId);
+        }
+
         public static Task UpdateUser(Guid id, EmployeeDto emp)
         {
             return _userRepository.UpdateUser(id, emp);

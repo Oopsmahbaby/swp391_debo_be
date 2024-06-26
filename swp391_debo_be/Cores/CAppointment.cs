@@ -42,22 +42,22 @@ namespace swp391_debo_be.Cores
             }
         }
         
-        public static List<int> GetApppointmentsByDentistIdAndDate(Guid dentistId, DateOnly date)
+        public static int[][] GetApppointmentsByDentistIdAndDate(Guid dentistId, DateOnly date, int treatmentId)
         {
             try
             {
-                return appointmentRepository.GetApppointmentsByDentistIdAndDate(dentistId, date);
+                return appointmentRepository.GetApppointmentsByDentistIdAndDate(dentistId, date, treatmentId);
             } catch
             {
                 throw;
             }
         }
 
-        public static Appointment CreateAppointment(Appointment appointment)
+        public static List<Appointment> CreateAppointment(AppointmentDto dto, Guid cusId)
         {
             try
             {
-                return appointmentRepository.CreateAppointment(appointment);
+                return appointmentRepository.CreateAppointment(dto, cusId);
             } catch
             {
                 throw;

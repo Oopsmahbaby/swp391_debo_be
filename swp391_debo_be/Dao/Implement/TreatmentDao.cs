@@ -81,15 +81,43 @@ namespace swp391_debo_be.Dao.Implement
         }
 
 
-        public List<ClinicTreatment> GetDentistsBasedOnBranchId(int branchId)
+        public List<object> GetTreatmentsBasedOnBranchId(int branchId)
         {
+
+            List<object> result = new List<object>();
             var treatments = _context.ClinicBranches
                 .Where(b => b.Id == branchId)
                 .SelectMany(b => b.Employees)
                 .Where(e => e.Type == 4)
                 .SelectMany(e => e.Treats)
                 .ToList();
-            return treatments;
+
+            foreach (var treatment in treatments)
+            {
+                string? categoryName = _context.TreatmentCategories
+                    .Where(tc => tc.Id == treatment.Category)
+                    .Select(tc => tc.Name)
+                    .FirstOrDefault();
+
+                string? ruleName = _context.Rules.Where(r => r.Id == treatment.RuleId)
+                    .Select(r => r.Name)
+                    .FirstOrDefault();
+
+
+                object treat = new
+                {
+                    ID = treatment.Id,
+                    category_name = categoryName,
+                    name = treatment.Name,
+                    description = treatment.Description,
+                    price = treatment.Price,
+                    rule_name = ruleName,
+                    num_of_appointment = treatment.NumOfApp
+                };
+
+                result.Add(treat);
+            }
+            return result;
 
         }
 

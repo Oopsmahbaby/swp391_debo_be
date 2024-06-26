@@ -51,9 +51,9 @@ namespace swp391_debo_be.Controllers
         }
 
         [HttpGet("slot")]
-        public ActionResult<ApiRespone> GetApppointmentsByDentistIdAndDate([FromQuery] string dentist, [FromQuery] string date)
+        public ActionResult<ApiRespone> GetApppointmentsByDentistIdAndDate([FromQuery] string dentist, [FromQuery] string date, [FromQuery] string treatment)
         {
-            return _appointmentService.GetApppointmentsByDentistIdAndDate(dentist, date);
+            return _appointmentService.GetApppointmentsByDentistIdAndDate(dentist, date, treatment);
         }
 
         [HttpPost("appointment")]
