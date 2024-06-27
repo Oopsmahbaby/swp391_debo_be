@@ -7,11 +7,19 @@ using swp391_debo_be.Services.Interfaces;
 using System.Security.Cryptography;
 using System.Text;
 using System.Net;
+using Amazon.S3.Model;
+using Amazon.S3;
 
 namespace swp391_debo_be.Services.Implements
 {
     public class UserService : IUserService
     {
+        private readonly IAmazonS3 _s3Client;
+
+        public UserService(IAmazonS3 s3Client)
+        {
+            _s3Client = s3Client;
+        }
         public ApiRespone CreateUser(CreateUserDto createUserDto)
         {
 
@@ -241,6 +249,28 @@ namespace swp391_debo_be.Services.Implements
             try
             {
                 var existingUser = await CUser.GetUserById2(id);
+
+                if (!string.IsNullOrEmpty(existingUser.MedRec))
+                {
+                    // Extract the file key from the MedRec URL
+                    var fileKey = new Uri(existingUser.MedRec).AbsolutePath.TrimStart('/');
+
+                    // Fetch metadata from S3
+                    var metadata = await _s3Client.GetObjectMetadataAsync(new GetObjectMetadataRequest
+                    {
+                        BucketName = "swp391-bucket",
+                        Key = fileKey
+                    });
+                    // Them Name cua file
+                    existingUser.MedRecMetaData = new MedRecMetaDataDto
+                    {
+                        NameFile = fileKey,
+                        FileSize = metadata.ContentLength,
+                        LastModified = metadata.LastModified,
+                        ContentType = metadata.Headers.ContentType
+                    };
+                }
+
                 var role = existingUser.RoleName;
                 response.StatusCode = HttpStatusCode.OK;
                 response.Data = existingUser;
