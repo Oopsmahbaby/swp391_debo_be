@@ -8,9 +8,9 @@ namespace swp391_debo_be.Repository.Implement
     public class PaymentRepository : IPaymentRepository
     {
         private readonly PaymentDao _paymentDao = new PaymentDao();
-        public PaymentLinkDto Create(CreatePaymentDto createPaymentDto, Guid appointmentId)
+        public PaymentLinkDto Create(CreatePaymentDto createPaymentDto)
         {
-            return _paymentDao.Create(createPaymentDto, appointmentId);
+            return _paymentDao.Create(createPaymentDto);
         }
 
         public PaymenReturnDto HandlePaymentResponse(VnpayPayResponse vnpayResponse)

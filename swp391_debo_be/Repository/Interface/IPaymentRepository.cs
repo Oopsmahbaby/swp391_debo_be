@@ -5,7 +5,7 @@ namespace swp391_debo_be.Repository.Interface
 {
     public interface IPaymentRepository
     {
-        public PaymentLinkDto Create(CreatePaymentDto createPaymentDto, Guid appointmentId);
+        public PaymentLinkDto Create(CreatePaymentDto createPaymentDto);
         public PaymenReturnDto HandlePaymentResponse(VnpayPayResponse vnpayResponse);
     }
 }

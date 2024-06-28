@@ -6,7 +6,7 @@ namespace swp391_debo_be.Services.Interfaces
 {
     public interface IPaymentService
     {
-        public ApiRespone Create(CreatePaymentDto createPaymentDto, string appointmentId);
+        public ApiRespone Create(CreatePaymentDto createPaymentDto);
 
         public ApiRespone HandlePaymentResponse(VnpayPayResponse vnpayResponse);
     }

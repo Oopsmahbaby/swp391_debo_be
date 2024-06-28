@@ -7,7 +7,7 @@ namespace swp391_debo_be.Dao.Interface
 {
     public interface IPaymentDao
     {
-        public PaymentLinkDto Create(CreatePaymentDto createPaymentDto, Guid appointmentId);
+        public PaymentLinkDto Create(CreatePaymentDto createPaymentDto);
         public PaymenReturnDto HandleVnpayPaymentReturnProcess(VnpayPayResponse vnpayPayResponse);
     }
 }
