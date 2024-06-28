@@ -43,5 +43,10 @@ namespace swp391_debo_be.Repository.Implement
         {
             return _branchDao.updateBranchAsync(id, branch);
         }
+
+        public Task UploadPicBranch(int id, BranchDto branch)
+        {
+            return _branchDao.UploadPicBranch(id, branch);
+        }
     }
 }

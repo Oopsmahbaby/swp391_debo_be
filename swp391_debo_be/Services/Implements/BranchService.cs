@@ -188,5 +188,47 @@ namespace swp391_debo_be.Services.Implements
             return response;
         }
 
+        public async Task<ApiRespone> UploadPicBranch(int id, BranchDto branch)
+        {
+            var response = new ApiRespone();
+            try
+            {
+                if (id != branch.Id)
+                {
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.Success = false;
+                    response.Message = "Branch ID mismatch";
+                    return response;
+                }
+                var data = await CBranch.getBranchAsync(id);
+                if (data == null)
+                {
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.Success = false;
+                    response.Message = "Branch not found or inactive.";
+                    return response;
+                }
+                await CBranch.UploadPicBranch(id, branch);
+                var updBranch = await CBranch.getBranchAsync(id);
+                response.StatusCode = HttpStatusCode.OK;
+                response.Data = updBranch;
+                response.Success = true;
+                response.Message = "Branch data updated successfully.";
+
+            }
+            catch (InvalidOperationException ex)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
     }
 }

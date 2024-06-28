@@ -18,6 +18,7 @@ namespace swp391_debo_be.Services.Interfaces
         public Task<ApiRespone> ViewDentList(int page, int limit);
         public Task<ApiRespone> ViewManagerList(int page, int limit);
         public Task<ApiRespone> ViewCustomerList(int page, int limit);
+        public Task<ApiRespone> AvailableManager(int page, int limit);
         public Task<ApiRespone> GetUserById2(Guid id);
         public Task<ApiRespone> UpdateUser(Guid id, EmployeeDto emp);
         public Task<ApiRespone> UploadAvatarUser(Guid id, EmployeeDto emp);

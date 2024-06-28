@@ -9,5 +9,7 @@ namespace swp391_debo_be.Repository.Interface
         public Task<int> addBranchAsync(BranchDto branch);
         public Task updateBranchAsync(int id, BranchDto branch);
         public Task deleteBranchAsync(int id);
+        public Task UploadPicBranch(int id, BranchDto branch);
     }
 }
+

@@ -11,6 +11,7 @@ namespace swp391_debo_be.Services.Interfaces
         public Task<ApiRespone> updateBranchAsync(int id, BranchDto branch);
         public Task<ApiRespone> deleteBranchAsync(int id);
         public Task<ApiRespone> activeBranchAsync(int id);
-
+        public Task<ApiRespone> UploadPicBranch(int id, BranchDto branch);
     }
+
 }

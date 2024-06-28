@@ -44,5 +44,11 @@ namespace swp391_debo_be.Cores
         {
             return _branchRepo.updateBranchAsync(id, branch);
         }
+
+        public static Task UploadPicBranch(int id, BranchDto branch)
+        {
+            return _branchRepo.UploadPicBranch(id, branch);
+        }
     }
 }
+

@@ -9,7 +9,7 @@ namespace swp391_debo_be.Dao.Implement
     {
         private readonly DeboDev02Context _context = new DeboDev02Context(new DbContextOptions<DeboDev02Context>());
 
-        public BranchDao() 
+        public BranchDao()
         {
         }
         public BranchDao(DeboDev02Context context)
@@ -37,7 +37,6 @@ namespace swp391_debo_be.Dao.Implement
                 Address = branch.Address,
                 Phone = branch.Phone,
                 Email = branch.Email,
-                Avt = branch.Avt,
                 Status = true,
             };
             _context.ClinicBranches.Add(newBranch);
@@ -48,11 +47,11 @@ namespace swp391_debo_be.Dao.Implement
         public async Task deleteBranchAsync(int id)
         {
             var deleteBranch = _context.ClinicBranches!.SingleOrDefault(x => x.Id == id);
-            if (deleteBranch != null) 
+            if (deleteBranch != null)
             {
                 deleteBranch.Status = false;
                 _context.ClinicBranches.Update(deleteBranch);
-                await _context.SaveChangesAsync() ;
+                await _context.SaveChangesAsync();
             }
         }
 
@@ -124,8 +123,23 @@ namespace swp391_debo_be.Dao.Implement
                 existingBranch.Address = branch.Address;
                 existingBranch.Phone = branch.Phone;
                 existingBranch.Email = branch.Email;
-                existingBranch.Avt = branch.Avt;
 
+                _context.ClinicBranches.Update(existingBranch);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task UploadPicBranch(int id, BranchDto branch)
+        {
+            var existingBranch = await _context.ClinicBranches.FindAsync(id);
+            if (existingBranch == null || existingBranch.Status != true || id != branch.Id)
+            {
+                throw new InvalidOperationException("Branch not found, inactive, or ID mismatch.");
+
+            }
+            else
+            {
+                existingBranch.Avt = branch.Avt;
                 _context.ClinicBranches.Update(existingBranch);
                 await _context.SaveChangesAsync();
             }

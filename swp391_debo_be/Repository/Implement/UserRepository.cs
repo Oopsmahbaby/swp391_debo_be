@@ -145,5 +145,10 @@ namespace swp391_debo_be.Repository.Implement
         {
             return _userDao.firstTimeBooking(userId);
         }
+
+        public Task<List<EmployeeDto>> AvailableManager(int page, int limit)
+        {
+            return _userDao.AvailableManager(page, limit);
+        }
     }
 }

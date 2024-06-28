@@ -161,8 +161,6 @@ namespace swp391_debo_be.Dao.Implement
                 Phone = employee.Phone,
                 Address = employee.Address,
                 DateOfBirthday = employee.DateOfBirthday,
-                //MedRec = employee.MedRec,
-                //Avt = employee.Avt,
             };
             _context.Users.Add(newStaff);
             await _context.SaveChangesAsync();
@@ -184,8 +182,6 @@ namespace swp391_debo_be.Dao.Implement
                 Phone = employee.Phone,
                 Address = employee.Address,
                 DateOfBirthday = employee.DateOfBirthday,
-                MedRec = employee.MedRec,
-                Avt = employee.Avt,
             };
             _context.Users.Add(newDent);
             await _context.SaveChangesAsync();
@@ -207,8 +203,6 @@ namespace swp391_debo_be.Dao.Implement
                 Phone = employee.Phone,
                 Address = employee.Address,
                 DateOfBirthday = employee.DateOfBirthday,
-                MedRec = employee.MedRec,
-                Avt = employee.Avt,
             };
             _context.Users.Add(newManager);
             await _context.SaveChangesAsync();
@@ -447,14 +441,15 @@ namespace swp391_debo_be.Dao.Implement
                 };
             }
 
-            if (!(bool)user.IsFirstTime) 
+            if (!(bool)user.IsFirstTime)
             {
                 return new
                 {
                     IsFirstTime = false,
                     Treatment = new List<string>()
                 };
-            } else
+            }
+            else
             {
                 ClinicTreatment? clinicTreatment = _context.ClinicTreatments.Where(t => t.Id == 8).FirstOrDefault();
                 return new
@@ -463,6 +458,39 @@ namespace swp391_debo_be.Dao.Implement
                     Treatment = clinicTreatment
                 };
             }
+        }
+
+        public async Task<List<EmployeeDto>> AvailableManager(int page, int limit)
+        {
+            var query = from user in _context.Users
+                        where user.Role == 2
+                        join clinicBranch in _context.ClinicBranches
+                        on user.Id equals clinicBranch.MngId into gj
+                        from subClinicBranch in gj.DefaultIfEmpty()
+                        where subClinicBranch == null
+                        select new EmployeeDto
+                        {
+                            Id = user.Id,
+                            Role = user.Role,
+                            Username = user.Username,
+                            Email = user.Email,
+                            Password = user.Password,
+                            FirstName = user.FirstName,
+                            LastName = user.LastName,
+                            Gender = user.Gender,
+                            Phone = user.Phone,
+                            Address = user.Address,
+                            DateOfBirthday = user.DateOfBirthday,
+                            MedRec = user.MedRec,
+                            Avt = user.Avt
+                        };
+
+            if (limit > 0)
+            {
+                query = query.Skip(page * limit).Take(limit);
+            }
+
+            return await query.ToListAsync();
         }
     }
 }

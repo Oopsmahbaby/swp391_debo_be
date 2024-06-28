@@ -436,5 +436,26 @@ namespace swp391_debo_be.Services.Implements
                 return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
         }
+
+        public async Task<ApiRespone> AvailableManager(int page, int limit)
+        {
+            var response = new ApiRespone();
+            try
+            {
+                var data = await CUser.AvailableManager(page, limit);
+                response.StatusCode = HttpStatusCode.OK;
+                response.Data = new { list = data, total = data.Count };
+                response.Success = true;
+                response.Message = "Manager list data retrieved successfully.";
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
     }
 }
