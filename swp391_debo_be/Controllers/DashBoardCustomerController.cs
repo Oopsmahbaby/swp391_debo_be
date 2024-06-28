@@ -4,7 +4,7 @@ using swp391_debo_be.Services.Interfaces;
 
 namespace swp391_debo_be.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/dashboard")]
     [ApiController]
     public class DashBoardCustomerController : ControllerBase
     {
@@ -24,7 +24,7 @@ namespace swp391_debo_be.Controllers
             };
         }
 
-        [HttpGet]
+        [HttpGet("totalpaid/{id}")]
         public async Task<IActionResult> ViewTotalPaidAmountOfCustomer(Guid id)
         {
             var response = await _dbcus.ViewTotalPaidAmountOfCustomer(id);
