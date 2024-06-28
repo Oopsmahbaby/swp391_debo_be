@@ -101,5 +101,15 @@ namespace swp391_debo_be.Cores
         {
             return _appointmentRepo.GetAppointmentByDentistId(page, limit, dentistId);
         }
+
+        public static Task<List<AppointmentDetailsDto>> GetAppointmentetail(Guid id, int page, int limit)
+        {
+            return _appointmentRepo.GetAppointmentetail(id, page, limit);
+        }
+
+        public static Task<AppointmentDetailsDto> ViewAppointmentDetail(Guid id)
+        {
+            return _appointmentRepo.ViewAppointmentDetail(id);
+        }
     }
 }

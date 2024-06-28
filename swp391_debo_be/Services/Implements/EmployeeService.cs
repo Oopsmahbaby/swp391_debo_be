@@ -131,6 +131,7 @@ namespace swp391_debo_be.Services.Implements
                     response.StatusCode = HttpStatusCode.NotFound;
                     response.Success = false;
                     response.Message = "Employee not found";
+                    return response;
                 }
                 await CEmployee.UpdateBranchForEmployee(id, employee);
                 var updEmp = await CEmployee.GetEmployeeById(id);

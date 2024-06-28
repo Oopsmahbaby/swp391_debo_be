@@ -7,11 +7,19 @@ using swp391_debo_be.Services.Interfaces;
 using System.Security.Cryptography;
 using System.Text;
 using System.Net;
+using Amazon.S3.Model;
+using Amazon.S3;
 
 namespace swp391_debo_be.Services.Implements
 {
     public class UserService : IUserService
     {
+        private readonly IAmazonS3 _s3Client;
+
+        public UserService(IAmazonS3 s3Client)
+        {
+            _s3Client = s3Client;
+        }
         public ApiRespone CreateUser(CreateUserDto createUserDto)
         {
 
@@ -64,12 +72,19 @@ namespace swp391_debo_be.Services.Implements
                     response.Message = "Email is already exist";
                     return response;
                 }
+                if (CUser.GetUserByPhoneNumber(employee.Phone) != null)
+                {
+                    response.StatusCode = HttpStatusCode.BadRequest;
+                    response.Success = false;
+                    response.Message = "Phone Number is already exist";
+                    return response;
+                }
                 var newStaff = await CUser.CreateNewStaff(employee);
+                var staff = await CUser.GetUserById2(newStaff);
                 response.StatusCode = HttpStatusCode.OK;
                 response.Success = true;
-                response.Data = newStaff;
+                response.Data = staff;
                 response.Message = "Create New Staff Successfully";
-
             }
             catch (Exception ex)
             {
@@ -90,6 +105,13 @@ namespace swp391_debo_be.Services.Implements
                     response.StatusCode = HttpStatusCode.BadRequest;
                     response.Success = false;
                     response.Message = "Email is already exist";
+                    return response;
+                }
+                if (CUser.GetUserByPhoneNumber(employee.Phone) != null)
+                {
+                    response.StatusCode = HttpStatusCode.BadRequest;
+                    response.Success = false;
+                    response.Message = "Phone Number is already exist";
                     return response;
                 }
                 var newStaff = await CUser.CreateNewDent(employee);
@@ -118,6 +140,13 @@ namespace swp391_debo_be.Services.Implements
                     response.StatusCode = HttpStatusCode.BadRequest;
                     response.Success = false;
                     response.Message = "Email is already exist";
+                    return response;
+                }
+                if (CUser.GetUserByPhoneNumber(employee.Phone) != null)
+                {
+                    response.StatusCode = HttpStatusCode.BadRequest;
+                    response.Success = false;
+                    response.Message = "Phone Number is already exist";
                     return response;
                 }
                 var newStaff = await CUser.CreateNewManager(employee);
@@ -220,6 +249,28 @@ namespace swp391_debo_be.Services.Implements
             try
             {
                 var existingUser = await CUser.GetUserById2(id);
+
+                if (!string.IsNullOrEmpty(existingUser.MedRec))
+                {
+                    // Extract the file key from the MedRec URL
+                    var fileKey = new Uri(existingUser.MedRec).AbsolutePath.TrimStart('/');
+
+                    // Fetch metadata from S3
+                    var metadata = await _s3Client.GetObjectMetadataAsync(new GetObjectMetadataRequest
+                    {
+                        BucketName = "swp391-bucket",
+                        Key = fileKey
+                    });
+                    // Them Name cua file
+                    existingUser.MedRecMetaData = new MedRecMetaDataDto
+                    {
+                        NameFile = fileKey,
+                        FileSize = metadata.ContentLength,
+                        LastModified = metadata.LastModified,
+                        ContentType = metadata.Headers.ContentType
+                    };
+                }
+
                 var role = existingUser.RoleName;
                 response.StatusCode = HttpStatusCode.OK;
                 response.Data = existingUser;
@@ -245,13 +296,29 @@ namespace swp391_debo_be.Services.Implements
                     response.StatusCode = HttpStatusCode.NotFound;
                     response.Success = false;
                     response.Message = "User ID mismatch";
+                    return response;
                 }
+                //if (CUser.GetUserByEmail(emp.Email) != null)
+                //{
+                //    response.StatusCode = HttpStatusCode.BadRequest;
+                //    response.Success = false;
+                //    response.Message = "Email is already exist";
+                //    return response;
+                //}
+                //if (CUser.GetUserByPhoneNumber(emp.Phone) != null)
+                //{
+                //    response.StatusCode = HttpStatusCode.BadRequest;
+                //    response.Success = false;
+                //    response.Message = "Phone Number is already exist";
+                //    return response;
+                //}
                 var data = await CUser.GetUserById2(id);
                 if (data == null)
                 {
                     response.StatusCode = HttpStatusCode.NotFound;
                     response.Success = false;
                     response.Message = "User not found.";
+                    return response;
                 }
                 await CUser.UpdateUser(id, emp);
                 var updUser = await CUser.GetUserById2(id);
@@ -270,6 +337,117 @@ namespace swp391_debo_be.Services.Implements
             return response;
         }
 
+        public async Task<ApiRespone> UploadAvatarUser(Guid id, EmployeeDto emp)
+        {
+            var response = new ApiRespone();
+            try
+            {
+                if (id != emp.Id)
+                {
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.Success = false;
+                    response.Message = "User ID mismatch";
+                    return response;
+                }
+                var data = await CUser.GetUserById2(id);
+                if (data == null)
+                {
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.Success = false;
+                    response.Message = "User not found.";
+                    return response;
+                }
+                await CUser.UploadAvatarUser(id, emp);
+                var updUser = await CUser.GetUserById2(id);
+                response.StatusCode = HttpStatusCode.OK;
+                response.Data = updUser;
+                response.Success = true;
+                response.Message = "Avatar profile uploaded successfully.";
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<ApiRespone> UploadMedRecPatient(Guid id, EmployeeDto emp)
+        {
+            var response = new ApiRespone();
+            try
+            {
+                if (id != emp.Id)
+                {
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.Success = false;
+                    response.Message = "User ID mismatch";
+                    return response;
+                }
+                var data = await CUser.GetUserById2(id);
+                if (data == null)
+                {
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.Success = false;
+                    response.Message = "User not found.";
+                    return response;
+                }
+                await CUser.UploadMedRecPatient(id, emp);
+                var updUser = await CUser.GetUserById2(id);
+                response.StatusCode = HttpStatusCode.OK;
+                response.Data = updUser;
+                response.Success = true;
+                response.Message = "Medical Record file uploaded successfully.";
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<ApiRespone> UpdatePassword(Guid id, EmployeeDto emp)
+        {
+            var response = new ApiRespone();
+            try
+            {
+                if (id != emp.Id)
+                {
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.Success = false;
+                    response.Message = "User ID mismatch";
+                    return response;
+                }
+                var data = await CUser.GetUserById2(id);
+                if (data == null)
+                {
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.Success = false;
+                    response.Message = "User not found.";
+                    return response;
+                }
+                await CUser.UpdatePassword(id, emp);
+                var updUser = await CUser.GetUserById2(id);
+                response.StatusCode = HttpStatusCode.OK;
+                response.Data = updUser;
+                response.Success = true;
+                response.Message = "User data updated successfully.";
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+            
         public ApiRespone firstTimeBooking(string userId)
         {
             try

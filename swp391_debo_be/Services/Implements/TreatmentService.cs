@@ -184,6 +184,7 @@ namespace swp391_debo_be.Services.Implements
                     response.StatusCode = HttpStatusCode.NotFound;
                     response.Success = false;
                     response.Message = "Treatment ID mismatch";
+                    return response;
                 }
                 var data = await CTreatment.getTreatmentAsync(id);
                 if (data == null)
@@ -191,6 +192,7 @@ namespace swp391_debo_be.Services.Implements
                     response.StatusCode = HttpStatusCode.NotFound;
                     response.Success = false;
                     response.Message = "Treatment not found or inactive.";
+                    return response;
                 }
                 await CTreatment.updateTreatmentAsync(id, treatment);
                 var updTreat = await CTreatment.getTreatmentAsync(id);

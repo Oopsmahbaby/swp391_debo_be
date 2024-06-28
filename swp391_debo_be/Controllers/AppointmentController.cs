@@ -146,5 +146,25 @@ namespace swp391_debo_be.Controllers
                 StatusCode = (int)response.StatusCode
             };
         }
+
+        [HttpGet("appointmentdetails/{id}")]
+        public async Task<IActionResult> GetAppointmentetail(Guid id, [FromQuery] int page = 0, [FromQuery] int limit = 5)
+        {
+            var response = await _appointmentService.GetAppointmentetail(id, page, limit);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+
+        [HttpGet("viewappointmentdetails/{id}")]
+        public async Task<IActionResult> ViewAppointmentDetail(Guid id)
+        {
+            var response = await _appointmentService.ViewAppointmentDetail(id);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
     }
 }

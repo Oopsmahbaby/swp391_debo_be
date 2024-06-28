@@ -14,6 +14,7 @@ namespace swp391_debo_be.Dto.Implement
         public string? Email { get; set; }
 
         public string? Password { get; set; }
+        public string? NewPassword { get; set; }
 
         public string? FirstName { get; set; }
 
@@ -30,5 +31,7 @@ namespace swp391_debo_be.Dto.Implement
         public string? MedRec { get; set; }
 
         public string? Avt { get; set; }
+        public bool? IsFirstTime { get; set; }
+        public MedRecMetaDataDto? MedRecMetaData { get; set; }
     }
 }

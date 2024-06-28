@@ -121,6 +121,26 @@ namespace swp391_debo_be.Repository.Implement
         {
             return _userDao.UpdateUser(id, emp);
         }
+
+        public Task UploadAvatarUser(Guid id, EmployeeDto emp)
+        {
+            return _userDao.UploadAvatarUser(id, emp);
+        }
+
+        public Task UploadMedRecPatient(Guid id, EmployeeDto emp)
+        {
+            return _userDao.UploadMedRecPatient(id, emp);
+        }
+
+        public User GetUserByAvt(string avt)
+        {
+            return _userDao.GetUserByAvt(avt);
+        }
+
+        public Task UpdatePassword(Guid id, EmployeeDto emp)
+        {
+            return _userDao.UpdatePassword(id, emp);
+        }
         public object firstTimeBooking(Guid userId)
         {
             return _userDao.firstTimeBooking(userId);
