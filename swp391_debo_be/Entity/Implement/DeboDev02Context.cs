@@ -39,15 +39,15 @@ public partial class DeboDev02Context : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=DESKTOP-3MT3PF7;Database=debo_dev_02;TrustServerCertificate=True;Trusted_Connection=True;MultipleActiveResultSets=true;");
+        => optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=debo_dev_02;Integrated Security=True;Encrypt=True;Trust Server Certificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Appointment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Appointm__3214EC276D4ACAF0");
+            entity.HasKey(e => e.Id).HasName("PK__Appointm__3214EC27F1C5041F");
 
-            entity.ToTable("Appointment");
+            entity.ToTable("Appointment", tb => tb.HasTrigger("trg_UpdateUserStatus"));
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
@@ -93,7 +93,7 @@ public partial class DeboDev02Context : DbContext
 
         modelBuilder.Entity<ClinicBranch>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Clinic_B__3214EC27B4691DEB");
+            entity.HasKey(e => e.Id).HasName("PK__Clinic_B__3214EC279C81B512");
 
             entity.ToTable("Clinic_Branch");
 
@@ -120,7 +120,7 @@ public partial class DeboDev02Context : DbContext
 
         modelBuilder.Entity<ClinicTreatment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Clinic_T__3214EC277B0AB045");
+            entity.HasKey(e => e.Id).HasName("PK__Clinic_T__3214EC27AE5163A5");
 
             entity.ToTable("Clinic_Treatment");
 
@@ -147,7 +147,7 @@ public partial class DeboDev02Context : DbContext
 
         modelBuilder.Entity<Employee>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Employee__3214EC27ABA64456");
+            entity.HasKey(e => e.Id).HasName("PK__Employee__3214EC27FC7EF367");
 
             entity.ToTable("Employee");
 
@@ -178,7 +178,7 @@ public partial class DeboDev02Context : DbContext
                         .HasConstraintName("FK_Dentist Major.Dent_ID"),
                     j =>
                     {
-                        j.HasKey("DentId", "TreatId").HasName("PK__Dentist___7EA26274216B17D9");
+                        j.HasKey("DentId", "TreatId").HasName("PK__Dentist___7EA26274180BAAE5");
                         j.ToTable("Dentist_Major");
                         j.IndexerProperty<Guid>("DentId").HasColumnName("Dent_ID");
                         j.IndexerProperty<int>("TreatId").HasColumnName("Treat_ID");
@@ -187,7 +187,7 @@ public partial class DeboDev02Context : DbContext
 
         modelBuilder.Entity<Feedback>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Feedback__3214EC27239EE7DE");
+            entity.HasKey(e => e.Id).HasName("PK__Feedback__3214EC27E453B585");
 
             entity.ToTable("Feedback");
 
@@ -209,7 +209,7 @@ public partial class DeboDev02Context : DbContext
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Payment__3214EC0761CD1DA9");
+            entity.HasKey(e => e.Id).HasName("PK__Payment__3214EC0754D0230F");
 
             entity.ToTable("Payment");
 
@@ -240,7 +240,7 @@ public partial class DeboDev02Context : DbContext
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.RoleId).HasName("PK__Role__D80AB49B088FE79C");
+            entity.HasKey(e => e.RoleId).HasName("PK__Role__D80AB49BB389FDC7");
 
             entity.ToTable("Role");
 
@@ -262,7 +262,7 @@ public partial class DeboDev02Context : DbContext
 
         modelBuilder.Entity<TreatmentCategory>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Treatmen__3214EC273652A7FC");
+            entity.HasKey(e => e.Id).HasName("PK__Treatmen__3214EC27A33F4755");
 
             entity.ToTable("Treatment_Category");
 
@@ -274,7 +274,7 @@ public partial class DeboDev02Context : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__User__3214EC27E79EA6B7");
+            entity.HasKey(e => e.Id).HasName("PK__User__3214EC2717580BB2");
 
             entity.ToTable("User", tb => tb.HasTrigger("trgAfterInsertUser"));
 
