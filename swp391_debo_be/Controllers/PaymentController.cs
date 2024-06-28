@@ -20,9 +20,9 @@ namespace swp391_debo_be.Controllers
         }
 
         [HttpPost]
-        public ActionResult<ApiRespone> CreatePayment([FromBody] CreatePaymentDto createPaymentDto, [FromRoute] string appointmentId)
+        public ActionResult<ApiRespone> CreatePayment([FromBody] CreatePaymentDto createPaymentDto)
         {
-            return _paymentService.Create(createPaymentDto, appointmentId);
+            return _paymentService.Create(createPaymentDto);
         }
 
         [HttpGet("vnpay-return")]

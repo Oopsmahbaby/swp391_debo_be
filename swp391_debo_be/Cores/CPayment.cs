@@ -9,11 +9,11 @@ namespace swp391_debo_be.Cores
     {
         protected static readonly IPaymentRepository paymentRepository = new PaymentRepository();
 
-        public static PaymentLinkDto Create(CreatePaymentDto createPaymentDto, Guid appointmentId)
+        public static PaymentLinkDto Create(CreatePaymentDto createPaymentDto)
         {
             try
             {
-                return paymentRepository.Create(createPaymentDto, appointmentId);
+                return paymentRepository.Create(createPaymentDto);
             }
             catch
             {

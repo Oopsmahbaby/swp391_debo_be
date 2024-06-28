@@ -8,13 +8,11 @@ namespace swp391_debo_be.Services.Implements
 {
     public class PaymentService : IPaymentService
     {
-        public ApiRespone Create(CreatePaymentDto createPaymentDto, string appointmentId)
+        public ApiRespone Create(CreatePaymentDto createPaymentDto)
         {
 
-            if (Guid.TryParse(appointmentId, out Guid appId))
-            {
-
-            var result = CPayment.Create(createPaymentDto, appId);
+  
+            var result = CPayment.Create(createPaymentDto);
 
             if (result == null)
             {
@@ -33,17 +31,6 @@ namespace swp391_debo_be.Services.Implements
                 Data = result,
                 Success = true
             };
-            } else
-            {
-                return new ApiRespone
-                {
-                    StatusCode = System.Net.HttpStatusCode.BadRequest,
-                    Message = "AppointmentId is invalid",
-                    Data = null,
-                    Success = false
-                };
-            }
-
         }
 
         public ApiRespone HandlePaymentResponse(VnpayPayResponse vnpayResponse)

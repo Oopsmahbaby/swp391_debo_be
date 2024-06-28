@@ -38,7 +38,7 @@ namespace swp391_debo_be.Dao.Implement
         {
             _context = context;
         }
-        public PaymentLinkDto? Create(CreatePaymentDto createPaymentDto, Guid appointmentId)
+        public PaymentLinkDto? Create(CreatePaymentDto createPaymentDto)
         {
             Payment payment = new Payment
             {
@@ -52,16 +52,21 @@ namespace swp391_debo_be.Dao.Implement
             };
             _context.Payments.Add(payment);
             _context.SaveChanges();
-
-            Appointment? appointment = _context.Appointments.Find(appointmentId);
-            if (appointment == null)
+            
+            // Handle update paymentId for appointments
+            foreach(string appointmentId in createPaymentDto.ListAppointmentId)
             {
-                return null;
-            }
+                Appointment? appointment = _context.Appointments.FirstOrDefault(a => a.Id.ToString() == appointmentId);
 
-            appointment.PaymentId = payment.Id;
-            _context.Appointments.Update(appointment);
-            _context.SaveChanges();
+                if (appointment == null)
+                {
+                    return null;
+                }
+
+                appointment.PaymentId = payment.Id;
+                _context.Appointments.Update(appointment);
+                _context.SaveChanges();
+            }
 
             var vnpayPayRequest = new VnpayPayRequest(vnpayConfig.Version,
            vnpayConfig.TmnCode, DateTime.Now, "127.0.0.1", createPaymentDto.RequiredAmount ?? 0, createPaymentDto.PaymentCurrency ?? string.Empty,
