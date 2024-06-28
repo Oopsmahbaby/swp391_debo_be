@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using swp391_debo_be.Dao.Implement;
+using swp391_debo_be.Dao.Interface;
 using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
 using swp391_debo_be.Helpers;
@@ -100,7 +101,12 @@ namespace swp391_debo_be.Cores
         {
             return _userRepository.ViewCustomerList(page, limit);
         }
-        public static Task<EmployeeDto> GetUserById2(Guid id)
+
+        public static Task<List<EmployeeDto>> AvailableManager(int page, int limit)
+        {
+            return _userRepository.AvailableManager(page, limit);
+        }
+            public static Task<EmployeeDto> GetUserById2(Guid id)
         {
             return _userRepository.GetUserById2(id);
         }

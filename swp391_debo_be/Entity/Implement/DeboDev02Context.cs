@@ -47,7 +47,7 @@ public partial class DeboDev02Context : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK__Appointm__3214EC27F1C5041F");
 
-            entity.ToTable("Appointment");
+            entity.ToTable("Appointment", tb => tb.HasTrigger("trg_UpdateUserStatus"));
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()

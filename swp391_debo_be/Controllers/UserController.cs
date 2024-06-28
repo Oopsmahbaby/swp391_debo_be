@@ -247,6 +247,18 @@ namespace swp391_debo_be.Controllers
                 StatusCode = (int)response.StatusCode
             };
         }
+
+        [Microsoft.AspNetCore.Mvc.HttpGet("availablemanager")]
+        public async Task<IActionResult> AvailableManager([FromQuery] int page = 0, [FromQuery] int limit = 5)
+        {
+            var response = await _userService.AvailableManager(page, limit);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+
+
         [Microsoft.AspNetCore.Mvc.HttpGet("{id}")]
         public async Task<IActionResult> GetUserById2(Guid id)
         {
