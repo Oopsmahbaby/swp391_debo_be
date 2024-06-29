@@ -31,12 +31,12 @@ namespace swp391_debo_be.Repository.Implement
             return appointmentDao.GetAppointmentByPagination(page, limit, userId);
         }
 
-        public List<object> GetAppointmentsByStartDateAndEndDate(DateOnly startDate, DateOnly endDate, Guid Id)
+        public List<object> GetAppointmentsByStartDateAndEndDate(DateTime startDate, DateTime endDate, Guid Id)
         {
            return appointmentDao.GetAppointmentsByStartDateAndEndDate(startDate, endDate ,Id);
         }
 
-        public int[][] GetApppointmentsByDentistIdAndDate(Guid dentistId, DateOnly date, int treatmentId)
+        public int[][] GetApppointmentsByDentistIdAndDate(Guid dentistId, DateTime date, int treatmentId)
         {
             return appointmentDao.GetApppointmentsByDentistIdAndDate(dentistId, date, treatmentId);
         }
@@ -55,7 +55,7 @@ namespace swp391_debo_be.Repository.Implement
             return _appointmentDao.ViewAllAppointment(page, limit);
         }
 
-        public List<object> GetAppointmentsByStartDateAndEndDateOfDentist(DateOnly startDate, DateOnly endDate, Guid id)
+        public List<object> GetAppointmentsByStartDateAndEndDateOfDentist(DateTime startDate, DateTime endDate, Guid id)
         {
             return appointmentDao.GetAppointmentsByStartDateAndEndDateOfDentist (startDate, endDate, id);
         }

@@ -51,12 +51,12 @@ namespace swp391_debo_be.Dao.Implement
                 .Select(t => t.NumOfApp)
                 .FirstOrDefault();
 
-            List<DateOnly> futureDates = GetFutureDate(DateOnly.Parse(dto.Date!), (int)numOfApp!, (int)ruleId!);
+            List<DateTime> futureDates = GetFutureDate(DateTime.Parse(dto.Date!), (int)numOfApp!, (int)ruleId!);
 
             // List to view created appoinment will be deleted when it done
             List<Appointment> createdAppointments = new List<Appointment>();
 
-            foreach(DateOnly date in futureDates)
+            foreach(DateTime date in futureDates)
             {
                 Appointment appointment = new Appointment
                 {
@@ -67,7 +67,7 @@ namespace swp391_debo_be.Dao.Implement
                     StartDate = date,
                     TimeSlot = dto.TimeSlot,
                     Status = "pending",
-                    CreatedDate = DateOnly.FromDateTime(DateTime.Now),
+                    CreatedDate = DateTime.Now,
                     CreatorId = cusId,
                     IsCreatedByStaff = false
                 };
@@ -113,7 +113,7 @@ namespace swp391_debo_be.Dao.Implement
                 result.Add(new
                 {
                     id = appointment.Id,
-                    start = appointment.StartDate.HasValue ? (DateOnly)appointment.StartDate : default(DateOnly),
+                    start = appointment.StartDate.HasValue ? appointment.StartDate : default(DateTime),
                     timeSlot = appointment.TimeSlot,
                     name = treatment?.Result.Name,
                     dentist = _context.Users.Where(u => u.Id == appointment.DentId).FirstOrDefault().FirstName + " " + _context.Users.Where(u => u.Id == appointment.DentId).FirstOrDefault().LastName,
@@ -131,7 +131,7 @@ namespace swp391_debo_be.Dao.Implement
             };
         }
 
-        public List<object> GetAppointmentsByStartDateAndEndDate(DateOnly startDate, DateOnly endDate, Guid Id)
+        public List<object> GetAppointmentsByStartDateAndEndDate(DateTime startDate, DateTime endDate, Guid Id)
         {
             var appointments = _context.Appointments.Where(a => a.StartDate >= startDate && a.StartDate <= endDate && Guid.Equals(a.CusId, Id)).ToList();
 
@@ -146,15 +146,15 @@ namespace swp391_debo_be.Dao.Implement
             foreach (Appointment appointment in appointments)
             {
                 var treatmeant = _context.ClinicTreatments.Where(t => t.Id == appointment.TreatId).FirstOrDefault();
-                result.Add(new { Id = appointment.Id, start = (DateOnly)appointment.StartDate, TimeSlot = appointment.TimeSlot, name = treatmeant?.Name });
+                result.Add(new { Id = appointment.Id, start = appointment.StartDate, TimeSlot = appointment.TimeSlot, name = treatmeant?.Name });
             }
 
             return result;
         }
 
-        private static List<DateOnly> GetFutureDate(DateOnly date, int numOfApp, int rule)
+        private static List<DateTime> GetFutureDate(DateTime date, int numOfApp, int rule)
         {
-            List<DateOnly> futureDate = [date];
+            List<DateTime> futureDate = [date];
             for (int i = 0; i < numOfApp - 1; i++)
             {
                 switch (rule)
@@ -184,12 +184,12 @@ namespace swp391_debo_be.Dao.Implement
             return futureDate;
         }
 
-        public int[][] GetApppointmentsByDentistIdAndDate(Guid dentistId, DateOnly date, int treatmentId)
+        public int[][] GetApppointmentsByDentistIdAndDate(Guid dentistId, DateTime date, int treatmentId)
         {
             int? rule = _context.Rules.Where(r => r.Id == treatmentId).Select(r => r.Id).FirstOrDefault();
             int? numOfApp = _context.ClinicTreatments.Where(t => t.Id == treatmentId).Select(t => t.NumOfApp).FirstOrDefault();
 
-            List<DateOnly> futureDate = GetFutureDate(date, (int)numOfApp, (int)rule);
+            List<DateTime> futureDate = GetFutureDate(date, (int)numOfApp, (int)rule);
             int[][] timeSlot = new int[futureDate.Count][];
 
             for (int i = 0; i < futureDate.Count; i++)
@@ -266,7 +266,7 @@ namespace swp391_debo_be.Dao.Implement
             return appointments;
         }
 
-        public List<object> GetAppointmentsByStartDateAndEndDateOfDentist(DateOnly startDate, DateOnly endDate, Guid Id)
+        public List<object> GetAppointmentsByStartDateAndEndDateOfDentist(DateTime startDate, DateTime endDate, Guid Id)
         {
             var appointments = _context.Appointments
                         .Where(a => a.StartDate >= startDate && a.StartDate <= endDate &&
@@ -285,7 +285,7 @@ namespace swp391_debo_be.Dao.Implement
                 result.Add(new 
                 { 
                     Id = appointment.Id, 
-                    start = (DateOnly)appointment.StartDate, 
+                    start = appointment.StartDate, 
                     TimeSlot = appointment.TimeSlot, 
                     name = treatmeant?.Name 
                 });

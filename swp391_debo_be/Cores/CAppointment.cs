@@ -20,7 +20,7 @@ namespace swp391_debo_be.Cores
             _appointmentRepo = new AppointmentRepository(new AppointmentDao(context));
         }
 
-        public static List<object> GetAppointmentsByStartDateAndEndDate(DateOnly startDate,DateOnly end ,Guid Id)
+        public static List<object> GetAppointmentsByStartDateAndEndDate(DateTime startDate, DateTime end ,Guid Id)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace swp391_debo_be.Cores
             }
         }
         
-        public static int[][] GetApppointmentsByDentistIdAndDate(Guid dentistId, DateOnly date, int treatmentId)
+        public static int[][] GetApppointmentsByDentistIdAndDate(Guid dentistId, DateTime date, int treatmentId)
         {
             try
             {
@@ -85,7 +85,7 @@ namespace swp391_debo_be.Cores
             return _appointmentRepo.ViewAllAppointment(page, limit);
         }
 
-        public static List<object> GetAppointmentsByStartDateAndEndDateOfDentist(DateOnly startDate, DateOnly endDate, Guid Id)
+        public static List<object> GetAppointmentsByStartDateAndEndDateOfDentist(DateTime startDate, DateTime endDate, Guid Id)
         {
             try
             {

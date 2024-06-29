@@ -138,7 +138,7 @@ namespace swp391_debo_be.Services.Implements
         {
             try
             {
-                if (DateOnly.TryParse(startDate, out DateOnly start) && DateOnly.TryParse(endDate, out DateOnly end) && Guid.TryParse(userId, out Guid Id))
+                if (DateTime.TryParse(startDate, out DateTime start) && DateTime.TryParse(endDate, out DateTime end) && Guid.TryParse(userId, out Guid Id))
                 {
 
                     ActionResult<List<object>> appointments = CAppointment.GetAppointmentsByStartDateAndEndDate(start, end, Id);
@@ -166,7 +166,7 @@ namespace swp391_debo_be.Services.Implements
         {
             try
             {
-                if (DateOnly.TryParse(startDate, out DateOnly start) && DateOnly.TryParse(endDate, out DateOnly end) && Guid.TryParse(userId, out Guid Id))
+                if (DateTime.TryParse(startDate, out DateTime start) && DateTime.TryParse(endDate, out DateTime end) && Guid.TryParse(userId, out Guid Id))
                 {
 
                     ActionResult<List<object>> appointments = CAppointment.GetAppointmentsByStartDateAndEndDateOfDentist(start, end, Id);
@@ -194,7 +194,7 @@ namespace swp391_debo_be.Services.Implements
         {
             try
             {
-                if (Guid.TryParse(dentistId, out Guid dentist) && DateOnly.TryParse(date, out DateOnly dateOnly) && int.TryParse(treatmentId, out int treatId))
+                if (Guid.TryParse(dentistId, out Guid dentist) && DateTime.TryParse(date, out DateTime dateOnly) && int.TryParse(treatmentId, out int treatId))
                 {
                     var result = CAppointment.GetApppointmentsByDentistIdAndDate(dentist, dateOnly,treatId);
 
