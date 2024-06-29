@@ -33,6 +33,7 @@ namespace swp391_debo_be.Dao.Implement
             var newBranch = new ClinicBranch
             {
                 Id = branch.Id,
+                MngId = branch.MngId,
                 Name = branch.Name,
                 Address = branch.Address,
                 Phone = branch.Phone,
@@ -122,6 +123,7 @@ namespace swp391_debo_be.Dao.Implement
                     throw new InvalidOperationException("Phone number cannot be more than 10 digits or contain alphabetic characters.");
                 }
                 existingBranch.Name = branch.Name;
+                existingBranch.MngId = branch.MngId;
                 existingBranch.Address = branch.Address;
                 existingBranch.Phone = branch.Phone;
                 existingBranch.Email = branch.Email;

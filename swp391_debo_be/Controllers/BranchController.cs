@@ -42,7 +42,7 @@ namespace swp391_debo_be.Controllers
             };
         }
 
-        [HttpPost("{id}/upload-pic-branch")]
+        [HttpPut("{id}/upload-pic-branch")]
         public async Task<IActionResult> UploadPicBranch(int id, [FromForm] BranchDto branch, IFormFile? file)
         {
             string bucketName = "swp391-bucket";
