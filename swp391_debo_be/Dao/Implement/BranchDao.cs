@@ -50,6 +50,7 @@ namespace swp391_debo_be.Dao.Implement
             var deleteBranch = _context.ClinicBranches!.SingleOrDefault(x => x.Id == id);
             if (deleteBranch != null)
             {
+                deleteBranch.MngId = null;
                 deleteBranch.Status = false;
                 _context.ClinicBranches.Update(deleteBranch);
                 await _context.SaveChangesAsync();
