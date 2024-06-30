@@ -84,6 +84,7 @@ namespace swp391_debo_be.Dao.Implement
                 vnpayConfig.TmnCode, DateTime.Now, "127.0.0.1", createPaymentDto.RequiredAmount ?? 0, createPaymentDto.PaymentCurrency ?? string.Empty,
                                "other", createPaymentDto.PaymentContent ?? string.Empty, vnpayConfig.ReturnUrl, payment.Id.ToString());
                 paymentUrl = vnpayPayRequest.GetLink(vnpayConfig.PaymentUrl, vnpayConfig.HashSecret);
+                paymentId = payment.Id;
             }
 
             var result = new PaymentLinkDto
