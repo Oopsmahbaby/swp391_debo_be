@@ -10,8 +10,6 @@ namespace swp391_debo_be.Services.Implements
     {
         public ApiRespone Create(CreatePaymentDto createPaymentDto)
         {
-
-  
             var result = CPayment.Create(createPaymentDto);
 
             if (result == null)
@@ -52,6 +50,30 @@ namespace swp391_debo_be.Services.Implements
             {
                 StatusCode = System.Net.HttpStatusCode.OK,
                 Message = "Payment successfully",
+                Data = result,
+                Success = true
+            };
+        }
+
+        public ApiRespone GetPayment(string id)
+        {
+            var result = CPayment.GetPaymentById(System.Guid.Parse(id));
+
+            if (result == null)
+            {
+                return new ApiRespone
+                {
+                    StatusCode = System.Net.HttpStatusCode.NotFound,
+                    Message = "Payment not found",
+                    Data = null,
+                    Success = false
+                };
+            }
+
+            return new ApiRespone
+            {
+                StatusCode = System.Net.HttpStatusCode.OK,
+                Message = "Get payment successfully",
                 Data = result,
                 Success = true
             };

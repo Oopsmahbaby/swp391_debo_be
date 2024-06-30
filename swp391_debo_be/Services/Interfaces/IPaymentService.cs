@@ -9,5 +9,7 @@ namespace swp391_debo_be.Services.Interfaces
         public ApiRespone Create(CreatePaymentDto createPaymentDto);
 
         public ApiRespone HandlePaymentResponse(VnpayPayResponse vnpayResponse);
+
+        public ApiRespone GetPayment(string id);
     }
 }

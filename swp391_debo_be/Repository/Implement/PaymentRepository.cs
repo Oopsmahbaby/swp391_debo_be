@@ -1,6 +1,7 @@
 ﻿using swp391_debo_be.Config.VnPay;
 using swp391_debo_be.Dao.Implement;
 using swp391_debo_be.Dto.Implement;
+using swp391_debo_be.Entity.Implement;
 using swp391_debo_be.Repository.Interface;
 
 namespace swp391_debo_be.Repository.Implement
@@ -16,6 +17,11 @@ namespace swp391_debo_be.Repository.Implement
         public PaymenReturnDto HandlePaymentResponse(VnpayPayResponse vnpayResponse)
         {
             return _paymentDao.HandleVnpayPaymentReturnProcess(vnpayResponse);
+        }
+
+        public Payment? GetPaymentById(Guid id)
+        {
+            return _paymentDao.GetPaymentById(id);
         }
     }
 }
