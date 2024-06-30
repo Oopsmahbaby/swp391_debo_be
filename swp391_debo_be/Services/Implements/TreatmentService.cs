@@ -6,6 +6,7 @@ using swp391_debo_be.Repository.Implement;
 using swp391_debo_be.Services.Interfaces;
 using System.Collections.Generic;
 using System.Net;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace swp391_debo_be.Services.Implements
 {
@@ -13,7 +14,6 @@ namespace swp391_debo_be.Services.Implements
     {
         public async Task<ApiRespone> addTreatmentAsync(TreatmentDto treatment)
         {
-            var response = new ApiRespone();
             try
             {
                 // -1 mean get all treatment 
@@ -22,136 +22,93 @@ namespace swp391_debo_be.Services.Implements
                 // Check if the treatment ID already exists
                 if (existingTreatments.Any(t => t.Id == treatment.Id))
                 {
-                    response.StatusCode = HttpStatusCode.BadRequest;
-                    response.Success = false;
-                    response.Message = "ID cannot be duplicated";
-                    return response;
+                    return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = "ID cannot be duplicated", Success = false };
                 }
                 var newTreat = await CTreatment.addTreatmentAsync(treatment);
                 var treat = await CTreatment.getTreatmentAsync(newTreat);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = treat;
-                response.Success = true;
-                response.Message = "Treatment data is added successfully.";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = treat, Message = "Treatment data is added successfully.", Success = true };
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
         public async Task<ApiRespone> deleteTreatmentAsync(int id)
         {
-            var response = new ApiRespone();
             try
             {
                 var existingTreatments = await CTreatment.getTreatmentAsync(id);
                 if (existingTreatments != null)
                 {
                     await CTreatment.deleteTreatmentAsync(id);
-                    response.StatusCode = HttpStatusCode.OK;
-                    response.Data = existingTreatments;
-                    response.Success = true;
-                    response.Message = "Treatment data is deleted successfully.";
+                    return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = existingTreatments, Message = "Treatment data is deleted successfully.", Success = true };
                 }
                 else
                 {
-                    response.StatusCode = HttpStatusCode.NotFound;
-                    response.Success = false;
-                    response.Message = "Treatment not found.";
+                    return new ApiRespone { StatusCode = HttpStatusCode.NotFound, Message = "Treatment not found", Success = false };
                 }
 
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
         public async Task<ApiRespone> activeTreatmentAsync(int id)
         {
-            var response = new ApiRespone();
             try
             {
                 var existingTreatments = await CTreatment.getTreatmentAsync(id);
                 if (existingTreatments != null)
                 {
                     await CTreatment.activeTreatmentAsync(id);
-                    response.StatusCode = HttpStatusCode.OK;
-                    response.Data = existingTreatments;
-                    response.Success = true;
-                    response.Message = "Treatment data is activated successfully.";
+                    return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = existingTreatments, Message = "Treatment data is activated successfully.", Success = true };
                 }
                 else
                 {
-                    response.StatusCode = HttpStatusCode.NotFound;
-                    response.Success = false;
-                    response.Message = "Treatment not found.";
+                    return new ApiRespone { StatusCode = HttpStatusCode.NotFound, Message = "Treatment not found", Success = false };
                 }
 
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
         public async Task<ApiRespone> getAllTreatmentAsync(int page, int limit)
         {
-            var response = new ApiRespone();
             try
             {
                 var data = await CTreatment.getAllTreatmentAsync(page, limit);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = new { list = data, total = data.Count };
-                response.Success = true;
-                response.Message = "Treatment data retrieved successfully.";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count }, Message = "Treatment data retrieved successfully.", Success = true };
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
         public async Task<ApiRespone> getTreatmentAsync(int id)
         {
-            var response = new ApiRespone();
             try
             {
                 var existingTreatments = await CTreatment.getTreatmentAsync(id);
                 if (existingTreatments != null)
                 {
-                    response.StatusCode = HttpStatusCode.OK;
-                    response.Data = existingTreatments;
-                    response.Success = true;
-                    response.Message = "Treatment data retrieved successfully.";
+                    return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = existingTreatments, Message = "Treatment data retrieved successfully.", Success = true };
                 }
                 else
                 {
-                    response.StatusCode = HttpStatusCode.NotFound;
-                    response.Success = false;
-                    response.Message = "Treatment not found.";
+                    return new ApiRespone { StatusCode = HttpStatusCode.NotFound, Message = "Treatment not found", Success = false };
                 }
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
         public ActionResult<ApiRespone> GetTreatmentsBasedBranchId(int branchId)
@@ -176,45 +133,30 @@ namespace swp391_debo_be.Services.Implements
 
         public async Task<ApiRespone> updateTreatmentAsync(int id, TreatmentDto treatment)
         {
-            var response = new ApiRespone();
             try
             {
                 if (id != treatment.Id)
                 {
-                    response.StatusCode = HttpStatusCode.NotFound;
-                    response.Success = false;
-                    response.Message = "Treatment ID mismatch";
-                    return response;
+                    return new ApiRespone { StatusCode = HttpStatusCode.NotFound, Message = "Treatment ID mismatch", Success = false };
                 }
                 var data = await CTreatment.getTreatmentAsync(id);
                 if (data == null)
                 {
-                    response.StatusCode = HttpStatusCode.NotFound;
-                    response.Success = false;
-                    response.Message = "Treatment not found or inactive.";
-                    return response;
+                    return new ApiRespone { StatusCode = HttpStatusCode.NotFound, Message = "Treatment not found or inactive.", Success = false };
                 }
                 await CTreatment.updateTreatmentAsync(id, treatment);
                 var updTreat = await CTreatment.getTreatmentAsync(id);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = updTreat;
-                response.Success = true;
-                response.Message = "Treatment data updated successfully.";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = updTreat, Message = "Treatment data updated successfully.", Success = true };
 
             }
             catch (InvalidOperationException ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
     }

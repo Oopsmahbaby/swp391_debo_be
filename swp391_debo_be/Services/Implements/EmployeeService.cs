@@ -35,118 +35,77 @@ namespace swp391_debo_be.Services.Implements
 
         public async Task<ApiRespone> GetEmployee(int page, int limit)
         {
-            var response = new ApiRespone();
             try
             {
                 var data = await CEmployee.GetEmployee(page, limit);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = new { list = data, total = data.Count };
-                response.Success = true;
-                response.Message = "Employee data retrieved successfully.";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count }, Message = "Employee data retrieved successfully.", Success = true };
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
         public async Task<ApiRespone> GetEmployeeById(Guid id)
         {
-            var response = new ApiRespone();
             try
             {
                 var data = await CEmployee.GetEmployeeById(id);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = data;
-                response.Success = true;
-                response.Message = "Employee data retrieved successfully.";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = data, Message = "Employee data retrieved successfully.", Success = true };
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
         public async Task<ApiRespone> GetEmployeeWithBranch(int page, int limit)
         {
-            var response = new ApiRespone();
             try
             {
                 var data = await CEmployee.GetEmployeeWithBranch(page, limit);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = new { list = data, total = data.Count };
-                response.Success = true;
-                response.Message = "Employee data retrieved successfully.";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count }, Message = "Employee data retrieved successfully.", Success = true };
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
         public async Task<ApiRespone> GetEmployeeWithBranchId(int id, int page, int limit)
         {
-            var response = new ApiRespone();
             try
             {
                 var data = await CEmployee.GetEmployeeWithBranchId(id, page, limit);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = new { list = data, count = data.Count };
-                response.Success = true;
-                response.Message = "Employee data retrieved successfully.";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count }, Message = "Employee data retrieved successfully.", Success = true };
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
         public async Task<ApiRespone> UpdateBranchForEmployee(Guid id, CreateEmployeeDto employee)
         {
-            var response = new ApiRespone();
             try
             {
                 if (id != employee.Id)
                 {
-                    response.StatusCode = HttpStatusCode.NotFound;
-                    response.Success = false;
-                    response.Message = "Employee ID not found";
-                    return response;
+                    return new ApiRespone { StatusCode = HttpStatusCode.NotFound, Message = "Employee ID not found", Success = false };
                 }
                 var data = await CEmployee.GetEmployeeById(id);
                 if (data == null)
                 {
-                    response.StatusCode = HttpStatusCode.NotFound;
-                    response.Success = false;
-                    response.Message = "Employee not found";
-                    return response;
+                    return new ApiRespone { StatusCode = HttpStatusCode.NotFound, Message = "Employee not found", Success = false }; ;
                 }
                 await CEmployee.UpdateBranchForEmployee(id, employee);
                 var updEmp = await CEmployee.GetEmployeeById(id);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = updEmp;
-                response.Success = true;
-                response.Message = "Employee data updated successfully.";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = updEmp, Message = "Employee data updated successfully.", Success = true };
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
             }
-            return response;
         }
     }
 }
