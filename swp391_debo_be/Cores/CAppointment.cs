@@ -111,5 +111,14 @@ namespace swp391_debo_be.Cores
         {
             return _appointmentRepo.ViewAppointmentDetail(id);
         }
+        public static Task RescheduleAppointment(Guid id, AppointmentDetailsDto appmnt)
+        {
+            return _appointmentRepo.RescheduleAppointment(id, appmnt);
+        }
+
+        public static Task<List<AppointmentDto>> GetDentistAvailableTimeSlots(DateTime startDate, Guid dentId)
+        {
+            return _appointmentRepo.GetDentistAvailableTimeSlots(startDate, dentId);
+        }
     }
 }

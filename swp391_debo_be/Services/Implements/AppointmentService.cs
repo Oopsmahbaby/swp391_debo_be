@@ -216,6 +216,20 @@ namespace swp391_debo_be.Services.Implements
                 return new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
         }
+
+        public async Task<ApiRespone> GetDentistAvailableTimeSlots(DateTime startDate, Guid dentId)
+        {
+            try
+            {
+                var data = await CAppointment.GetDentistAvailableTimeSlots(startDate, dentId);
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count}, Message = "Fetched slots successfully.", Success = true };
+            }
+            catch (Exception ex)
+            {
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
+            }
+        }
+
         public async Task<ApiRespone> GetHistoryAppointmentByUserID(Guid userId)
         {
             var response = new ApiRespone();
@@ -234,6 +248,21 @@ namespace swp391_debo_be.Services.Implements
                 response.Message = ex.Message;
             }
             return response;
+        }
+
+        public async Task<ApiRespone> RescheduleAppointment(Guid id, AppointmentDetailsDto appmnt)
+        {
+            var response = new ApiRespone();
+            try
+            {
+                await CAppointment.RescheduleAppointment(id, appmnt);
+                var data = await CAppointment.ViewAppointmentDetail(id);
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = data, Message = "Rescheduled successfully.", Success = true };
+            }
+            catch (Exception ex)
+            {
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
+            }
         }
 
         public async Task<ApiRespone> ViewAllAppointment(int page, int limit)

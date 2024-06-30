@@ -33,8 +33,8 @@ namespace swp391_debo_be.Dto.Implement
         [Required]
         public int? TimeSlot { get; set; }
 
-        [Required]
-        [RegularExpression("^(cancelled|pending|future|on-going|done)$", ErrorMessage = "Invalid status value")]
+        //[Required]
+        //[RegularExpression("^(cancelled|pending|future|on-going|done)$", ErrorMessage = "Invalid status value")]
 
         public string? Status { get; set; }
 
