@@ -21,9 +21,9 @@ public partial class Appointment
 
     public bool? IsCreatedByStaff { get; set; }
 
-    public DateOnly? CreatedDate { get; set; }
+    public DateTime? CreatedDate { get; set; }
 
-    public DateOnly? StartDate { get; set; }
+    public DateTime? StartDate { get; set; }
 
     public int? TimeSlot { get; set; }
 
