@@ -6,11 +6,11 @@ namespace swp391_debo_be.Services.Interfaces
 {
     public interface ITokenService
     {
-        public ApiRespone GenerateAccessToken(UserRequestDto user);
+        public Task<ApiRespone> GenerateAccessToken(UserRequestDto user);
 
-        public ApiRespone GenerateRefreshToken(TokenRequestDto token);
+        public Task<ApiRespone> GenerateRefreshToken(TokenRequestDto token);
 
-        public ApiRespone HandleLogout(string token);
+        public Task<ApiRespone> HandleLogout(string token);
 
         public string GetAuthorizationHeader(HttpRequest request);
         public string GetUserIdFromToken(string token);

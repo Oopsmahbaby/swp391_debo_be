@@ -15,14 +15,14 @@ namespace swp391_debo_be.Services.Implements
     {
         private const string UserNotFoundErrorMessage = "User not Found";
 
-        public ApiRespone GenerateAccessToken(UserRequestDto user)
+        public async Task<ApiRespone> GenerateAccessToken(UserRequestDto user)
         {
             try
                 {
                 User foundUser = null;
                 if (user.PhoneNumber == null && user.Email != null)
                 {
-                    foundUser = CUser.GetUserByEmail(user.Email);
+                    foundUser = await CUser.GetUserByEmail(user.Email);
                 }
                 else if (user.PhoneNumber != null && user.Email == null)
                 {
@@ -91,13 +91,11 @@ namespace swp391_debo_be.Services.Implements
             
         }
 
-        public ApiRespone GenerateRefreshToken(TokenRequestDto tokenRequest)
+        public async Task<ApiRespone> GenerateRefreshToken(TokenRequestDto tokenRequest)
         {
             try
             {
                 List<Claim> claims = JwtProvider.DecodeToken(tokenRequest.accessToken);
-
-                System.Console.WriteLine(claims.ToString());
 
                 if (claims == null)
                 {
@@ -110,7 +108,7 @@ namespace swp391_debo_be.Services.Implements
                 {
                     return new ApiRespone { StatusCode = System.Net.HttpStatusCode.Forbidden, Message = "Invalid Token", Success = false };
                 }   
-                User user = CUser.GetUserByEmail(claim.Value);
+                User user = await CUser.GetUserByEmail(claim.Value);
 
                 if (CUser.IsRefreshTokenExist(user) == false)
                 {
@@ -132,7 +130,7 @@ namespace swp391_debo_be.Services.Implements
             }
         }
 
-        public ApiRespone HandleLogout(string token)
+        public async Task<ApiRespone> HandleLogout(string token)
         {
             try
             {
@@ -149,7 +147,7 @@ namespace swp391_debo_be.Services.Implements
                 {
                     return new ApiRespone { StatusCode = System.Net.HttpStatusCode.Forbidden, Message = "Invalid Claim", Success = false };
                 }
-                User user = CUser.GetUserByEmail(claim.Value);
+                User user = await CUser.GetUserByEmail(claim.Value);
 
                 var result = CUser.DeleteRefreshToken(user.Id);
 
