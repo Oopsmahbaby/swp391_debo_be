@@ -35,9 +35,9 @@ namespace swp391_debo_be.Repository.Implement
             return _userDao.GetRolesName(user);
         }
 
-        public User GetUserByEmail(string email)
+        public async Task<User> GetUserByEmail(string email)
         {
-            return _userDao.GetUserByEmail(email);
+            return await _userDao.GetUserByEmail(email);
         }
 
         public User GetUserById(Guid id)
