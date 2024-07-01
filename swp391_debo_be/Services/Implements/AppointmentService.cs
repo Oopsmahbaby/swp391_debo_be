@@ -234,22 +234,15 @@ namespace swp391_debo_be.Services.Implements
 
         public async Task<ApiRespone> GetHistoryAppointmentByUserID(Guid userId)
         {
-            var response = new ApiRespone();
             try
             {
                 var data = await CAppointment.GetHistoryAppointmentByUserID(userId);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = data;
-                response.Success = true;
-                response.Message = "Treatment data retrieved successfully.";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = data, Message = "Treatment data retrieved successfully.", Success = true };
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
         public async Task<ApiRespone> RescheduleAppointment(Guid id, AppointmentDetailsDto appmnt)
@@ -269,42 +262,28 @@ namespace swp391_debo_be.Services.Implements
 
         public async Task<ApiRespone> ViewAllAppointment(int page, int limit)
         {
-            var response = new ApiRespone();
             try
             {
                 var data = await CAppointment.ViewAllAppointment(page, limit);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = new { list = data, total = data.Count };
-                response.Success = true;
-                response.Message = "Appointment data retrieved successfully.";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count }, Message = "Appointment data retrieved successfully.", Success = true };
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
         public async Task<ApiRespone> ViewAppointmentDetail(Guid id)
         {
-            var response = new ApiRespone();
             try
             {
                 var data = await CAppointment.ViewAppointmentDetail(id);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = data;
-                response.Success = true;
-                response.Message = "Appointment data retrieved successfully.";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = data, Message = "Appointment data retrieved successfully.", Success = true };
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
-            return response;
         }
         public ApiRespone GetApppointmentsByDentistIdAndDate(string dentistId, string date, string treatmentId)
         {

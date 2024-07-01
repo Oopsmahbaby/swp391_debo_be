@@ -9,6 +9,7 @@ using System.Text;
 using System.Net;
 using Amazon.S3.Model;
 using Amazon.S3;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace swp391_debo_be.Services.Implements
 {
@@ -62,185 +63,118 @@ namespace swp391_debo_be.Services.Implements
 
         public async Task<ApiRespone> CreateNewStaff(EmployeeDto employee)
         {
-            var response = new ApiRespone();
             try
             {
                 if (CUser.GetUserByEmail(employee.Email) != null)
                 {
-                    response.StatusCode = HttpStatusCode.BadRequest;
-                    response.Success = false;
-                    response.Message = "Email is already exist";
-                    return response;
+                    return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = "Email is already exist", Success = false };
                 }
                 if (CUser.GetUserByPhoneNumber(employee.Phone) != null)
                 {
-                    response.StatusCode = HttpStatusCode.BadRequest;
-                    response.Success = false;
-                    response.Message = "Phone Number is already exist";
-                    return response;
+                    return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = "Phone Number is already exist", Success = false };
                 }
                 var newStaff = await CUser.CreateNewStaff(employee);
                 var staff = await CUser.GetUserById2(newStaff);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Success = true;
-                response.Data = staff;
-                response.Message = "Create New Staff Successfully";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = staff, Message = "Create New Staff Successfully.", Success = true };
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
         public async Task<ApiRespone> CreateNewDent(EmployeeDto employee)
         {
-            var response = new ApiRespone();
             try
             {
                 if (CUser.GetUserByEmail(employee.Email) != null)
                 {
-                    response.StatusCode = HttpStatusCode.BadRequest;
-                    response.Success = false;
-                    response.Message = "Email is already exist";
-                    return response;
+                    return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = "Email is already exist", Success = false };
                 }
                 if (CUser.GetUserByPhoneNumber(employee.Phone) != null)
                 {
-                    response.StatusCode = HttpStatusCode.BadRequest;
-                    response.Success = false;
-                    response.Message = "Phone Number is already exist";
-                    return response;
+                    return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = "Phone Number is already exist", Success = false };
                 }
-                var newStaff = await CUser.CreateNewDent(employee);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Success = true;
-                response.Data = newStaff;
-                response.Message = "Create New Dentist Successfully";
+                var newDent = await CUser.CreateNewDent(employee);
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = newDent, Message = "Create New Dentist Successfully.", Success = true };
 
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
         public async Task<ApiRespone> CreateNewManager(EmployeeDto employee)
         {
-            var response = new ApiRespone();
             try
             {
-                if (CUser.GetUserByEmail(employee.Email) != null)
+                if (CUser.GetUserByEmail(employee.Email!) != null)
                 {
-                    response.StatusCode = HttpStatusCode.BadRequest;
-                    response.Success = false;
-                    response.Message = "Email is already exist";
-                    return response;
+                    return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = "Email is already exist", Success = false };
                 }
-                if (CUser.GetUserByPhoneNumber(employee.Phone) != null)
+                if (CUser.GetUserByPhoneNumber(employee.Phone!) != null)
                 {
-                    response.StatusCode = HttpStatusCode.BadRequest;
-                    response.Success = false;
-                    response.Message = "Phone Number is already exist";
-                    return response;
+                    return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = "Phone Number is already exist", Success = false };
                 }
-                var newStaff = await CUser.CreateNewManager(employee);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Success = true;
-                response.Data = newStaff;
-                response.Message = "Create New Manager Successfully";
+                var newMng = await CUser.CreateNewManager(employee);
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = newMng, Message = "Create New Manager Successfully.", Success = true };
 
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
         public async Task<ApiRespone> ViewStaffList(int page, int limit)
         {
-            var response = new ApiRespone();
             try
             {
                 var data = await CUser.ViewStaffList(page, limit);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = new { list = data, total = data.Count };
-                response.Success = true;
-                response.Message = "Staff list data retrieved successfully.";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count }, Message = "Staff list data retrieved successfully.", Success = true };
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
-            return response;
         }
         public async Task<ApiRespone> ViewDentList(int page, int limit)
         {
-            var response = new ApiRespone();
             try
             {
                 var data = await CUser.ViewDentList(page, limit);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = new { list = data, total = data.Count };
-                response.Success = true;
-                response.Message = "Dentist list data retrieved successfully.";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count }, Message = "Dentist list data retrieved successfully.", Success = true };
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
-            return response;
         }
         public async Task<ApiRespone> ViewManagerList(int page, int limit)
         {
-            var response = new ApiRespone();
             try
             {
                 var data = await CUser.ViewManagerList(page, limit);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = new { list = data, total = data.Count };
-                response.Success = true;
-                response.Message = "Manager list data retrieved successfully.";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count }, Message = "Manager list data retrieved successfully.", Success = true };
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
         public async Task<ApiRespone> ViewCustomerList(int page, int limit)
         {
-            var response = new ApiRespone();
             try
             {
                 var data = await CUser.ViewCustomerList(page, limit);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = new { list = data, total = data.Count };
-                response.Success = true;
-                response.Message = "Customer list data retrieved successfully.";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count }, Message = "Customer list data retrieved successfully.", Success = true };
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
         public async Task<ApiRespone> GetUserById2(Guid id)
@@ -272,31 +206,22 @@ namespace swp391_debo_be.Services.Implements
                 }
 
                 var role = existingUser.RoleName;
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = existingUser;
-                response.Success = true;
-                response.Message = role +" data retrieved successfully.";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = existingUser, Message = role + " data retrieved successfully.", Success = true };
             }
             catch(Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
             return response;
         }
 
         public async Task<ApiRespone> UpdateUser(Guid id, EmployeeDto emp)
         {
-            var response = new ApiRespone();
             try
             {
                 if (id != emp.Id)
                 {
-                    response.StatusCode = HttpStatusCode.NotFound;
-                    response.Success = false;
-                    response.Message = "User ID mismatch";
-                    return response;
+                    return new ApiRespone { StatusCode = HttpStatusCode.NotFound, Message = "User ID mismatch.", Success = false };
                 }
                 //if (CUser.GetUserByEmail(emp.Email) != null)
                 //{
@@ -315,137 +240,88 @@ namespace swp391_debo_be.Services.Implements
                 var data = await CUser.GetUserById2(id);
                 if (data == null)
                 {
-                    response.StatusCode = HttpStatusCode.NotFound;
-                    response.Success = false;
-                    response.Message = "User not found.";
-                    return response;
+                    return new ApiRespone { StatusCode = HttpStatusCode.NotFound, Message = "User not found", Success = false };
                 }
                 await CUser.UpdateUser(id, emp);
                 var updUser = await CUser.GetUserById2(id);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = updUser;
-                response.Success = true;
-                response.Message = "User data updated successfully.";
-
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = updUser, Message = "User data updated successfully.", Success = true };
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
         public async Task<ApiRespone> UploadAvatarUser(Guid id, EmployeeDto emp)
         {
-            var response = new ApiRespone();
             try
             {
                 if (id != emp.Id)
                 {
-                    response.StatusCode = HttpStatusCode.NotFound;
-                    response.Success = false;
-                    response.Message = "User ID mismatch";
-                    return response;
+                    return new ApiRespone { StatusCode = HttpStatusCode.NotFound, Message = "User ID mismatch.", Success = false };
                 }
                 var data = await CUser.GetUserById2(id);
                 if (data == null)
                 {
-                    response.StatusCode = HttpStatusCode.NotFound;
-                    response.Success = false;
-                    response.Message = "User not found.";
-                    return response;
+                    return new ApiRespone { StatusCode = HttpStatusCode.NotFound, Message = "User not found.", Success = false };
                 }
                 await CUser.UploadAvatarUser(id, emp);
                 var updUser = await CUser.GetUserById2(id);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = updUser;
-                response.Success = true;
-                response.Message = "Avatar profile uploaded successfully.";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = updUser, Message = "Avatar profile uploaded successfully.", Success = true };
 
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
         public async Task<ApiRespone> UploadMedRecPatient(Guid id, EmployeeDto emp)
         {
-            var response = new ApiRespone();
             try
             {
                 if (id != emp.Id)
                 {
-                    response.StatusCode = HttpStatusCode.NotFound;
-                    response.Success = false;
-                    response.Message = "User ID mismatch";
-                    return response;
+                    return new ApiRespone { StatusCode = HttpStatusCode.NotFound, Message = "User ID mismatch.", Success = false };
                 }
                 var data = await CUser.GetUserById2(id);
                 if (data == null)
                 {
-                    response.StatusCode = HttpStatusCode.NotFound;
-                    response.Success = false;
-                    response.Message = "User not found.";
-                    return response;
+                    return new ApiRespone { StatusCode = HttpStatusCode.NotFound, Message = "User not found.", Success = false };
                 }
                 await CUser.UploadMedRecPatient(id, emp);
                 var updUser = await CUser.GetUserById2(id);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = updUser;
-                response.Success = true;
-                response.Message = "Medical Record file uploaded successfully.";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = updUser, Message = "Medical Record file uploaded successfully.", Success = true };
 
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
         public async Task<ApiRespone> UpdatePassword(Guid id, EmployeeDto emp)
         {
-            var response = new ApiRespone();
             try
             {
                 if (id != emp.Id)
                 {
-                    response.StatusCode = HttpStatusCode.NotFound;
-                    response.Success = false;
-                    response.Message = "User ID mismatch";
-                    return response;
+                    return new ApiRespone { StatusCode = HttpStatusCode.NotFound, Message = "User ID mismatch.", Success = false };
                 }
                 var data = await CUser.GetUserById2(id);
                 if (data == null)
                 {
-                    response.StatusCode = HttpStatusCode.NotFound;
-                    response.Success = false;
-                    response.Message = "User not found.";
-                    return response;
+                    return new ApiRespone { StatusCode = HttpStatusCode.NotFound, Message = "User not found.", Success = false };
                 }
                 await CUser.UpdatePassword(id, emp);
                 var updUser = await CUser.GetUserById2(id);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = updUser;
-                response.Success = true;
-                response.Message = "User data updated successfully.";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = updUser, Message = "User data updated successfully.", Success = true };
 
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
-            return response;
         }
             
         public ApiRespone firstTimeBooking(string userId)
@@ -469,23 +345,16 @@ namespace swp391_debo_be.Services.Implements
 
         public async Task<ApiRespone> AvailableManager(int page, int limit)
         {
-            var response = new ApiRespone();
             try
             {
                 var data = await CUser.AvailableManager(page, limit);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = new { list = data, total = data.Count };
-                response.Success = true;
-                response.Message = "Manager list data retrieved successfully.";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count }, Message = "Manager list data retrieved successfully.", Success = true };
 
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
-            return response;
         }
     }
 }
