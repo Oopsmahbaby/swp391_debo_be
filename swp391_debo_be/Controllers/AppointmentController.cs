@@ -104,7 +104,7 @@ namespace swp391_debo_be.Controllers
             return userId;
         }
 
-        [HttpGet("viewhistoryappoinment")]
+        [HttpGet("viewhistoryappoinment/{id}")]
         public async Task<IActionResult> GetHistoryAppointmentByUserID(Guid id)
         {
             var response = await _appointmentService.GetHistoryAppointmentByUserID(id);
