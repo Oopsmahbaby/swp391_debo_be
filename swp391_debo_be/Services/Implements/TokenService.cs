@@ -15,14 +15,14 @@ namespace swp391_debo_be.Services.Implements
     {
         private const string UserNotFoundErrorMessage = "User not Found";
 
-        public async Task<ApiRespone> GenerateAccessToken(UserRequestDto user)
+        public ApiRespone GenerateAccessToken(UserRequestDto user)
         {
             try
                 {
                 User foundUser = null;
                 if (user.PhoneNumber == null && user.Email != null)
                 {
-                    foundUser = await CUser.GetUserByEmail(user.Email);
+                    foundUser =  CUser.GetUserByEmail(user.Email);
                 }
                 else if (user.PhoneNumber != null && user.Email == null)
                 {
@@ -91,7 +91,7 @@ namespace swp391_debo_be.Services.Implements
             
         }
 
-        public async Task<ApiRespone> GenerateRefreshToken(TokenRequestDto tokenRequest)
+        public ApiRespone GenerateRefreshToken(TokenRequestDto tokenRequest)
         {
             try
             {
@@ -108,7 +108,7 @@ namespace swp391_debo_be.Services.Implements
                 {
                     return new ApiRespone { StatusCode = System.Net.HttpStatusCode.Forbidden, Message = "Invalid Token", Success = false };
                 }   
-                User user = await CUser.GetUserByEmail(claim.Value);
+                User user = CUser.GetUserByEmail(claim.Value);
 
                 if (CUser.IsRefreshTokenExist(user) == false)
                 {
@@ -130,7 +130,7 @@ namespace swp391_debo_be.Services.Implements
             }
         }
 
-        public async Task<ApiRespone> HandleLogout(string token)
+        public ApiRespone HandleLogout(string token)
         {
             try
             {
@@ -147,7 +147,7 @@ namespace swp391_debo_be.Services.Implements
                 {
                     return new ApiRespone { StatusCode = System.Net.HttpStatusCode.Forbidden, Message = "Invalid Claim", Success = false };
                 }
-                User user = await CUser.GetUserByEmail(claim.Value);
+                User user = CUser.GetUserByEmail(claim.Value);
 
                 var result = CUser.DeleteRefreshToken(user.Id);
 

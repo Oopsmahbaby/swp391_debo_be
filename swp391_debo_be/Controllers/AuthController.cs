@@ -30,9 +30,9 @@ namespace swp391_debo_be.Controllers
 
         [EnableCors("AllowSpecificOrigin")]
         [HttpPost("credentials/login")]
-        public async Task<IActionResult> LoginByCredentials([FromBody] UserRequestDto userRequest)
+        public IActionResult LoginByCredentials([FromBody] UserRequestDto userRequest)
         {
-            var result = await _tokenService.GenerateAccessToken(userRequest);
+            var result = _tokenService.GenerateAccessToken(userRequest);
 
             return Ok(result);
         }
@@ -99,7 +99,7 @@ namespace swp391_debo_be.Controllers
 
         [EnableCors("AllowSpecificOrigin")]
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] CreateUserDto createUserDto)
+        public IActionResult Register([FromBody] CreateUserDto createUserDto)
         {
             return Ok(_userService.CreateUser(createUserDto));
         }

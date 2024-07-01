@@ -50,9 +50,9 @@ namespace swp391_debo_be.Dao.Implement
             return new string[] { role.Role1 };
         }
 
-        public async Task<User> GetUserByEmail(string email)
+        public User GetUserByEmail(string email)
         {
-            User? user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            User? user = _context.Users.FirstOrDefault(u => u.Email == email);
 
             return user;
         }

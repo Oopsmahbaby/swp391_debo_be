@@ -29,7 +29,7 @@ namespace swp391_debo_be.Cores
             return _userRepository.CreateUser(user);
         }
 
-        public static Task<User> GetUserByEmail(string email)
+        public static User GetUserByEmail(string email)
         {
             return _userRepository.GetUserByEmail(email);
         }

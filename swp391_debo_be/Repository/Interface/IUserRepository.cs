@@ -8,7 +8,7 @@ namespace swp391_debo_be.Repository.Interface
     {
         public User GetUserById(Guid id);
 
-        public Task<User> GetUserByEmail(string email);
+        public User GetUserByEmail(string email);
         public User GetUserByAvt(string avt);
 
         public User CreateUser(User user);
