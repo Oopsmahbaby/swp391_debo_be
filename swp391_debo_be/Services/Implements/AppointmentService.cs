@@ -192,32 +192,32 @@ namespace swp391_debo_be.Services.Implements
             }
         }
 
-        public ApiRespone GetApppointmentsByDentistIdAndDate(string dentistId, string date, string treatmentId)
-        {
-            try
-            {
-                if (Guid.TryParse(dentistId, out Guid dentist) && DateTime.TryParse(date, out DateTime dateOnly) && int.TryParse(treatmentId, out int treatId))
-                {
-                    var result = CAppointment.GetApppointmentsByDentistIdAndDate(dentist, dateOnly,treatId);
+        //public ApiRespone GetApppointmentsByDentistIdAndDate(string dentistId, string date, string treatmentId)
+        //{
+        //    try
+        //    {
+        //        if (Guid.TryParse(dentistId, out Guid dentist) && DateTime.TryParse(date, out DateTime dateOnly) && int.TryParse(treatmentId, out int treatId))
+        //        {
+        //            var result = CAppointment.GetApppointmentsByDentistIdAndDate(dentist, dateOnly,treatId);
 
-                    if (result == null)
-                    {
-                        return new ApiRespone { StatusCode = System.Net.HttpStatusCode.NotFound, Data = null, Message = "No slots found", Success = false };
-                    }
+        //            if (result == null)
+        //            {
+        //                return new ApiRespone { StatusCode = System.Net.HttpStatusCode.NotFound, Data = null, Message = "No slots found", Success = false };
+        //            }
 
-                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.OK, Data = result, Message = "Fetched slots successfully.", Success = true };
-                }
-                else
-                {
-                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Data = null, Message = "Invalid dentist id or date", Success = false };
-                }
+        //            return new ApiRespone { StatusCode = System.Net.HttpStatusCode.OK, Data = result, Message = "Fetched slots successfully.", Success = true };
+        //        }
+        //        else
+        //        {
+        //            return new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Data = null, Message = "Invalid dentist id or date", Success = false };
+        //        }
 
-            }
-            catch (Exception ex)
-            {
-                return new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
-            }
-        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
+        //    }
+        //}
 
         public async Task<ApiRespone> GetDentistAvailableTimeSlots(DateTime startDate, Guid dentId)
         {

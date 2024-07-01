@@ -228,8 +228,8 @@ namespace swp391_debo_be.Dao.Implement
                                       select new AppointmentHistoryDto
                                       {
                                           TreatName = ct.Name,
-                                          CreatedDate = DateOnly.FromDateTime(a.CreatedDate ?? DateTime.Now),
-                                          StartDate = DateOnly.FromDateTime(a.StartDate ?? DateTime.Now)
+                                          CreatedDate = a.CreatedDate,
+                                          StartDate = a.StartDate
                                       }).ToListAsync();
             return appointments;
         }
@@ -248,8 +248,8 @@ namespace swp391_debo_be.Dao.Implement
                                                    CusId = a.CusId,
                                                    CreatorId = a.CreatorId,
                                                    IsCreatedByStaff = a.IsCreatedByStaff,
-                                                   CreatedDate = DateOnly.FromDateTime(a.CreatedDate ?? DateTime.Now),
-                                                   StartDate = DateOnly.FromDateTime(a.StartDate ?? DateTime.Now),
+                                                   CreatedDate = a.CreatedDate,
+                                                   StartDate = a.StartDate,
                                                    TimeSlot = a.TimeSlot,
                                                    Status = a.Status,
                                                    Description = a.Description,
@@ -302,7 +302,7 @@ namespace swp391_debo_be.Dao.Implement
                                       {
                                           Id = a.Id,
                                           TreatName = ct.Name,
-                                          StartDate = DateOnly.FromDateTime(a.StartDate ?? DateTime.Now),
+                                          StartDate = a.StartDate,
                                           CusId = a.CusId,
                                           Status = a.Status,
                                       };
@@ -337,8 +337,8 @@ namespace swp391_debo_be.Dao.Implement
             var appointmentDetails = appointments.Select(a => new AppointmentDetailsDto
             {
                 Id = a.Id,
-                CreatedDate = DateOnly.FromDateTime(a.CreatedDate ?? default),
-                StartDate = DateOnly.FromDateTime(a.StartDate ?? default),
+                CreatedDate = a.CreatedDate ?? default,
+                StartDate = a.StartDate ?? default,
                 TimeSlot = a.TimeSlot,
                 Status = a.Status,
                 Description = a.Description,
@@ -375,8 +375,8 @@ namespace swp391_debo_be.Dao.Implement
             var appointmentDetails = new AppointmentDetailsDto
             {
                 Id = appointment.Id,
-                CreatedDate = DateOnly.FromDateTime(appointment.CreatedDate ?? default),
-                StartDate = DateOnly.FromDateTime(appointment.StartDate ?? default),
+                CreatedDate = appointment.CreatedDate ?? default,
+                StartDate = appointment.StartDate ?? default,
                 TimeSlot = appointment.TimeSlot,
                 Status = appointment.Status,
                 Description = appointment.Description,
