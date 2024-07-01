@@ -20,6 +20,7 @@ namespace swp391_debo_be.Cores
             _appointmentRepo = new AppointmentRepository(new AppointmentDao(context));
         }
 
+
         public static List<object> GetAppointmentsByStartDateAndEndDate(DateTime startDate, DateTime end ,Guid Id)
         {
             try

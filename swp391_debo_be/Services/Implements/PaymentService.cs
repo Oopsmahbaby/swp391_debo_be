@@ -10,8 +10,6 @@ namespace swp391_debo_be.Services.Implements
     {
         public ApiRespone Create(CreatePaymentDto createPaymentDto)
         {
-
-  
             var result = CPayment.Create(createPaymentDto);
 
             if (result == null)
@@ -33,17 +31,24 @@ namespace swp391_debo_be.Services.Implements
             };
         }
 
-        public ApiRespone HandlePaymentResponse(VnpayPayResponse vnpayResponse)
+        public PaymenReturnDto HandlePaymentResponse(VnpayPayResponse vnpayResponse)
         {
             var result = CPayment.HandlePaymentResponse(vnpayResponse);
 
-            if (result.PaymentStatus != "00")
+            return result;
+        }
+
+        public ApiRespone GetPayment(string id)
+        {
+            var result = CPayment.GetPaymentById(System.Guid.Parse(id));
+
+            if (result == null)
             {
                 return new ApiRespone
                 {
-                    StatusCode = System.Net.HttpStatusCode.BadRequest,
-                    Message = "Payment failed",
-                    Data = result,
+                    StatusCode = System.Net.HttpStatusCode.NotFound,
+                    Message = "Payment not found",
+                    Data = null,
                     Success = false
                 };
             }
@@ -51,7 +56,7 @@ namespace swp391_debo_be.Services.Implements
             return new ApiRespone
             {
                 StatusCode = System.Net.HttpStatusCode.OK,
-                Message = "Payment successfully",
+                Message = "Get payment successfully",
                 Data = result,
                 Success = true
             };

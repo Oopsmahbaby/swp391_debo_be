@@ -161,8 +161,6 @@ namespace swp391_debo_be.Dao.Implement
                 switch (rule)
                 {
                     case 1:
-                        date = date.AddDays(1);
-                        futureDate.Add(date);
                         break;
                     case 2:
                         date = date.AddDays(7);
@@ -187,7 +185,7 @@ namespace swp391_debo_be.Dao.Implement
 
         public int[][] GetApppointmentsByDentistIdAndDate(Guid dentistId, DateTime date, int treatmentId)
         {
-            int? rule = _context.Rules.Where(r => r.Id == treatmentId).Select(r => r.Id).FirstOrDefault();
+            int? rule = _context.ClinicTreatments.Where(cl => cl.Id == treatmentId).Select(cl => cl.RuleId).FirstOrDefault();
             int? numOfApp = _context.ClinicTreatments.Where(t => t.Id == treatmentId).Select(t => t.NumOfApp).FirstOrDefault();
 
             List<DateTime> futureDate = GetFutureDate(date, (int)numOfApp, (int)rule);
@@ -230,8 +228,8 @@ namespace swp391_debo_be.Dao.Implement
                                       select new AppointmentHistoryDto
                                       {
                                           TreatName = ct.Name,
-                                          CreatedDate = a.CreatedDate,
-                                          StartDate = a.StartDate
+                                          CreatedDate = DateOnly.FromDateTime(a.CreatedDate ?? DateTime.Now),
+                                          StartDate = DateOnly.FromDateTime(a.StartDate ?? DateTime.Now)
                                       }).ToListAsync();
             return appointments;
         }
@@ -250,8 +248,8 @@ namespace swp391_debo_be.Dao.Implement
                                                    CusId = a.CusId,
                                                    CreatorId = a.CreatorId,
                                                    IsCreatedByStaff = a.IsCreatedByStaff,
-                                                   CreatedDate = a.CreatedDate,
-                                                   StartDate = a.StartDate,
+                                                   CreatedDate = DateOnly.FromDateTime(a.CreatedDate ?? DateTime.Now),
+                                                   StartDate = DateOnly.FromDateTime(a.StartDate ?? DateTime.Now),
                                                    TimeSlot = a.TimeSlot,
                                                    Status = a.Status,
                                                    Description = a.Description,
@@ -304,7 +302,7 @@ namespace swp391_debo_be.Dao.Implement
                                       {
                                           Id = a.Id,
                                           TreatName = ct.Name,
-                                          StartDate = a.StartDate,
+                                          StartDate = DateOnly.FromDateTime(a.StartDate ?? DateTime.Now),
                                           CusId = a.CusId,
                                           Status = a.Status,
                                       };
@@ -339,8 +337,8 @@ namespace swp391_debo_be.Dao.Implement
             var appointmentDetails = appointments.Select(a => new AppointmentDetailsDto
             {
                 Id = a.Id,
-                CreatedDate = a.CreatedDate ?? default,
-                StartDate = a.StartDate,
+                CreatedDate = DateOnly.FromDateTime(a.CreatedDate ?? default),
+                StartDate = DateOnly.FromDateTime(a.StartDate ?? default),
                 TimeSlot = a.TimeSlot,
                 Status = a.Status,
                 Description = a.Description,
@@ -377,8 +375,8 @@ namespace swp391_debo_be.Dao.Implement
             var appointmentDetails = new AppointmentDetailsDto
             {
                 Id = appointment.Id,
-                CreatedDate = appointment.CreatedDate ?? default,
-                StartDate = appointment.StartDate,
+                CreatedDate = DateOnly.FromDateTime(appointment.CreatedDate ?? default),
+                StartDate = DateOnly.FromDateTime(appointment.StartDate ?? default),
                 TimeSlot = appointment.TimeSlot,
                 Status = appointment.Status,
                 Description = appointment.Description,

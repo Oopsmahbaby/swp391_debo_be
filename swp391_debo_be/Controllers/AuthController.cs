@@ -32,7 +32,9 @@ namespace swp391_debo_be.Controllers
         [HttpPost("credentials/login")]
         public IActionResult LoginByCredentials([FromBody] UserRequestDto userRequest)
         {
-            return Ok(_tokenService.GenerateAccessToken(userRequest));
+            var result = _tokenService.GenerateAccessToken(userRequest);
+
+            return Ok(result);
         }
 
         [EnableCors("AllowSpecificOrigin")]

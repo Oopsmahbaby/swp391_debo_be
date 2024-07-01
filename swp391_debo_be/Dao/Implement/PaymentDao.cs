@@ -4,6 +4,7 @@ using swp391_debo_be.Config.VnPay;
 using swp391_debo_be.Dao.Interface;
 using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
+using System.Net.WebSockets;
 using System.Security.Claims;
 
 namespace swp391_debo_be.Dao.Implement
@@ -40,21 +41,11 @@ namespace swp391_debo_be.Dao.Implement
         }
         public PaymentLinkDto? Create(CreatePaymentDto createPaymentDto)
         {
-            Payment payment = new Payment
-            {
-                Id = Guid.NewGuid(),
-                ExpireDate = DateTime.UtcNow.AddMinutes(15),
-                PaymentContent = createPaymentDto.PaymentContent,
-                PaymentCurrency = createPaymentDto.PaymentCurrency,
-                PaymentDate = DateTime.UtcNow,
-                PaymentLanguage = createPaymentDto.PaymentLanguage,
-                RequiredAmount = createPaymentDto.RequiredAmount,
-            };
-            _context.Payments.Add(payment);
-            _context.SaveChanges();
-            
-            // Handle update paymentId for appointments
-            foreach(string appointmentId in createPaymentDto.ListAppointmentId)
+            bool isGeneralCheckup = false;
+            var paymentUrl = string.Empty;
+            Guid paymentId = Guid.Empty;
+
+            foreach (string appointmentId in createPaymentDto.ListAppointmentId)
             {
                 Appointment? appointment = _context.Appointments.FirstOrDefault(a => a.Id.ToString() == appointmentId);
 
@@ -63,19 +54,43 @@ namespace swp391_debo_be.Dao.Implement
                     return null;
                 }
 
-                appointment.PaymentId = payment.Id;
-                _context.Appointments.Update(appointment);
-                _context.SaveChanges();
+                if (appointment.TreatId == 8)
+                {
+                    isGeneralCheckup = true;
+                }
             }
 
-            var vnpayPayRequest = new VnpayPayRequest(vnpayConfig.Version,
-           vnpayConfig.TmnCode, DateTime.Now, "127.0.0.1", createPaymentDto.RequiredAmount ?? 0, createPaymentDto.PaymentCurrency ?? string.Empty,
+            if (isGeneralCheckup == false)
+            {
+
+                Payment payment = new Payment
+                {
+                    Id = Guid.NewGuid(),
+                    ExpireDate = DateTime.UtcNow.AddMinutes(15),
+                    PaymentContent = createPaymentDto.PaymentContent,
+                    PaymentCurrency = createPaymentDto.PaymentCurrency,
+                    PaymentDate = DateTime.UtcNow,
+                    PaymentLanguage = createPaymentDto.PaymentLanguage,
+                    RequiredAmount = createPaymentDto.RequiredAmount,
+                    PaymentStatus = "Pending",
+                };
+                _context.Payments.Add(payment);
+                _context.SaveChanges();
+            
+                // Handle update paymentId for appointments
+            
+
+                var vnpayPayRequest = new VnpayPayRequest(vnpayConfig.Version,
+                vnpayConfig.TmnCode, DateTime.Now, "127.0.0.1", createPaymentDto.RequiredAmount ?? 0, createPaymentDto.PaymentCurrency ?? string.Empty,
                                "other", createPaymentDto.PaymentContent ?? string.Empty, vnpayConfig.ReturnUrl, payment.Id.ToString());
-            var paymentUrl = vnpayPayRequest.GetLink(vnpayConfig.PaymentUrl, vnpayConfig.HashSecret);
+                paymentUrl = vnpayPayRequest.GetLink(vnpayConfig.PaymentUrl, vnpayConfig.HashSecret);
+                paymentId = payment.Id;
+            }
 
             var result = new PaymentLinkDto
-            {
-                PaymentId = payment.Id,
+             {
+                IsGeneralCheckup = isGeneralCheckup,
+                PaymentId = paymentId,
                 PaymentUrl = paymentUrl
             };
 
@@ -139,6 +154,11 @@ namespace swp391_debo_be.Dao.Implement
             {
                 return null;
             }
+        }
+
+        public Payment? GetPaymentById(Guid id)
+        {
+            return _context.Payments.FirstOrDefault(p => p.Id == id);
         }
     }
 }
