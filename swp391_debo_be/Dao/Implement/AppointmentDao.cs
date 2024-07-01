@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using Microsoft.Extensions.Logging;
@@ -241,7 +242,7 @@ namespace swp391_debo_be.Dao.Implement
                                                {
                                                    Id = a.Id,
                                                    TreatName = ct.Name,
-                                                   PaymentId = (Guid)a.PaymentId,
+                                                   PaymentId = a.PaymentId,
                                                    DentId = a.DentId,
                                                    TempDentId = a.TempDentId,
                                                    CusId = a.CusId,
@@ -391,5 +392,138 @@ namespace swp391_debo_be.Dao.Implement
 
             return appointmentDetails;
         }
+
+        public async Task RescheduleAppointment(Guid id, AppointmentDetailsDto appmnt)
+        {
+            // Get the appointment to be rescheduled
+            var appointment = await _context.Appointments.FindAsync(id);
+            if (appointment == null)
+            {
+                throw new ArgumentException("Appointment not found.");
+            }
+
+            // Check the status of the appointment
+            var validStatuses = new List<string> { "pending", "on-going", "future" };
+            if (!validStatuses.Contains(appointment.Status!))
+            {
+                throw new ArgumentException("Only appointments with status 'pending', 'on-going', or 'future' can be rescheduled.");
+            }
+
+            // Parse the new start date from the DTO
+            if (!appmnt.StartDate.HasValue)
+            {
+                throw new ArgumentException("Start date is required.");
+            }
+            DateTime newStartDate = appmnt.StartDate.Value;
+
+            // Ensure the new start date's time slot is valid
+            if (!appmnt.TimeSlot.HasValue || appmnt.TimeSlot < 7 || appmnt.TimeSlot > 19)
+            {
+                throw new ArgumentException("Invalid time slot. Must be between 7 and 19.");
+            }
+
+            // Combine the new start date and time slot
+            newStartDate = newStartDate.Date.AddHours(appmnt.TimeSlot.Value);
+
+            // Ensure the new start date is greater than or equal to the current time
+            DateTime currentTime = DateTime.Now;
+            if (newStartDate < currentTime)
+            {
+                throw new ArgumentException("The new start date and time must be greater than or equal to the current time.");
+            }
+
+            // If the new start date equals the current date, calculate the difference between the current hour and the new time slot
+            if (newStartDate.Date == currentTime.Date)
+            {
+                int currentHour = currentTime.Hour;
+                if (appmnt.TimeSlot.Value - currentHour < 2)
+                {
+                    throw new ArgumentException("The new time slot must be at least 2 hours ahead of the current time.");
+                }
+            }
+
+            // Update the appointment
+            appointment.StartDate = newStartDate;
+            appointment.TimeSlot = appmnt.TimeSlot;
+            appointment.Description = appmnt.Description;
+            appointment.Note = appmnt.Note;
+
+            // Save the changes to the database
+            _context.Appointments.Update(appointment);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<AppointmentDto>> GetDentistAvailableTimeSlots(DateTime startDate, Guid dentId)
+        {
+            DateTime currentDateTime = DateTime.Now;
+            DateTime minAvailableTime = currentDateTime.AddHours(2);
+
+            // Generate all possible time slots (7 to 19)
+            List<int> allTimeSlots = Enumerable.Range(7, 13).ToList();
+
+            // Fetch existing appointments for the specified dentist and date
+            var existingAppointments = await _context.Appointments
+                .Where(a => a.DentId == dentId && a.StartDate.HasValue && a.StartDate.Value.Date == startDate.Date)
+                .Select(a => a.TimeSlot)
+                .ToListAsync();
+
+            // Filter out the unavailable slots
+            List<int> availableSlots = allTimeSlots
+                .Where(slot =>
+                    !existingAppointments.Contains(slot) &&
+                    startDate.Date.AddHours(slot) > minAvailableTime)
+                .ToList();
+
+            // Convert to AppointmentDto list
+            List<AppointmentDto> availableTimeSlots = availableSlots.Select(slot => new AppointmentDto
+            {
+                DentId = dentId.ToString(),
+                Date = startDate.ToString("yyyy-MM-dd"),
+                TimeSlot = slot
+            }).ToList();
+
+            return availableTimeSlots;
+        }
+
+
+        //public async Task<List<int>> GetDentistAvailableTimeSlots(DateTime startDate, Guid dentId, Guid? tempDentId)
+        //{
+        //    // Ensure the parameters are passed as SQL parameters to avoid SQL injection vulnerabilities
+        //    var startDateParam = new SqlParameter("@StartDate", startDate);
+        //    var dentIdParam = new SqlParameter("@DentID", dentId);
+        //    var tempDentIdParam = new SqlParameter("@TempDentID", tempDentId ?? (object)DBNull.Value);
+
+        //    // Define the raw SQL query
+        //    string sqlQuery = @"
+        //    DECLARE @StartDate DATETIME2 = @StartDate;
+        //    DECLARE @DentID UNIQUEIDENTIFIER = @DentID;
+        //    DECLARE @TempDentID UNIQUEIDENTIFIER = @TempDentID;
+
+        //    WITH UsedTimeSlots AS (
+        //        SELECT Time_Slot
+        //        FROM [dbo].[Appointment]
+        //        WHERE Start_Date = @StartDate
+        //          AND (
+        //                (Temp_Dent_ID IS NULL AND Dent_ID = @DentID)
+        //                OR
+        //                (Temp_Dent_ID IS NOT NULL AND Temp_Dent_ID = @TempDentID)
+        //              )
+        //    )
+
+        //    SELECT Time_Slot
+        //    FROM (VALUES (7), (8), (9), (10), (11), (12), (13), (14), (15), (16), (17), (18), (19)) AS AllSlots(Time_Slot)
+        //    WHERE Time_Slot NOT IN (SELECT Time_Slot FROM UsedTimeSlots);";
+
+        //    // Execute the raw SQL query using Entity Framework Core
+        //    var availableTimeSlots = await _context.Appointments
+        //        .FromSqlRaw(sqlQuery, startDateParam, dentIdParam, tempDentIdParam)
+        //        .Select(s => s.TimeSlot)
+        //        .ToListAsync();
+
+        //    // Convert the results to a list of integers
+        //    var availableTimeSlotsList = availableTimeSlots.Cast<int>().ToList();
+
+        //    return availableTimeSlotsList;
+        //}
     }
 }

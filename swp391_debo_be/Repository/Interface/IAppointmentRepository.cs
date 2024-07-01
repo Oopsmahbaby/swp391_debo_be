@@ -8,7 +8,7 @@ namespace swp391_debo_be.Repository.Interface
     {
         public List<Appointment> CreateAppointment(AppointmentDto appointment, Guid cusId);
         public object GetAppointmentByPagination(string page, string limit, Guid userId);
-        public List<object> GetAppointmentsByStartDateAndEndDate(DateTime startDate,DateTime endDate ,Guid id);
+        public List<object> GetAppointmentsByStartDateAndEndDate(DateTime startDate, DateTime endDate ,Guid id);
         public int[][] GetApppointmentsByDentistIdAndDate(Guid dentistId, DateTime date, int treatmentId);
         public Appointment CancelAppointment(Guid appointmentId);
         public Task<List<AppointmentHistoryDto>> GetHistoryAppointmentByUserID(Guid id);
@@ -17,5 +17,7 @@ namespace swp391_debo_be.Repository.Interface
         public Task<List<AppointmentHistoryDto>> GetAppointmentByDentistId(int page, int limit, Guid dentistId);
         public Task<List<AppointmentDetailsDto>> GetAppointmentetail(Guid id, int page, int limit);
         public Task<AppointmentDetailsDto> ViewAppointmentDetail(Guid id);
+        public Task RescheduleAppointment(Guid id, AppointmentDetailsDto appmnt);
+        public Task<List<AppointmentDto>> GetDentistAvailableTimeSlots(DateTime startDate, Guid dentId);
     }
 }

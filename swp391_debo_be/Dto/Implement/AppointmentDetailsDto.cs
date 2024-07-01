@@ -5,8 +5,8 @@ namespace swp391_debo_be.Dto.Implement
     public class AppointmentDetailsDto
     {
         public Guid Id { get; set; }
-        public DateOnly CreatedDate { get; set; }
-        public DateOnly? StartDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public DateTime? StartDate { get; set; }
         public int? TimeSlot { get; set; }
         public string? Status { get; set; }
         public string? Description { get; set; }
