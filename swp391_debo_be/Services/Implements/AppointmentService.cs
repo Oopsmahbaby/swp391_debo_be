@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.SqlServer.Server;
 using swp391_debo_be.Constants;
 using swp391_debo_be.Cores;
 using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
 using swp391_debo_be.Services.Interfaces;
+using System.Globalization;
 using System.Net;
 
 namespace swp391_debo_be.Services.Implements
@@ -42,7 +44,7 @@ namespace swp391_debo_be.Services.Implements
                     return new ApiRespone { StatusCode = System.Net.HttpStatusCode.Unauthorized, Data = null, Message = "You are not allowed to create appointment", Success = false };
                 }
 
-                if (Guid.TryParse(userId, out var id)  && DateOnly.TryParse(dto.Date, out DateOnly startDate))
+                if (Guid.TryParse(userId, out var id)  && DateTime.TryParse(dto.Date, out DateTime startDate))
                 {
         
                     var result = CAppointment.CreateAppointment(dto, id);
@@ -138,7 +140,7 @@ namespace swp391_debo_be.Services.Implements
         {
             try
             {
-                if (DateOnly.TryParse(startDate, out DateOnly start) && DateOnly.TryParse(endDate, out DateOnly end) && Guid.TryParse(userId, out Guid Id))
+                if (DateTime.TryParse(startDate, out DateTime start) && DateTime.TryParse(endDate, out DateTime end) && Guid.TryParse(userId, out Guid Id))
                 {
 
                     ActionResult<List<object>> appointments = CAppointment.GetAppointmentsByStartDateAndEndDate(start, end, Id);
@@ -166,7 +168,7 @@ namespace swp391_debo_be.Services.Implements
         {
             try
             {
-                if (DateOnly.TryParse(startDate, out DateOnly start) && DateOnly.TryParse(endDate, out DateOnly end) && Guid.TryParse(userId, out Guid Id))
+                if (DateTime.TryParse(startDate, out DateTime start) && DateTime.TryParse(endDate, out DateTime end) && Guid.TryParse(userId, out Guid Id))
                 {
 
                     ActionResult<List<object>> appointments = CAppointment.GetAppointmentsByStartDateAndEndDateOfDentist(start, end, Id);
@@ -194,7 +196,7 @@ namespace swp391_debo_be.Services.Implements
         {
             try
             {
-                if (Guid.TryParse(dentistId, out Guid dentist) && DateOnly.TryParse(date, out DateOnly dateOnly) && int.TryParse(treatmentId, out int treatId))
+                if (Guid.TryParse(dentistId, out Guid dentist) && DateTime.TryParse(date, out DateTime dateOnly) && int.TryParse(treatmentId, out int treatId))
                 {
                     var result = CAppointment.GetApppointmentsByDentistIdAndDate(dentist, dateOnly,treatId);
 
@@ -216,6 +218,20 @@ namespace swp391_debo_be.Services.Implements
                 return new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
         }
+
+        public async Task<ApiRespone> GetDentistAvailableTimeSlots(DateTime startDate, Guid dentId)
+        {
+            try
+            {
+                var data = await CAppointment.GetDentistAvailableTimeSlots(startDate, dentId);
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count}, Message = "Fetched slots successfully.", Success = true };
+            }
+            catch (Exception ex)
+            {
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
+            }
+        }
+
         public async Task<ApiRespone> GetHistoryAppointmentByUserID(Guid userId)
         {
             var response = new ApiRespone();
@@ -234,6 +250,21 @@ namespace swp391_debo_be.Services.Implements
                 response.Message = ex.Message;
             }
             return response;
+        }
+
+        public async Task<ApiRespone> RescheduleAppointment(Guid id, AppointmentDetailsDto appmnt)
+        {
+            var response = new ApiRespone();
+            try
+            {
+                await CAppointment.RescheduleAppointment(id, appmnt);
+                var data = await CAppointment.ViewAppointmentDetail(id);
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = data, Message = "Rescheduled successfully.", Success = true };
+            }
+            catch (Exception ex)
+            {
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
+            }
         }
 
         public async Task<ApiRespone> ViewAllAppointment(int page, int limit)
@@ -274,6 +305,31 @@ namespace swp391_debo_be.Services.Implements
                 response.Message = ex.Message;
             }
             return response;
+        }
+        public ApiRespone GetApppointmentsByDentistIdAndDate(string dentistId, string date, string treatmentId)
+        {
+            try
+            {
+                if (Guid.TryParse(dentistId, out Guid dentist) && DateTime.TryParse(date, CultureInfo.InvariantCulture, out DateTime dateOnly) && int.TryParse(treatmentId, out int treatId))
+                {
+                    var result = CAppointment.GetApppointmentsByDentistIdAndDate(dentist, dateOnly, treatId);
+
+                    if (result == null) // Assuming result is a collection of appointments
+                    {
+                        return new ApiRespone { StatusCode = System.Net.HttpStatusCode.NotFound, Data = null, Message = "No slots found", Success = false };
+                    }
+
+                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.OK, Data = result, Message = "Fetched slots successfully.", Success = true };
+                }
+                else
+                {
+                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Data = null, Message = "Invalid dentist id, date, or treatment id format", Success = false };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ApiRespone { StatusCode = System.Net.HttpStatusCode.InternalServerError, Data = null, Message = ex.Message, Success = false };
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using Microsoft.Extensions.Logging;
@@ -51,12 +52,12 @@ namespace swp391_debo_be.Dao.Implement
                 .Select(t => t.NumOfApp)
                 .FirstOrDefault();
 
-            List<DateOnly> futureDates = GetFutureDate(DateOnly.Parse(dto.Date!), (int)numOfApp!, (int)ruleId!);
+            List<DateTime> futureDates = GetFutureDate(DateTime.Parse(dto.Date!), (int)numOfApp!, (int)ruleId!);
 
             // List to view created appoinment will be deleted when it done
             List<Appointment> createdAppointments = new List<Appointment>();
 
-            foreach(DateOnly date in futureDates)
+            foreach(DateTime date in futureDates)
             {
                 Appointment appointment = new Appointment
                 {
@@ -67,7 +68,7 @@ namespace swp391_debo_be.Dao.Implement
                     StartDate = date,
                     TimeSlot = dto.TimeSlot,
                     Status = "pending",
-                    CreatedDate = DateOnly.FromDateTime(DateTime.Now),
+                    CreatedDate = DateTime.Now,
                     CreatorId = cusId,
                     IsCreatedByStaff = false
                 };
@@ -113,7 +114,7 @@ namespace swp391_debo_be.Dao.Implement
                 result.Add(new
                 {
                     id = appointment.Id,
-                    start = appointment.StartDate.HasValue ? (DateOnly)appointment.StartDate : default(DateOnly),
+                    start = appointment.StartDate.HasValue ? appointment.StartDate : default(DateTime),
                     timeSlot = appointment.TimeSlot,
                     name = treatment?.Result.Name,
                     dentist = _context.Users.Where(u => u.Id == appointment.DentId).FirstOrDefault().FirstName + " " + _context.Users.Where(u => u.Id == appointment.DentId).FirstOrDefault().LastName,
@@ -131,7 +132,7 @@ namespace swp391_debo_be.Dao.Implement
             };
         }
 
-        public List<object> GetAppointmentsByStartDateAndEndDate(DateOnly startDate, DateOnly endDate, Guid Id)
+        public List<object> GetAppointmentsByStartDateAndEndDate(DateTime startDate, DateTime endDate, Guid Id)
         {
             var appointments = _context.Appointments.Where(a => a.StartDate >= startDate && a.StartDate <= endDate && Guid.Equals(a.CusId, Id)).ToList();
 
@@ -146,22 +147,20 @@ namespace swp391_debo_be.Dao.Implement
             foreach (Appointment appointment in appointments)
             {
                 var treatmeant = _context.ClinicTreatments.Where(t => t.Id == appointment.TreatId).FirstOrDefault();
-                result.Add(new { Id = appointment.Id, start = (DateOnly)appointment.StartDate, TimeSlot = appointment.TimeSlot, name = treatmeant?.Name });
+                result.Add(new { Id = appointment.Id, start = appointment.StartDate, TimeSlot = appointment.TimeSlot, name = treatmeant?.Name });
             }
 
             return result;
         }
 
-        private static List<DateOnly> GetFutureDate(DateOnly date, int numOfApp, int rule)
+        private static List<DateTime> GetFutureDate(DateTime date, int numOfApp, int rule)
         {
-            List<DateOnly> futureDate = [date];
+            List<DateTime> futureDate = [date];
             for (int i = 0; i < numOfApp - 1; i++)
             {
                 switch (rule)
                 {
                     case 1:
-                        date = date.AddDays(1);
-                        futureDate.Add(date);
                         break;
                     case 2:
                         date = date.AddDays(7);
@@ -184,12 +183,12 @@ namespace swp391_debo_be.Dao.Implement
             return futureDate;
         }
 
-        public int[][] GetApppointmentsByDentistIdAndDate(Guid dentistId, DateOnly date, int treatmentId)
+        public int[][] GetApppointmentsByDentistIdAndDate(Guid dentistId, DateTime date, int treatmentId)
         {
-            int? rule = _context.Rules.Where(r => r.Id == treatmentId).Select(r => r.Id).FirstOrDefault();
+            int? rule = _context.ClinicTreatments.Where(cl => cl.Id == treatmentId).Select(cl => cl.RuleId).FirstOrDefault();
             int? numOfApp = _context.ClinicTreatments.Where(t => t.Id == treatmentId).Select(t => t.NumOfApp).FirstOrDefault();
 
-            List<DateOnly> futureDate = GetFutureDate(date, (int)numOfApp, (int)rule);
+            List<DateTime> futureDate = GetFutureDate(date, (int)numOfApp, (int)rule);
             int[][] timeSlot = new int[futureDate.Count][];
 
             for (int i = 0; i < futureDate.Count; i++)
@@ -229,8 +228,8 @@ namespace swp391_debo_be.Dao.Implement
                                       select new AppointmentHistoryDto
                                       {
                                           TreatName = ct.Name,
-                                          CreatedDate = a.CreatedDate,
-                                          StartDate = a.StartDate
+                                          CreatedDate = DateOnly.FromDateTime(a.CreatedDate ?? DateTime.Now),
+                                          StartDate = DateOnly.FromDateTime(a.StartDate ?? DateTime.Now)
                                       }).ToListAsync();
             return appointments;
         }
@@ -243,14 +242,14 @@ namespace swp391_debo_be.Dao.Implement
                                                {
                                                    Id = a.Id,
                                                    TreatName = ct.Name,
-                                                   PaymentId = (Guid)a.PaymentId,
+                                                   PaymentId = a.PaymentId,
                                                    DentId = a.DentId,
                                                    TempDentId = a.TempDentId,
                                                    CusId = a.CusId,
                                                    CreatorId = a.CreatorId,
                                                    IsCreatedByStaff = a.IsCreatedByStaff,
-                                                   CreatedDate = a.CreatedDate,
-                                                   StartDate = a.StartDate,
+                                                   CreatedDate = DateOnly.FromDateTime(a.CreatedDate ?? DateTime.Now),
+                                                   StartDate = DateOnly.FromDateTime(a.StartDate ?? DateTime.Now),
                                                    TimeSlot = a.TimeSlot,
                                                    Status = a.Status,
                                                    Description = a.Description,
@@ -266,7 +265,7 @@ namespace swp391_debo_be.Dao.Implement
             return appointments;
         }
 
-        public List<object> GetAppointmentsByStartDateAndEndDateOfDentist(DateOnly startDate, DateOnly endDate, Guid Id)
+        public List<object> GetAppointmentsByStartDateAndEndDateOfDentist(DateTime startDate, DateTime endDate, Guid Id)
         {
             var appointments = _context.Appointments
                         .Where(a => a.StartDate >= startDate && a.StartDate <= endDate &&
@@ -285,7 +284,7 @@ namespace swp391_debo_be.Dao.Implement
                 result.Add(new 
                 { 
                     Id = appointment.Id, 
-                    start = (DateOnly)appointment.StartDate, 
+                    start = appointment.StartDate, 
                     TimeSlot = appointment.TimeSlot, 
                     name = treatmeant?.Name 
                 });
@@ -303,7 +302,7 @@ namespace swp391_debo_be.Dao.Implement
                                       {
                                           Id = a.Id,
                                           TreatName = ct.Name,
-                                          StartDate = a.StartDate,
+                                          StartDate = DateOnly.FromDateTime(a.StartDate ?? DateTime.Now),
                                           CusId = a.CusId,
                                           Status = a.Status,
                                       };
@@ -338,8 +337,8 @@ namespace swp391_debo_be.Dao.Implement
             var appointmentDetails = appointments.Select(a => new AppointmentDetailsDto
             {
                 Id = a.Id,
-                CreatedDate = a.CreatedDate ?? default,
-                StartDate = a.StartDate,
+                CreatedDate = DateOnly.FromDateTime(a.CreatedDate ?? default),
+                StartDate = DateOnly.FromDateTime(a.StartDate ?? default),
                 TimeSlot = a.TimeSlot,
                 Status = a.Status,
                 Description = a.Description,
@@ -376,8 +375,8 @@ namespace swp391_debo_be.Dao.Implement
             var appointmentDetails = new AppointmentDetailsDto
             {
                 Id = appointment.Id,
-                CreatedDate = appointment.CreatedDate ?? default,
-                StartDate = appointment.StartDate,
+                CreatedDate = DateOnly.FromDateTime(appointment.CreatedDate ?? default),
+                StartDate = DateOnly.FromDateTime(appointment.StartDate ?? default),
                 TimeSlot = appointment.TimeSlot,
                 Status = appointment.Status,
                 Description = appointment.Description,
@@ -393,5 +392,138 @@ namespace swp391_debo_be.Dao.Implement
 
             return appointmentDetails;
         }
+
+        public async Task RescheduleAppointment(Guid id, AppointmentDetailsDto appmnt)
+        {
+            // Get the appointment to be rescheduled
+            var appointment = await _context.Appointments.FindAsync(id);
+            if (appointment == null)
+            {
+                throw new ArgumentException("Appointment not found.");
+            }
+
+            // Check the status of the appointment
+            var validStatuses = new List<string> { "pending", "on-going", "future" };
+            if (!validStatuses.Contains(appointment.Status!))
+            {
+                throw new ArgumentException("Only appointments with status 'pending', 'on-going', or 'future' can be rescheduled.");
+            }
+
+            // Parse the new start date from the DTO
+            if (!appmnt.StartDate.HasValue)
+            {
+                throw new ArgumentException("Start date is required.");
+            }
+            DateTime newStartDate = appmnt.StartDate.Value;
+
+            // Ensure the new start date's time slot is valid
+            if (!appmnt.TimeSlot.HasValue || appmnt.TimeSlot < 7 || appmnt.TimeSlot > 19)
+            {
+                throw new ArgumentException("Invalid time slot. Must be between 7 and 19.");
+            }
+
+            // Combine the new start date and time slot
+            newStartDate = newStartDate.Date.AddHours(appmnt.TimeSlot.Value);
+
+            // Ensure the new start date is greater than or equal to the current time
+            DateTime currentTime = DateTime.Now;
+            if (newStartDate < currentTime)
+            {
+                throw new ArgumentException("The new start date and time must be greater than or equal to the current time.");
+            }
+
+            // If the new start date equals the current date, calculate the difference between the current hour and the new time slot
+            if (newStartDate.Date == currentTime.Date)
+            {
+                int currentHour = currentTime.Hour;
+                if (appmnt.TimeSlot.Value - currentHour < 2)
+                {
+                    throw new ArgumentException("The new time slot must be at least 2 hours ahead of the current time.");
+                }
+            }
+
+            // Update the appointment
+            appointment.StartDate = newStartDate;
+            appointment.TimeSlot = appmnt.TimeSlot;
+            appointment.Description = appmnt.Description;
+            appointment.Note = appmnt.Note;
+
+            // Save the changes to the database
+            _context.Appointments.Update(appointment);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<AppointmentDto>> GetDentistAvailableTimeSlots(DateTime startDate, Guid dentId)
+        {
+            DateTime currentDateTime = DateTime.Now;
+            DateTime minAvailableTime = currentDateTime.AddHours(2);
+
+            // Generate all possible time slots (7 to 19)
+            List<int> allTimeSlots = Enumerable.Range(7, 13).ToList();
+
+            // Fetch existing appointments for the specified dentist and date
+            var existingAppointments = await _context.Appointments
+                .Where(a => a.DentId == dentId && a.StartDate.HasValue && a.StartDate.Value.Date == startDate.Date)
+                .Select(a => a.TimeSlot)
+                .ToListAsync();
+
+            // Filter out the unavailable slots
+            List<int> availableSlots = allTimeSlots
+                .Where(slot =>
+                    !existingAppointments.Contains(slot) &&
+                    startDate.Date.AddHours(slot) > minAvailableTime)
+                .ToList();
+
+            // Convert to AppointmentDto list
+            List<AppointmentDto> availableTimeSlots = availableSlots.Select(slot => new AppointmentDto
+            {
+                DentId = dentId.ToString(),
+                Date = startDate.ToString("yyyy-MM-dd"),
+                TimeSlot = slot
+            }).ToList();
+
+            return availableTimeSlots;
+        }
+
+
+        //public async Task<List<int>> GetDentistAvailableTimeSlots(DateTime startDate, Guid dentId, Guid? tempDentId)
+        //{
+        //    // Ensure the parameters are passed as SQL parameters to avoid SQL injection vulnerabilities
+        //    var startDateParam = new SqlParameter("@StartDate", startDate);
+        //    var dentIdParam = new SqlParameter("@DentID", dentId);
+        //    var tempDentIdParam = new SqlParameter("@TempDentID", tempDentId ?? (object)DBNull.Value);
+
+        //    // Define the raw SQL query
+        //    string sqlQuery = @"
+        //    DECLARE @StartDate DATETIME2 = @StartDate;
+        //    DECLARE @DentID UNIQUEIDENTIFIER = @DentID;
+        //    DECLARE @TempDentID UNIQUEIDENTIFIER = @TempDentID;
+
+        //    WITH UsedTimeSlots AS (
+        //        SELECT Time_Slot
+        //        FROM [dbo].[Appointment]
+        //        WHERE Start_Date = @StartDate
+        //          AND (
+        //                (Temp_Dent_ID IS NULL AND Dent_ID = @DentID)
+        //                OR
+        //                (Temp_Dent_ID IS NOT NULL AND Temp_Dent_ID = @TempDentID)
+        //              )
+        //    )
+
+        //    SELECT Time_Slot
+        //    FROM (VALUES (7), (8), (9), (10), (11), (12), (13), (14), (15), (16), (17), (18), (19)) AS AllSlots(Time_Slot)
+        //    WHERE Time_Slot NOT IN (SELECT Time_Slot FROM UsedTimeSlots);";
+
+        //    // Execute the raw SQL query using Entity Framework Core
+        //    var availableTimeSlots = await _context.Appointments
+        //        .FromSqlRaw(sqlQuery, startDateParam, dentIdParam, tempDentIdParam)
+        //        .Select(s => s.TimeSlot)
+        //        .ToListAsync();
+
+        //    // Convert the results to a list of integers
+        //    var availableTimeSlotsList = availableTimeSlots.Cast<int>().ToList();
+
+        //    return availableTimeSlotsList;
+        //}
     }
 }

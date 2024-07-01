@@ -26,15 +26,15 @@ namespace swp391_debo_be.Dto.Implement
 
         public bool? IsCreatedByStaff { get; set; }
 
-        public DateOnly? CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
-        public DateOnly? StartDate { get; set; }
+        public DateTime? StartDate { get; set; }
 
         [Required]
         public int? TimeSlot { get; set; }
 
-        [Required]
-        [RegularExpression("^(cancelled|pending|future|on-going|done)$", ErrorMessage = "Invalid status value")]
+        //[Required]
+        //[RegularExpression("^(cancelled|pending|future|on-going|done)$", ErrorMessage = "Invalid status value")]
 
         public string? Status { get; set; }
 

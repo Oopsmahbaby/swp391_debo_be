@@ -26,10 +26,16 @@ namespace swp391_debo_be.Controllers
         }
 
         [HttpGet("vnpay-return")]
-        public ActionResult<ApiRespone> VnpayReturn([FromQuery] VnpayPayResponse response)
+        public IActionResult VnpayReturn([FromQuery] VnpayPayResponse response)
         {
-            
-            return _paymentService.HandlePaymentResponse(response);
+            var result = _paymentService.HandlePaymentResponse(response);
+            return Redirect($"http://localhost:5173/patient/booking/payment-status/{result.PaymentId}");
+        }
+
+        [HttpGet("{id}/status")]
+        public ActionResult<ApiRespone> GetPaymentStatus([FromRoute] string id)
+        {
+            return Ok(_paymentService.GetPayment(id));
         }
     }
 }

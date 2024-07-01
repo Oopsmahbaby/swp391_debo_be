@@ -13,10 +13,12 @@ using swp391_debo_be.Cores;
 using swp391_debo_be.Dao.Implement;
 using swp391_debo_be.Dao.Interface;
 using swp391_debo_be.Entity.Implement;
+using swp391_debo_be.Handler;
 using swp391_debo_be.Repository.Implement;
 using swp391_debo_be.Repository.Interface;
 using swp391_debo_be.Services.Implements;
 using swp391_debo_be.Services.Interfaces;
+using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -159,11 +161,19 @@ app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseWebSockets(new WebSocketOptions
+{
+    KeepAliveInterval = TimeSpan.FromSeconds(120),
+    ReceiveBufferSize = 4 * 1024
+});
 // Apply CORS middleware
 app.UseCors("AllowSpecificOrigin");
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
 });
+
+
+
 
 app.Run();

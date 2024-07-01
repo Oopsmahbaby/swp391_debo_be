@@ -22,7 +22,7 @@ namespace swp391_debo_be.Services.Implements
                 User foundUser = null;
                 if (user.PhoneNumber == null && user.Email != null)
                 {
-                    foundUser = CUser.GetUserByEmail(user.Email);
+                    foundUser =  CUser.GetUserByEmail(user.Email);
                 }
                 else if (user.PhoneNumber != null && user.Email == null)
                 {
@@ -96,8 +96,6 @@ namespace swp391_debo_be.Services.Implements
             try
             {
                 List<Claim> claims = JwtProvider.DecodeToken(tokenRequest.accessToken);
-
-                System.Console.WriteLine(claims.ToString());
 
                 if (claims == null)
                 {

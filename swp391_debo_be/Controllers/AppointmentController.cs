@@ -166,5 +166,25 @@ namespace swp391_debo_be.Controllers
                 StatusCode = (int)response.StatusCode
             };
         }
+
+        [HttpPut("reschedule/{id}")]
+        public async Task<IActionResult> RescheduleAppointment(Guid id, AppointmentDetailsDto appmnt)
+        {
+            var response = await _appointmentService.RescheduleAppointment(id, appmnt);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+
+        [HttpGet("availableslot")]
+        public async Task<IActionResult> GetDentistAvailableTimeSlots(DateTime startDate, Guid dentId)
+        {
+            var response = await _appointmentService.GetDentistAvailableTimeSlots(startDate, dentId);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
     }
 }
