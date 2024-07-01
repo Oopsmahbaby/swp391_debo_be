@@ -31,28 +31,11 @@ namespace swp391_debo_be.Services.Implements
             };
         }
 
-        public ApiRespone HandlePaymentResponse(VnpayPayResponse vnpayResponse)
+        public PaymenReturnDto HandlePaymentResponse(VnpayPayResponse vnpayResponse)
         {
             var result = CPayment.HandlePaymentResponse(vnpayResponse);
 
-            if (result.PaymentStatus != "00")
-            {
-                return new ApiRespone
-                {
-                    StatusCode = System.Net.HttpStatusCode.BadRequest,
-                    Message = "Payment failed",
-                    Data = result,
-                    Success = false
-                };
-            }
-
-            return new ApiRespone
-            {
-                StatusCode = System.Net.HttpStatusCode.OK,
-                Message = "Payment successfully",
-                Data = result,
-                Success = true
-            };
+            return result;
         }
 
         public ApiRespone GetPayment(string id)
