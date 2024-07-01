@@ -405,9 +405,14 @@ namespace swp391_debo_be.Dao.Implement
 
             // Check the status of the appointment
             var validStatuses = new List<string> { "pending", "on-going", "future" };
-            if (!validStatuses.Contains(appointment.Status!))
+            if (!validStatuses.Contains(appointment.Status!)) 
             {
                 throw new ArgumentException("Only appointments with status 'pending', 'on-going', or 'future' can be rescheduled.");
+            }
+
+            if (appointment.RescheduleCount >= 2)
+            {
+                throw new InvalidOperationException("This appointment can only be rescheduled up to 2 times.");
             }
 
             // Parse the new start date from the DTO
@@ -448,6 +453,7 @@ namespace swp391_debo_be.Dao.Implement
             appointment.TimeSlot = appmnt.TimeSlot;
             appointment.Description = appmnt.Description;
             appointment.Note = appmnt.Note;
+            appointment.RescheduleCount += 1;
 
             // Save the changes to the database
             _context.Appointments.Update(appointment);
