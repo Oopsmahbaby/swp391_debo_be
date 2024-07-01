@@ -384,6 +384,7 @@ namespace swp391_debo_be.Dao.Implement
                 CategoryName = appointment.Treat?.CategoryNavigation?.Name,
                 TreatmentName = appointment.Treat?.Name,
                 Price = appointment.Treat?.Price,
+                Dent_Id = appointment.DentId,
                 DentistName = appointment.TempDentId != null ? appointment.TempDent?.FirstName + " " + appointment.TempDent?.LastName : appointment.Dent?.FirstName + " " + appointment.Dent?.LastName,
                 CustomerName = appointment.Cus?.FirstName + " " + appointment.Cus?.LastName,
                 CreatorName = appointment.Creator?.FirstName + " " + appointment.Creator?.LastName,
