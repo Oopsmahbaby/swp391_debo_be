@@ -160,8 +160,6 @@ namespace swp391_debo_be.Dao.Implement
                 switch (rule)
                 {
                     case 1:
-                        date = date.AddDays(1);
-                        futureDate.Add(date);
                         break;
                     case 2:
                         date = date.AddDays(7);
@@ -186,7 +184,7 @@ namespace swp391_debo_be.Dao.Implement
 
         public int[][] GetApppointmentsByDentistIdAndDate(Guid dentistId, DateTime date, int treatmentId)
         {
-            int? rule = _context.Rules.Where(r => r.Id == treatmentId).Select(r => r.Id).FirstOrDefault();
+            int? rule = _context.ClinicTreatments.Where(cl => cl.Id == treatmentId).Select(cl => cl.RuleId).FirstOrDefault();
             int? numOfApp = _context.ClinicTreatments.Where(t => t.Id == treatmentId).Select(t => t.NumOfApp).FirstOrDefault();
 
             List<DateTime> futureDate = GetFutureDate(date, (int)numOfApp, (int)rule);
