@@ -129,7 +129,12 @@ namespace swp391_debo_be.Cores
 
         public static Task RescheduleByDentist(AppointmentDetailsDto appmnt)
         {
-            return _appointmentRepo.RescheduleByDentist((AppointmentDetailsDto)appmnt);
+            return _appointmentRepo.RescheduleByDentist(appmnt);
+        }
+
+        public static Task UpdatAppointmenteNote(AppointmentDetailsDto appmnt)
+        {
+            return _appointmentRepo.UpdatAppointmenteNote(appmnt);
         }
     }
 }

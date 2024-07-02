@@ -419,5 +419,19 @@ namespace swp391_debo_be.Services.Implements
                 return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
         }
+
+        public async Task<ApiRespone> UpdatAppointmenteNote(AppointmentDetailsDto appmnt)
+        {
+            try
+            {
+                await CAppointment.UpdatAppointmenteNote(appmnt);
+                var data = await CAppointment.ViewAppointmentDetail(appmnt.Id);
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = data, Message = "Update Note successfully.", Success = true };
+            }
+            catch(Exception ex)
+            {
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
+            }
+        }
     }
 }

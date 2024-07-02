@@ -23,5 +23,6 @@ namespace swp391_debo_be.Services.Interfaces
         public Task SendEmailWithConfirmationLink(Guid id, string confirmationLink);
         public Task<ApiRespone> GenerateConfirmEmailToken(AppointmentDetailsDto appmnt);
         public Task<ApiRespone> RescheduleByDentist(AppointmentDetailsDto appmnt);
+        public Task<ApiRespone> UpdatAppointmenteNote(AppointmentDetailsDto appmnt);
     }
 }

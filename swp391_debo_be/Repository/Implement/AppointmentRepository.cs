@@ -94,5 +94,10 @@ namespace swp391_debo_be.Repository.Implement
         {
             return _appointmentDao.RescheduleByDentist (appmnt);
         }
+
+        public Task UpdatAppointmenteNote(AppointmentDetailsDto appmnt)
+        {
+            return _appointmentDao.UpdatAppointmenteNote (appmnt);
+        }
     }
 }

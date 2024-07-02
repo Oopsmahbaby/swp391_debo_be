@@ -244,5 +244,15 @@ namespace swp391_debo_be.Controllers
                 StatusCode = (int)response.StatusCode
             };
         }
+
+        [HttpPut("updateappointmentnote")]
+        public async Task<IActionResult> UpdatAppointmenteNote(AppointmentDetailsDto appmnt)
+        {
+            var response = await _appointmentService.UpdatAppointmenteNote(appmnt);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
     }
 }
