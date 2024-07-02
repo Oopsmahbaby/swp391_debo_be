@@ -535,6 +535,18 @@ namespace swp391_debo_be.Dao.Implement
             await _context.SaveChangesAsync();
         }
 
+        public async Task UpdatAppointmenteNote(AppointmentDetailsDto appmnt)
+        {
+            var appointment = await _context.Appointments.FindAsync(appmnt.Id);
+            if (appointment == null)
+            {
+                throw new ArgumentException("Appointment not found.");
+            }
+            appointment.Note = appmnt.Note;
+            _context.Appointments.Update(appointment);
+            await _context.SaveChangesAsync();
+        }
+
 
 
 
