@@ -454,6 +454,7 @@ namespace swp391_debo_be.Dao.Implement
             appointment.Description = appmnt.Description;
             appointment.Note = appmnt.Note;
             appointment.RescheduleCount += 1;
+            appointment.RescheduleCount = appmnt.RescheduleCount;
 
             // Save the changes to the database
             _context.Appointments.Update(appointment);
