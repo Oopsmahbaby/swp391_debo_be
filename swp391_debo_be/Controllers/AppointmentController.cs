@@ -186,5 +186,15 @@ namespace swp391_debo_be.Controllers
                 StatusCode = (int)response.StatusCode
             };
         }
+
+        [HttpGet("rescheduletempdent")]
+        public async Task<IActionResult> GetRescheduleTempDent(DateTime startDate, int timeSlot, int treatId)
+        {
+            var response = await _appointmentService.GetRescheduleTempDent(startDate, timeSlot, treatId);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
     }
 }

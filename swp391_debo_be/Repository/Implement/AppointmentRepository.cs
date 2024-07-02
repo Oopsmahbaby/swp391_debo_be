@@ -84,5 +84,10 @@ namespace swp391_debo_be.Repository.Implement
         {
             return _appointmentDao.GetDentistAvailableTimeSlots (startDate, dentId);
         }
+
+        public Task<List<AppointmentDetailsDto>> GetRescheduleTempDent(DateTime startDate, int timeSlot, int treatId)
+        {
+            return _appointmentDao.GetRescheduleTempDent (startDate, timeSlot, treatId);
+        }
     }
 }

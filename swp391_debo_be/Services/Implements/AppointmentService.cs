@@ -310,5 +310,18 @@ namespace swp391_debo_be.Services.Implements
                 return new ApiRespone { StatusCode = System.Net.HttpStatusCode.InternalServerError, Data = null, Message = ex.Message, Success = false };
             }
         }
+
+        public async Task<ApiRespone> GetRescheduleTempDent(DateTime startDate, int timeSlot, int treatId)
+        {
+            try
+            {
+                var data = await CAppointment.GetRescheduleTempDent(startDate, timeSlot, treatId);
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count }, Message = "Appointment data retrieved successfully.", Success = true };
+            }
+            catch (Exception ex)
+            {
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
+            }
+        }
     }
 }

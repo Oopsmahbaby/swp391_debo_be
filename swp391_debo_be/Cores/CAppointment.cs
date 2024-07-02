@@ -121,5 +121,10 @@ namespace swp391_debo_be.Cores
         {
             return _appointmentRepo.GetDentistAvailableTimeSlots(startDate, dentId);
         }
+
+        public static Task<List<AppointmentDetailsDto>> GetRescheduleTempDent(DateTime startDate, int timeSlot, int treatId)
+        {
+            return _appointmentRepo.GetRescheduleTempDent(startDate, timeSlot, treatId);
+        }
     }
 }

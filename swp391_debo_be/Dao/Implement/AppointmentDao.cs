@@ -384,6 +384,7 @@ namespace swp391_debo_be.Dao.Implement
                 CategoryName = appointment.Treat?.CategoryNavigation?.Name,
                 TreatmentName = appointment.Treat?.Name,
                 Price = appointment.Treat?.Price,
+                RescheduleCount = appointment.RescheduleCount,
                 Dent_Id = appointment.DentId,
                 DentistName = appointment.TempDentId != null ? appointment.TempDent?.FirstName + " " + appointment.TempDent?.LastName : appointment.Dent?.FirstName + " " + appointment.Dent?.LastName,
                 CustomerName = appointment.Cus?.FirstName + " " + appointment.Cus?.LastName,
@@ -454,7 +455,6 @@ namespace swp391_debo_be.Dao.Implement
             appointment.Description = appmnt.Description;
             appointment.Note = appmnt.Note;
             appointment.RescheduleCount += 1;
-            appointment.RescheduleCount = appmnt.RescheduleCount;
 
             // Save the changes to the database
             _context.Appointments.Update(appointment);
@@ -492,6 +492,35 @@ namespace swp391_debo_be.Dao.Implement
 
             return availableTimeSlots;
         }
+
+        public async Task<List<AppointmentDetailsDto>> GetRescheduleTempDent(DateTime startDate, int timeSlot, int treatId)
+        {
+            // Lấy danh sách các Dentists đã có cuộc hẹn vào thời gian và điều kiện cụ thể
+            var busyDentists = await (from a in _context.Appointments
+                                      where a.StartDate == startDate && a.TimeSlot == timeSlot && a.TreatId == treatId
+                                      select a.DentId)
+                                      .Distinct()
+                                      .ToListAsync();
+
+            // Lấy danh sách các Dentists có sẵn (không nằm trong danh sách bận) và cung cấp dịch vụ điều trị cụ thể
+            var availableDentists = await (from e in _context.Employees
+                                           join u in _context.Users on e.Id equals u.Id
+                                           join ct in _context.ClinicTreatments on treatId equals ct.Id
+                                           where !busyDentists.Contains(e.Id) && ct.Dents.Any(d => d.Id == e.Id)
+                                           select new AppointmentDetailsDto
+                                           {
+                                               Dent_Id = u.Id,
+                                               DentistName = u.FirstName + " " + u.LastName,
+                                               Dent_Avt = u.Avt
+                                           })
+                                           .ToListAsync();
+
+            return availableDentists;
+        }
+
+
+
+
 
 
         //public async Task<List<int>> GetDentistAvailableTimeSlots(DateTime startDate, Guid dentId, Guid? tempDentId)
