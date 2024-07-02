@@ -179,5 +179,15 @@ namespace swp391_debo_be.Services.Implements
 
             return jwtToken.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
         }
+
+        public List<Claim> ValidateToken(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
+
+            // Validate the token here (e.g., signature, expiration)
+
+            return jwtToken.Claims.ToList();
+        }
     }
 }
