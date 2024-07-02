@@ -518,6 +518,23 @@ namespace swp391_debo_be.Dao.Implement
             return availableDentists;
         }
 
+        public async Task RescheduleByDentist(AppointmentDetailsDto appmnt)
+        {
+            var appointment = await _context.Appointments.FindAsync(appmnt.Id);
+            if (appointment == null)
+            {
+                throw new ArgumentException("Appointment not found.");
+            }
+            var validStatuses = new List<string> { "pending", "on-going", "future" };
+            if (!validStatuses.Contains(appointment.Status!))
+            {
+                throw new ArgumentException("Only appointments with status 'pending', 'on-going', or 'future' can be rescheduled.");
+            }
+            appointment.TempDentId = appmnt.Temp_Dent_Id;
+            _context.Appointments.Update(appointment);
+            await _context.SaveChangesAsync();
+        }
+
 
 
 

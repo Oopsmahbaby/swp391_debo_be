@@ -1,6 +1,7 @@
 ﻿using swp391_debo_be.Constants;
 using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
+using System.Security.Claims;
 
 namespace swp391_debo_be.Services.Interfaces
 {
@@ -14,5 +15,6 @@ namespace swp391_debo_be.Services.Interfaces
 
         public string GetAuthorizationHeader(HttpRequest request);
         public string GetUserIdFromToken(string token);
+        public List<Claim> ValidateToken(string token);
     }
 }

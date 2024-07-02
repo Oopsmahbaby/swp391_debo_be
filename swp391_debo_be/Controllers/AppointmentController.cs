@@ -1,4 +1,5 @@
-﻿using Google.Apis.Oauth2.v2;
+﻿using Azure;
+using Google.Apis.Oauth2.v2;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -191,6 +192,53 @@ namespace swp391_debo_be.Controllers
         public async Task<IActionResult> GetRescheduleTempDent(DateTime startDate, int timeSlot, int treatId)
         {
             var response = await _appointmentService.GetRescheduleTempDent(startDate, timeSlot, treatId);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+
+        //[HttpPost("sendConfirmEmail")]
+        //public async Task<IActionResult> SendEmail(Guid id)
+        //{
+        //    await _appointmentService.SendEmailWithConfirmationLink(id);
+        //    return Ok();
+        //}
+
+        [HttpPost("generateconfirmtoken")]
+        public async Task<IActionResult> GenerateConfirmEmailToken(AppointmentDetailsDto appmnt)
+        {
+            var response = await _appointmentService.GenerateConfirmEmailToken(appmnt);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+
+        [HttpGet("reschedule/{token}")]
+        public IActionResult ConfirmReschedule(string token)
+        {
+            try
+            {
+                var claims = _tokenService.ValidateToken(token);
+                var appointmentId = claims.FirstOrDefault(c => c.Type == "AppointmentId")?.Value;
+                var tempDentId = claims.FirstOrDefault(c => c.Type == "TempDentId")?.Value;
+                var cusId = claims.FirstOrDefault(c => c.Type == "CusId")?.Value;
+
+                // Implement your logic here. For example, mark the appointment as confirmed in the database.
+
+                return Ok(new { Message = "Appointment reschedule confirmed successfully", AppointmentId = appointmentId, TempDentId = tempDentId, CusId = cusId });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = "Invalid token", Error = ex.Message });
+            }
+        }
+
+        [HttpPut("reschedulebydentist/{id}")]
+        public async Task<IActionResult> RescheduleByDentist(AppointmentDetailsDto appmnt)
+        {
+            var response = await _appointmentService.RescheduleByDentist(appmnt);
             return new ObjectResult(response)
             {
                 StatusCode = (int)response.StatusCode

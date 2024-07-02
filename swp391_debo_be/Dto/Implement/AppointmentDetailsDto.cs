@@ -17,6 +17,7 @@ namespace swp391_debo_be.Dto.Implement
         public int? RescheduleCount { get; set; }
         public Guid? Cus_Id { get; set; }
         public Guid? Dent_Id { get; set; }
+        public Guid? Temp_Dent_Id { get; set; }
         public string? DentistName { get; set; }
         public string? CustomerName { get; set; }
         public string? CreatorName { get; set; }
