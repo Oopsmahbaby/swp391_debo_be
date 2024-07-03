@@ -6,5 +6,7 @@ namespace swp391_debo_be.Dao.Interface
     {
         public Task<List<DashboardCustomerDto>> ViewAppointmentState(Guid id);
         public Task<DashboardCustomerDto> ViewTotalPaidAmountOfCustomer(Guid id);
+
+        public Task<DashboardAdminDto> ViewTotalRevenue();
     }
 }

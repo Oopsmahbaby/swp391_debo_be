@@ -32,5 +32,18 @@ namespace swp391_debo_be.Services.Implements
                 return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
             }
         }
+
+        public async Task<ApiRespone> ViewTotalRevenue()
+        {
+            try
+            {
+                var data = await CDashBoardCustomer.ViewTotalRevenue();
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = data, Message = "Data retrieved successfully.", Success = true };
+            }
+            catch(Exception ex)
+            {
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
+            }
+        }
     }
 }

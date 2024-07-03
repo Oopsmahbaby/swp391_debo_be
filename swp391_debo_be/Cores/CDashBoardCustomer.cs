@@ -26,5 +26,10 @@ namespace swp391_debo_be.Cores
         {
             return _dashboardRepo.ViewTotalPaidAmountOfCustomer(id);
         }
+
+        public static Task<DashboardAdminDto> ViewTotalRevenue()
+        {
+            return _dashboardRepo.ViewTotalRevenue();
+        }
     }
 }

@@ -139,9 +139,14 @@ namespace swp391_debo_be.Controllers
         }
 
         [HttpGet("dentist/appointments")]
-        public async Task<IActionResult> GetAppointmentByDentistId(Guid dentistId, [FromQuery] int page = 0, [FromQuery] int limit = 5)
+        public async Task<IActionResult> GetAppointmentByDentistId([FromQuery] int page = 0, [FromQuery] int limit = 5)
         {
-            var response = await _appointmentService.GetAppointmentByDentistId(page, limit, dentistId);
+            string? userIdString = JwtProvider.GetUserId(Request);
+            if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out Guid userId))
+            {
+                return BadRequest("Invalid user ID.");
+            }
+            var response = await _appointmentService.GetAppointmentByDentistId(page, limit, userId);
             return new ObjectResult(response)
             {
                 StatusCode = (int)response.StatusCode
