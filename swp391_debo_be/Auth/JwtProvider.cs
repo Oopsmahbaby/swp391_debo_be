@@ -260,5 +260,37 @@ namespace swp391_debo_be.Auth
                 throw;
             }
         }
+
+        public static Guid? GetUserId2(string token)
+        {
+            if (string.IsNullOrEmpty(token))
+            {
+                return null;
+            }
+
+            List<Claim> claims = DecodeToken(token);
+
+            return GetUserId2(claims);
+        }
+
+        /// <summary>
+        /// Gets the user identifier from the list of claim.
+        /// </summary>
+        /// <param name="claims">The list of the claim.</param>
+        /// <returns></returns>
+        public static Guid? GetUserId2(List<Claim> claims)
+        {
+            if (!claims.IsNullOrEmpty())
+            {
+                Claim? claim = claims.FirstOrDefault(c => c.Type == "nameid");
+
+                if (claim != null && Guid.TryParse(claim.Value, out Guid userId))
+                {
+                    return userId;
+                }
+            }
+
+            return null;
+        }
     }
 }

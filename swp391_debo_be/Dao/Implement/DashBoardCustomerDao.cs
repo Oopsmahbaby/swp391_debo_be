@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using swp391_debo_be.Cores;
 using swp391_debo_be.Dao.Interface;
 using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
@@ -47,6 +48,31 @@ namespace swp391_debo_be.Dao.Implement
             .FirstOrDefaultAsync();
 
             return result;
+        }
+
+        public async Task<DashboardAdminDto> ViewTotalRevenue()
+        {
+            var result = await (from appointment in _context.Appointments
+                                      join treatment in _context.ClinicTreatments
+                                      on appointment.TreatId equals treatment.Id
+                                      select new
+                                      {
+                                          treatment.Price,
+                                          appointment.Id
+                                      })
+                        .GroupBy(x => 1) // Group all results to calculate the aggregate functions
+                        .Select(g => new
+                        {
+                            TotalRevenue = g.Sum(x => x.Price),
+                            TotalAppointment = g.Count()
+                        })
+                        .FirstOrDefaultAsync();
+
+            return new DashboardAdminDto 
+            { 
+                TotalRevenue = result.TotalRevenue,
+                TotalAppointment = result.TotalAppointment,
+            };
         }
     }
 }

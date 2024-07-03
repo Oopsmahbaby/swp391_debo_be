@@ -27,5 +27,10 @@ namespace swp391_debo_be.Repository.Implement
         {
             return _dashBoardDao.ViewTotalPaidAmountOfCustomer(id);
         }
+
+        public Task<DashboardAdminDto> ViewTotalRevenue()
+        {
+            return _dashBoardDao.ViewTotalRevenue();
+        }
     }
 }

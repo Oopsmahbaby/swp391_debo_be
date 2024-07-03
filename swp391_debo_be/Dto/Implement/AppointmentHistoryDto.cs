@@ -17,10 +17,13 @@ namespace swp391_debo_be.Dto.Implement
         public Guid? PaymentId { get; set; }
 
         public Guid? DentId { get; set; }
+        public string? DentName { get; set; }
 
         public Guid? TempDentId { get; set; }
+        public string? TempDentName { get; set; }
 
         public Guid? CusId { get; set; }
+        public string? CustomerName { get; set; }
 
         public Guid? CreatorId { get; set; }
 
@@ -32,9 +35,6 @@ namespace swp391_debo_be.Dto.Implement
 
         [Required]
         public int? TimeSlot { get; set; }
-
-        //[Required]
-        //[RegularExpression("^(cancelled|pending|future|on-going|done)$", ErrorMessage = "Invalid status value")]
 
         public string? Status { get; set; }
 
