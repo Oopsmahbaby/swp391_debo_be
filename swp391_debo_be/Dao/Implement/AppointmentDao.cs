@@ -298,6 +298,9 @@ namespace swp391_debo_be.Dao.Implement
             var query = from a in _context.Appointments
                         join ct in _context.ClinicTreatments on a.TreatId equals ct.Id
                         join u in _context.Users on a.CusId equals u.Id
+                        join dent in _context.Users on a.DentId equals dent.Id
+                        join tempDent in _context.Users on a.TempDentId equals tempDent.Id into tempDentJoin
+                        from tempDent in tempDentJoin.DefaultIfEmpty()
                         where (a.TempDentId == dentistId || (a.TempDentId == null && a.DentId == dentistId))
                         select new AppointmentHistoryDto
                         {
@@ -306,6 +309,11 @@ namespace swp391_debo_be.Dao.Implement
                             StartDate = a.StartDate,
                             CusId = a.CusId,
                             CustomerName = u.FirstName + " " + u.LastName,
+                            DentId = a.DentId,
+                            DentName = dent.FirstName + " " + dent.LastName,
+                            TempDentId = a.TempDentId != null ? a.TempDentId : null,
+                            TempDentName = tempDent != null ? tempDent.FirstName + " " + tempDent.LastName : null,
+                            TimeSlot = a.TimeSlot,
                             Status = a.Status,
                         };
             if (limit > 0)

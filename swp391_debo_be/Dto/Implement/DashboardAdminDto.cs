@@ -2,6 +2,7 @@
 {
     public class DashboardAdminDto
     {
+        public int? TotalAppointment {  get; set; }
         public double? TotalRevenue { get; set; }
     }
 }
