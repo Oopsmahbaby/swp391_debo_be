@@ -120,5 +120,10 @@ namespace swp391_debo_be.Cores
         {
             return _appointmentRepo.GetDentistAvailableTimeSlots(startDate, dentId);
         }
+
+        public static Appointment UpdateAppointment(Guid id, UpdateAppointmentDto dto)
+        {
+            return _appointmentRepo.UpdateAppointment(id, dto);
+        }
     }
 }

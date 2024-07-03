@@ -84,5 +84,10 @@ namespace swp391_debo_be.Repository.Implement
         {
             return _appointmentDao.GetDentistAvailableTimeSlots (startDate, dentId);
         }
+
+        public Appointment UpdateAppointment(Guid id, UpdateAppointmentDto dto)
+        {
+            return appointmentDao.UpdateAppointment(id, dto);
+        }
     }
 }

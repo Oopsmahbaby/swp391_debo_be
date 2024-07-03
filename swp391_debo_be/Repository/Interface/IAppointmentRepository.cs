@@ -19,5 +19,7 @@ namespace swp391_debo_be.Repository.Interface
         public Task<AppointmentDetailsDto> ViewAppointmentDetail(Guid id);
         public Task RescheduleAppointment(Guid id, AppointmentDetailsDto appmnt);
         public Task<List<AppointmentDto>> GetDentistAvailableTimeSlots(DateTime startDate, Guid dentId);
+
+        public Appointment UpdateAppointment(Guid id, UpdateAppointmentDto dto);
     }
 }

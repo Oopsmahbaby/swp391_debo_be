@@ -196,7 +196,7 @@ namespace swp391_debo_be.Dao.Implement
             for (int i = 0; i < futureDate.Count; i++)
             {
                 timeSlot[i] = _context.Appointments
-                    .Where(a => a.DentId == dentistId && a.StartDate == futureDate[i] && (a.Status == "pending" || a.Status  == "future"))
+                    .Where(a => a.DentId == dentistId && a.StartDate == futureDate[i] && (a.Status != "pending" && a.Status  != "canceled"))
                     .Select(a => (int)a.TimeSlot)
                     .ToArray();
             }
@@ -485,6 +485,29 @@ namespace swp391_debo_be.Dao.Implement
             }).ToList();
 
             return availableTimeSlots;
+        }
+
+        public Appointment UpdateAppointment(Guid id, UpdateAppointmentDto dto)
+        {
+            Appointment? appointment = _context.Appointments
+                .Where(a => a.Id == id)
+                .FirstOrDefault();
+
+            if (appointment == null)
+            {
+                return null;
+            }
+
+            appointment.DentId = Guid.Parse(dto.DentId!);
+            appointment.TreatId = dto.TreateId;
+            appointment.StartDate = DateTime.Parse(dto.Date!);
+            appointment.TimeSlot = dto.TimeSlot;
+            appointment.Note = dto.Note;
+
+            _context.Update(appointment);
+            _context.SaveChanges();
+
+            return appointment;
         }
 
 

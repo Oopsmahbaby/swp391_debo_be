@@ -186,5 +186,13 @@ namespace swp391_debo_be.Controllers
                 StatusCode = (int)response.StatusCode
             };
         }
+
+        [HttpPut("updatestatus/{id}")]
+        public ActionResult<ApiRespone> UpdateAppointment(Guid id, [FromBody] UpdateAppointmentDto dto)
+        {
+            var response = _appointmentService.UpdateAppointment(id, dto);
+
+            return response;
+        }
     }
 }
