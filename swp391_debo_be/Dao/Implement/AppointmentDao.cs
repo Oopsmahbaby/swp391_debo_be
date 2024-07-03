@@ -197,7 +197,7 @@ namespace swp391_debo_be.Dao.Implement
             for (int i = 0; i < futureDate.Count; i++)
             {
                 timeSlot[i] = _context.Appointments
-                    .Where(a => a.DentId == dentistId && a.StartDate == futureDate[i] && (a.Status == "pending" && a.Status  == "future"))
+                    .Where(a => a.DentId == dentistId && a.StartDate == futureDate[i] && a.Status == "pending" || a.Status  == "future")
                     .Select(a => (int)a.TimeSlot)
                     .ToArray();
             }
