@@ -433,17 +433,5 @@ namespace swp391_debo_be.Services.Implements
                 return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
         }
-
-        public ApiRespone UpdateAppointment(Guid id, UpdateAppointmentDto dto)
-        {
-            var result = CAppointment.UpdateAppointment(id, dto);
-
-            if (result == null)
-            {
-                return new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Data = null, Message = "Failed to update appointment", Success = false };
-            }
-
-            return new ApiRespone { StatusCode = System.Net.HttpStatusCode.OK, Data = result, Message = "Updated appointment successfully", Success = true };
-        }
     }
 }
