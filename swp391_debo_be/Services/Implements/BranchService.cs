@@ -17,218 +17,146 @@ namespace swp391_debo_be.Services.Implements
 
         public async Task<ApiRespone> activeBranchAsync(int id)
         {
-            var response = new ApiRespone();
             try
             {
                 var existingBranchs = await CBranch.getBranchAsync(id);
                 if (existingBranchs != null)
                 {
                     await CBranch.activeBranchAsync(id);
-                    response.StatusCode = HttpStatusCode.OK;
-                    response.Data = existingBranchs;
-                    response.Success = true;
-                    response.Message = "Branch data is activated successfully.";
+                    return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = existingBranchs, Message = "Branch data is activated successfully.", Success = true };
                 }
                 else
                 {
-                    response.StatusCode = HttpStatusCode.NotFound;
-                    response.Success = false;
-                    response.Message = "Branch not found.";
+                    return new ApiRespone { StatusCode = HttpStatusCode.NotFound, Message = "Branch not found.", Success = false };
                 }
 
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
         public async Task<ApiRespone> addBranchAsync(BranchDto branch)
         {
-            var response = new ApiRespone();
             try
             {
                 var existingBranch = await CBranch.getAllBranchAsync(1, -1);
                 if (existingBranch.Any(t => t.Id == branch.Id))
                 {
-                    response.StatusCode = HttpStatusCode.BadRequest;
-                    response.Success = false;
-                    response.Message = "ID cannot be duplicated";
-                    return response;
+                    return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = "ID cannot be duplicated", Success = false };
                 }
                 var newBranch = await CBranch.addBranchAsync(branch);
                 var branchs = await CBranch.getBranchAsync(newBranch);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = branchs;
-                response.Success = true;
-                response.Message = "Branch data is added successfully";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = branchs, Message = "Branch data is added successfully.", Success = true };
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
         public async Task<ApiRespone> deleteBranchAsync(int id)
         {
-            var response = new ApiRespone();
             try
             {
                 var existingBranch = await CBranch.getBranchAsync(id);
                 if (existingBranch != null)
                 {
                     await CBranch.deleteBranchAsync(id);
-                    response.StatusCode = HttpStatusCode.OK;
-                    response.Data = existingBranch;
-                    response.Success = true;
-                    response.Message = "Branch data is deleted successfully";
+                    return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = existingBranch, Message = "Branch data is deleted successfully.", Success = true };
                 }
                 else
                 {
-                    response.StatusCode = HttpStatusCode.NotFound;
-                    response.Success = false;
-                    response.Message = "Branch not found";
+                    return new ApiRespone { StatusCode = HttpStatusCode.NotFound, Message = "Branch not found.", Success = false };
                 }
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
         public async Task<ApiRespone> getAllBranchAsync(int page, int limit)
         {
-            var response = new ApiRespone();
             try
             {
                 var data = await CBranch.getAllBranchAsync(page, limit);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = new { list = data, total = data.Count };
-                response.Success = true;
-                response.Message = "Branch data is retrieved successfully";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count }, Message = "Branch data is retrieved successfully.", Success = true };
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
         public async Task<ApiRespone> getBranchAsync(int id)
         {
-            var response = new ApiRespone();
             try
             {
                 var data = await CBranch.getBranchAsync(id);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = data;
-                response.Success = true;
-                response.Message = "Branch data retrieved successfully";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = data, Message = "Branch data is retrieved successfully.", Success = true };
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
         public async Task<ApiRespone> updateBranchAsync(int id, BranchDto branch)
         {
-            var response = new ApiRespone();
             try
             {
                 if (id != branch.Id)
                 {
-                    response.StatusCode = HttpStatusCode.NotFound;
-                    response.Success = false;
-                    response.Message = "Branch ID mismatch";
-                    return response;
+                    return new ApiRespone { StatusCode = HttpStatusCode.NotFound, Message = "Branch ID mismatch.", Success = false };
                 }
                 var data = await CBranch.getBranchAsync(id);
                 if (data == null)
                 {
-                    response.StatusCode = HttpStatusCode.NotFound;
-                    response.Success = false;
-                    response.Message = "Branch not found or inactive.";
-                    return response;
+                    return new ApiRespone { StatusCode = HttpStatusCode.NotFound, Message = "Branch not found or inactive.", Success = false };
                 }
                 await CBranch.updateBranchAsync(id, branch);
                 var updBranch = await CBranch.getBranchAsync(id);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = updBranch;
-                response.Success = true;
-                response.Message = "Branch data updated successfully.";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = updBranch, Message = "Branch data is updated successfully.", Success = true };
 
             }
             catch (InvalidOperationException ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
             }
-            return response;
         }
 
         public async Task<ApiRespone> UploadPicBranch(int id, BranchDto branch)
         {
-            var response = new ApiRespone();
             try
             {
                 if (id != branch.Id)
                 {
-                    response.StatusCode = HttpStatusCode.NotFound;
-                    response.Success = false;
-                    response.Message = "Branch ID mismatch";
-                    return response;
+                    return new ApiRespone { StatusCode = HttpStatusCode.NotFound, Message = "Branch ID mismatch.", Success = false };
                 }
                 var data = await CBranch.getBranchAsync(id);
                 if (data == null)
                 {
-                    response.StatusCode = HttpStatusCode.NotFound;
-                    response.Success = false;
-                    response.Message = "Branch not found or inactive.";
-                    return response;
+                    return new ApiRespone { StatusCode = HttpStatusCode.NotFound, Message = "Branch not found or inactive.", Success = false };
                 }
                 await CBranch.UploadPicBranch(id, branch);
                 var updBranch = await CBranch.getBranchAsync(id);
-                response.StatusCode = HttpStatusCode.OK;
-                response.Data = updBranch;
-                response.Success = true;
-                response.Message = "Branch data updated successfully.";
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = updBranch, Message = "Branch data is updated successfully.", Success = true };
 
             }
             catch (InvalidOperationException ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
             }
             catch (Exception ex)
             {
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Success = false;
-                response.Message = ex.Message;
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
             }
-            return response;
         }
     }
 }

@@ -20,6 +20,7 @@ namespace swp391_debo_be.Cores
             _appointmentRepo = new AppointmentRepository(new AppointmentDao(context));
         }
 
+
         public static List<object> GetAppointmentsByStartDateAndEndDate(DateTime startDate, DateTime end ,Guid Id)
         {
             try
@@ -121,9 +122,19 @@ namespace swp391_debo_be.Cores
             return _appointmentRepo.GetDentistAvailableTimeSlots(startDate, dentId);
         }
 
-        public static Appointment UpdateAppointment(Guid id, UpdateAppointmentDto dto)
+        public static Task<List<AppointmentDetailsDto>> GetRescheduleTempDent(DateTime startDate, int timeSlot, int treatId)
         {
-            return _appointmentRepo.UpdateAppointment(id, dto);
+            return _appointmentRepo.GetRescheduleTempDent(startDate, timeSlot, treatId);
+        }
+
+        public static Task RescheduleByDentist(AppointmentDetailsDto appmnt)
+        {
+            return _appointmentRepo.RescheduleByDentist(appmnt);
+        }
+
+        public static Task UpdatAppointmenteNote(AppointmentDetailsDto appmnt)
+        {
+            return _appointmentRepo.UpdatAppointmenteNote(appmnt);
         }
     }
 }

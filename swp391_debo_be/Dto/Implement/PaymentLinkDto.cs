@@ -2,6 +2,7 @@
 {
     public class PaymentLinkDto
     {
+        public bool IsGeneralCheckup { get; set; }
         public Guid? PaymentId { get; set; }
         public string PaymentUrl { get; set; } = string.Empty;
     }

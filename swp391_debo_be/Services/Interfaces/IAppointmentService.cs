@@ -19,7 +19,10 @@ namespace swp391_debo_be.Services.Interfaces
         public Task<ApiRespone> ViewAppointmentDetail(Guid id);
         public Task<ApiRespone> RescheduleAppointment(Guid id, AppointmentDetailsDto appmnt);
         public Task<ApiRespone> GetDentistAvailableTimeSlots(DateTime startDate, Guid dentId);
-
-        public ApiRespone UpdateAppointment(Guid id, UpdateAppointmentDto dto);
+        public Task<ApiRespone> GetRescheduleTempDent(DateTime startDate, int timeSlot, int treatId);
+        public Task SendEmailWithConfirmationLink(Guid id, string confirmationLink);
+        public Task<ApiRespone> GenerateConfirmEmailToken(AppointmentDetailsDto appmnt);
+        public Task<ApiRespone> RescheduleByDentist(AppointmentDetailsDto appmnt);
+        public Task<ApiRespone> UpdatAppointmenteNote(AppointmentDetailsDto appmnt);
     }
 }

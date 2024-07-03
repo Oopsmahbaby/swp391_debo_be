@@ -161,8 +161,6 @@ namespace swp391_debo_be.Dao.Implement
                 switch (rule)
                 {
                     case 1:
-                        date = date.AddDays(1);
-                        futureDate.Add(date);
                         break;
                     case 2:
                         date = date.AddDays(7);
@@ -187,7 +185,7 @@ namespace swp391_debo_be.Dao.Implement
 
         public int[][] GetApppointmentsByDentistIdAndDate(Guid dentistId, DateTime date, int treatmentId)
         {
-            int? rule = _context.Rules.Where(r => r.Id == treatmentId).Select(r => r.Id).FirstOrDefault();
+            int? rule = _context.ClinicTreatments.Where(cl => cl.Id == treatmentId).Select(cl => cl.RuleId).FirstOrDefault();
             int? numOfApp = _context.ClinicTreatments.Where(t => t.Id == treatmentId).Select(t => t.NumOfApp).FirstOrDefault();
 
             List<DateTime> futureDate = GetFutureDate(date, (int)numOfApp, (int)rule);
@@ -340,7 +338,7 @@ namespace swp391_debo_be.Dao.Implement
             {
                 Id = a.Id,
                 CreatedDate = a.CreatedDate ?? default,
-                StartDate = a.StartDate,
+                StartDate = a.StartDate ?? default,
                 TimeSlot = a.TimeSlot,
                 Status = a.Status,
                 Description = a.Description,
@@ -378,7 +376,7 @@ namespace swp391_debo_be.Dao.Implement
             {
                 Id = appointment.Id,
                 CreatedDate = appointment.CreatedDate ?? default,
-                StartDate = appointment.StartDate,
+                StartDate = appointment.StartDate ?? default,
                 TimeSlot = appointment.TimeSlot,
                 Status = appointment.Status,
                 Description = appointment.Description,
@@ -386,6 +384,8 @@ namespace swp391_debo_be.Dao.Implement
                 CategoryName = appointment.Treat?.CategoryNavigation?.Name,
                 TreatmentName = appointment.Treat?.Name,
                 Price = appointment.Treat?.Price,
+                RescheduleCount = appointment.RescheduleCount,
+                Dent_Id = appointment.DentId,
                 DentistName = appointment.TempDentId != null ? appointment.TempDent?.FirstName + " " + appointment.TempDent?.LastName : appointment.Dent?.FirstName + " " + appointment.Dent?.LastName,
                 CustomerName = appointment.Cus?.FirstName + " " + appointment.Cus?.LastName,
                 CreatorName = appointment.Creator?.FirstName + " " + appointment.Creator?.LastName,
@@ -406,9 +406,14 @@ namespace swp391_debo_be.Dao.Implement
 
             // Check the status of the appointment
             var validStatuses = new List<string> { "pending", "on-going", "future" };
-            if (!validStatuses.Contains(appointment.Status!))
+            if (!validStatuses.Contains(appointment.Status!)) 
             {
                 throw new ArgumentException("Only appointments with status 'pending', 'on-going', or 'future' can be rescheduled.");
+            }
+
+            if (appointment.RescheduleCount >= 2)
+            {
+                throw new InvalidOperationException("This appointment can only be rescheduled up to 2 times.");
             }
 
             // Parse the new start date from the DTO
@@ -449,6 +454,7 @@ namespace swp391_debo_be.Dao.Implement
             appointment.TimeSlot = appmnt.TimeSlot;
             appointment.Description = appmnt.Description;
             appointment.Note = appmnt.Note;
+            appointment.RescheduleCount += 1;
 
             // Save the changes to the database
             _context.Appointments.Update(appointment);
@@ -487,28 +493,63 @@ namespace swp391_debo_be.Dao.Implement
             return availableTimeSlots;
         }
 
-        public Appointment UpdateAppointment(Guid id, UpdateAppointmentDto dto)
+        public async Task<List<AppointmentDetailsDto>> GetRescheduleTempDent(DateTime startDate, int timeSlot, int treatId)
         {
-            Appointment? appointment = _context.Appointments
-                .Where(a => a.Id == id)
-                .FirstOrDefault();
+            // Lấy danh sách các Dentists đã có cuộc hẹn vào thời gian và điều kiện cụ thể
+            var busyDentists = await (from a in _context.Appointments
+                                      where a.StartDate == startDate && a.TimeSlot == timeSlot && a.TreatId == treatId
+                                      select a.DentId)
+                                      .Distinct()
+                                      .ToListAsync();
 
+            // Lấy danh sách các Dentists có sẵn (không nằm trong danh sách bận) và cung cấp dịch vụ điều trị cụ thể
+            var availableDentists = await (from e in _context.Employees
+                                           join u in _context.Users on e.Id equals u.Id
+                                           join ct in _context.ClinicTreatments on treatId equals ct.Id
+                                           where !busyDentists.Contains(e.Id) && ct.Dents.Any(d => d.Id == e.Id)
+                                           select new AppointmentDetailsDto
+                                           {
+                                               Dent_Id = u.Id,
+                                               DentistName = u.FirstName + " " + u.LastName,
+                                               Dent_Avt = u.Avt
+                                           })
+                                           .ToListAsync();
+
+            return availableDentists;
+        }
+
+        public async Task RescheduleByDentist(AppointmentDetailsDto appmnt)
+        {
+            var appointment = await _context.Appointments.FindAsync(appmnt.Id);
             if (appointment == null)
             {
-                return null;
+                throw new ArgumentException("Appointment not found.");
             }
-
-            appointment.DentId = Guid.Parse(dto.DentId!);
-            appointment.TreatId = dto.TreateId;
-            appointment.StartDate = DateTime.Parse(dto.Date!);
-            appointment.TimeSlot = dto.TimeSlot;
-            appointment.Note = dto.Note;
-
-            _context.Update(appointment);
-            _context.SaveChanges();
-
-            return appointment;
+            var validStatuses = new List<string> { "pending", "on-going", "future" };
+            if (!validStatuses.Contains(appointment.Status!))
+            {
+                throw new ArgumentException("Only appointments with status 'pending', 'on-going', or 'future' can be rescheduled.");
+            }
+            appointment.TempDentId = appmnt.Temp_Dent_Id;
+            _context.Appointments.Update(appointment);
+            await _context.SaveChangesAsync();
         }
+
+        public async Task UpdatAppointmenteNote(AppointmentDetailsDto appmnt)
+        {
+            var appointment = await _context.Appointments.FindAsync(appmnt.Id);
+            if (appointment == null)
+            {
+                throw new ArgumentException("Appointment not found.");
+            }
+            appointment.Note = appmnt.Note;
+            _context.Appointments.Update(appointment);
+            await _context.SaveChangesAsync();
+        }
+
+
+
+
 
 
         //public async Task<List<int>> GetDentistAvailableTimeSlots(DateTime startDate, Guid dentId, Guid? tempDentId)

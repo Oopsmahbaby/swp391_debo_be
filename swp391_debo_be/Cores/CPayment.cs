@@ -1,5 +1,6 @@
 ﻿using swp391_debo_be.Config.VnPay;
 using swp391_debo_be.Dto.Implement;
+using swp391_debo_be.Entity.Implement;
 using swp391_debo_be.Repository.Implement;
 using swp391_debo_be.Repository.Interface;
 
@@ -26,6 +27,18 @@ namespace swp391_debo_be.Cores
             try
             {
                 return paymentRepository.HandlePaymentResponse(vnpayResponse);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public static Payment? GetPaymentById(System.Guid id)
+        {
+            try
+            {
+                return paymentRepository.GetPaymentById(id);
             }
             catch
             {

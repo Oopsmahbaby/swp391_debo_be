@@ -22,7 +22,7 @@ namespace swp391_debo_be.Services.Implements
                 User foundUser = null;
                 if (user.PhoneNumber == null && user.Email != null)
                 {
-                    foundUser = CUser.GetUserByEmail(user.Email);
+                    foundUser =  CUser.GetUserByEmail(user.Email);
                 }
                 else if (user.PhoneNumber != null && user.Email == null)
                 {
@@ -96,8 +96,6 @@ namespace swp391_debo_be.Services.Implements
             try
             {
                 List<Claim> claims = JwtProvider.DecodeToken(tokenRequest.accessToken);
-
-                System.Console.WriteLine(claims.ToString());
 
                 if (claims == null)
                 {
@@ -180,6 +178,16 @@ namespace swp391_debo_be.Services.Implements
             }
 
             return jwtToken.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
+        }
+
+        public List<Claim> ValidateToken(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
+
+            // Validate the token here (e.g., signature, expiration)
+
+            return jwtToken.Claims.ToList();
         }
     }
 }
