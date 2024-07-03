@@ -134,7 +134,10 @@ namespace swp391_debo_be.Dao.Implement
 
         public List<object> GetAppointmentsByStartDateAndEndDate(DateTime startDate, DateTime endDate, Guid Id)
         {
-            var appointments = _context.Appointments.Where(a => a.StartDate >= startDate && a.StartDate <= endDate && Guid.Equals(a.CusId, Id)).ToList();
+            var appointments = _context.Appointments.Where(a => a.StartDate >= startDate 
+                && a.StartDate <= endDate &&
+                Guid.Equals(a.CusId, Id) &&
+                a.Status != "canceled" && a.Status!= "pending").ToList();
 
 
             if (appointments == null)
@@ -194,7 +197,7 @@ namespace swp391_debo_be.Dao.Implement
             for (int i = 0; i < futureDate.Count; i++)
             {
                 timeSlot[i] = _context.Appointments
-                    .Where(a => a.DentId == dentistId && a.StartDate == futureDate[i] && (a.Status != "pending" && a.Status  != "canceled"))
+                    .Where(a => a.DentId == dentistId && a.StartDate == futureDate[i] && (a.Status == "pending" && a.Status  == "future"))
                     .Select(a => (int)a.TimeSlot)
                     .ToArray();
             }
