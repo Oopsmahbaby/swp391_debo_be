@@ -57,7 +57,7 @@ namespace swp391_debo_be.Dao.Implement
             // List to view created appoinment will be deleted when it done
             List<Appointment> createdAppointments = new List<Appointment>();
 
-            foreach(DateTime date in futureDates)
+            foreach (DateTime date in futureDates)
             {
                 Appointment appointment = new Appointment
                 {
@@ -209,7 +209,7 @@ namespace swp391_debo_be.Dao.Implement
             for (int i = 0; i < slots.Length; i++)
             {
                 List<int> availableSlot = new List<int>();
-                for (int j = 7; j <= 19 ; j++)
+                for (int j = 7; j <= 19; j++)
                 {
                     if (!slots[i].Contains(j))
                     {
@@ -237,24 +237,24 @@ namespace swp391_debo_be.Dao.Implement
         public async Task<List<AppointmentHistoryDto>> ViewAllAppointment(int page, int limit)
         {
             IQueryable<AppointmentHistoryDto> query = from a in _context.Appointments
-                                               join ct in _context.ClinicTreatments on a.TreatId equals ct.Id
-                                               select new AppointmentHistoryDto
-                                               {
-                                                   Id = a.Id,
-                                                   TreatName = ct.Name,
-                                                   PaymentId = a.PaymentId,
-                                                   DentId = a.DentId,
-                                                   TempDentId = a.TempDentId,
-                                                   CusId = a.CusId,
-                                                   CreatorId = a.CreatorId,
-                                                   IsCreatedByStaff = a.IsCreatedByStaff,
-                                                   CreatedDate = a.CreatedDate,
-                                                   StartDate = a.StartDate,
-                                                   TimeSlot = a.TimeSlot,
-                                                   Status = a.Status,
-                                                   Description = a.Description,
-                                                   Note = a.Note,
-                                               };
+                                                      join ct in _context.ClinicTreatments on a.TreatId equals ct.Id
+                                                      select new AppointmentHistoryDto
+                                                      {
+                                                          Id = a.Id,
+                                                          TreatName = ct.Name,
+                                                          PaymentId = a.PaymentId,
+                                                          DentId = a.DentId,
+                                                          TempDentId = a.TempDentId,
+                                                          CusId = a.CusId,
+                                                          CreatorId = a.CreatorId,
+                                                          IsCreatedByStaff = a.IsCreatedByStaff,
+                                                          CreatedDate = a.CreatedDate,
+                                                          StartDate = a.StartDate,
+                                                          TimeSlot = a.TimeSlot,
+                                                          Status = a.Status,
+                                                          Description = a.Description,
+                                                          Note = a.Note,
+                                                      };
 
             if (limit > 0)
             {
@@ -281,12 +281,12 @@ namespace swp391_debo_be.Dao.Implement
             foreach (Appointment appointment in appointments)
             {
                 var treatmeant = _context.ClinicTreatments.Where(t => t.Id == appointment.TreatId).FirstOrDefault();
-                result.Add(new 
-                { 
-                    Id = appointment.Id, 
-                    start = appointment.StartDate, 
-                    TimeSlot = appointment.TimeSlot, 
-                    name = treatmeant?.Name 
+                result.Add(new
+                {
+                    Id = appointment.Id,
+                    start = appointment.StartDate,
+                    TimeSlot = appointment.TimeSlot,
+                    name = treatmeant?.Name
                 });
             }
 
@@ -296,16 +296,18 @@ namespace swp391_debo_be.Dao.Implement
         public async Task<List<AppointmentHistoryDto>> GetAppointmentByDentistId(int page, int limit, Guid dentistId)
         {
             var query = from a in _context.Appointments
-                                      join ct in _context.ClinicTreatments on a.TreatId equals ct.Id
-                                      where (a.TempDentId == dentistId || (a.TempDentId == null && a.DentId == dentistId))
-                                      select new AppointmentHistoryDto
-                                      {
-                                          Id = a.Id,
-                                          TreatName = ct.Name,
-                                          StartDate = a.StartDate,
-                                          CusId = a.CusId,
-                                          Status = a.Status,
-                                      };
+                        join ct in _context.ClinicTreatments on a.TreatId equals ct.Id
+                        join u in _context.Users on a.CusId equals u.Id
+                        where (a.TempDentId == dentistId || (a.TempDentId == null && a.DentId == dentistId))
+                        select new AppointmentHistoryDto
+                        {
+                            Id = a.Id,
+                            TreatName = ct.Name,
+                            StartDate = a.StartDate,
+                            CusId = a.CusId,
+                            CustomerName = u.FirstName + " " + u.LastName,
+                            Status = a.Status,
+                        };
             if (limit > 0)
             {
                 query = query.Skip(page * limit)
@@ -406,7 +408,7 @@ namespace swp391_debo_be.Dao.Implement
 
             // Check the status of the appointment
             var validStatuses = new List<string> { "pending", "on-going", "future" };
-            if (!validStatuses.Contains(appointment.Status!)) 
+            if (!validStatuses.Contains(appointment.Status!))
             {
                 throw new ArgumentException("Only appointments with status 'pending', 'on-going', or 'future' can be rescheduled.");
             }

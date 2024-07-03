@@ -21,6 +21,7 @@ namespace swp391_debo_be.Dto.Implement
         public Guid? TempDentId { get; set; }
 
         public Guid? CusId { get; set; }
+        public string? CustomerName { get; set; }
 
         public Guid? CreatorId { get; set; }
 

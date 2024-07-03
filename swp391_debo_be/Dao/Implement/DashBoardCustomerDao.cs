@@ -48,5 +48,16 @@ namespace swp391_debo_be.Dao.Implement
 
             return result;
         }
+
+        public async Task<DashboardAdminDto> ViewTotalRevenue()
+        {
+            var totalRevenue = await (from appointment in _context.Appointments
+                                      join treatment in _context.ClinicTreatments
+                                      on appointment.TreatId equals treatment.Id
+                                      where appointment.PaymentId != null
+                                      select treatment.Price).SumAsync();
+
+            return new DashboardAdminDto { TotalRevenue = totalRevenue };
+        }
     }
 }

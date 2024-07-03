@@ -33,5 +33,15 @@ namespace swp391_debo_be.Controllers
                 StatusCode = (int)response.StatusCode
             };
         }
+
+        [HttpGet("totalrevenue")]
+        public async Task<IActionResult> ViewTotalRevenue()
+        {
+            var response = await _dbcus.ViewTotalRevenue();
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
     }
 }
