@@ -194,7 +194,7 @@ namespace swp391_debo_be.Dao.Implement
             for (int i = 0; i < futureDate.Count; i++)
             {
                 timeSlot[i] = _context.Appointments
-                    .Where(a => a.DentId == dentistId && a.StartDate == futureDate[i] && (a.Status != "pending" && a.Status  != "canceled"))
+                    .Where(a => a.DentId == dentistId && a.StartDate == futureDate[i] && (a.Status != "pending" && a.Status != "canceled"))
                     .Select(a => (int)a.TimeSlot)
                     .ToArray();
             }
@@ -385,6 +385,7 @@ namespace swp391_debo_be.Dao.Implement
             var appointmentDetails = new AppointmentDetailsDto
             {
                 Id = appointment.Id,
+                TreatId = appointment.TreatId,
                 CreatedDate = appointment.CreatedDate ?? default,
                 StartDate = appointment.StartDate ?? default,
                 TimeSlot = appointment.TimeSlot,
@@ -395,11 +396,14 @@ namespace swp391_debo_be.Dao.Implement
                 TreatmentName = appointment.Treat?.Name,
                 Price = appointment.Treat?.Price,
                 RescheduleCount = appointment.RescheduleCount,
+                Cus_Id = appointment.CusId,
                 Dent_Id = appointment.DentId,
+                Temp_Dent_Id = appointment.TempDentId,
                 DentistName = appointment.TempDentId != null ? appointment.TempDent?.FirstName + " " + appointment.TempDent?.LastName : appointment.Dent?.FirstName + " " + appointment.Dent?.LastName,
                 CustomerName = appointment.Cus?.FirstName + " " + appointment.Cus?.LastName,
                 CreatorName = appointment.Creator?.FirstName + " " + appointment.Creator?.LastName,
-                Dent_Avt = appointment.TempDentId != null ? appointment.TempDent?.Avt : appointment.Dent?.Avt
+                Dent_Avt = appointment.TempDentId != null ? appointment.TempDent?.Avt : appointment.Dent?.Avt,
+                RescheduleToken = appointment.RescheduleToken,
             };
 
             return appointmentDetails;
@@ -531,18 +535,23 @@ namespace swp391_debo_be.Dao.Implement
         public async Task RescheduleByDentist(AppointmentDetailsDto appmnt)
         {
             var appointment = await _context.Appointments.FindAsync(appmnt.Id);
-            if (appointment == null)
+
+            if (appmnt.RescheduleToken == appointment.RescheduleToken)
             {
-                throw new ArgumentException("Appointment not found.");
+                if (appointment == null)
+                {
+                    throw new ArgumentException("Appointment not found.");
+                }
+                var validStatuses = new List<string> { "pending", "on-going", "future" };
+                if (!validStatuses.Contains(appointment.Status!))
+                {
+                    throw new ArgumentException("Only appointments with status 'pending', 'on-going', or 'future' can be rescheduled.");
+                }
+                appointment.RescheduleToken = null;
+                appointment.TempDentId = appmnt.Temp_Dent_Id;
+                _context.Appointments.Update(appointment);
+                await _context.SaveChangesAsync();
             }
-            var validStatuses = new List<string> { "pending", "on-going", "future" };
-            if (!validStatuses.Contains(appointment.Status!))
-            {
-                throw new ArgumentException("Only appointments with status 'pending', 'on-going', or 'future' can be rescheduled.");
-            }
-            appointment.TempDentId = appmnt.Temp_Dent_Id;
-            _context.Appointments.Update(appointment);
-            await _context.SaveChangesAsync();
         }
 
         public async Task UpdatAppointmenteNote(AppointmentDetailsDto appmnt)
@@ -557,7 +566,17 @@ namespace swp391_debo_be.Dao.Implement
             await _context.SaveChangesAsync();
         }
 
-
+        public async Task SaveRescheduleToken(Guid appmtId, string rescheduleToken)
+        {
+            var appointment = await _context.Appointments.FindAsync(appmtId);
+            if (appointment == null)
+            {
+                throw new ArgumentException("Appointment not found.");
+            }
+            appointment.RescheduleToken = rescheduleToken;
+            _context.Appointments.Update(appointment);
+            await _context.SaveChangesAsync();
+        }
 
 
 
