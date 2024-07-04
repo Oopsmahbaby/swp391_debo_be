@@ -99,5 +99,10 @@ namespace swp391_debo_be.Repository.Implement
         {
             return _appointmentDao.UpdatAppointmenteNote (appmnt);
         }
+
+        public Task SaveRescheduleToken(Guid appmtId, string rescheduleToken)
+        {
+            return _appointmentDao.SaveRescheduleToken (appmtId, rescheduleToken);
+        }
     }
 }

@@ -22,6 +22,7 @@ namespace swp391_debo_be.Dao.Interface
         public Task<List<AppointmentDetailsDto>> GetRescheduleTempDent(DateTime startDate, int timeSlot, int treatId);
         public Task RescheduleByDentist(AppointmentDetailsDto appmnt);
         public Task UpdatAppointmenteNote(AppointmentDetailsDto appmnt);
+        public Task SaveRescheduleToken(Guid appmtId, string rescheduleToken);
 
     }
 }

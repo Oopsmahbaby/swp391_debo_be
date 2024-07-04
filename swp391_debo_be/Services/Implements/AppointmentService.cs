@@ -7,6 +7,7 @@ using MimeKit;
 using swp391_debo_be.Auth;
 using swp391_debo_be.Constants;
 using swp391_debo_be.Cores;
+using swp391_debo_be.Dao.Implement;
 using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
 using swp391_debo_be.Services.Interfaces;
@@ -343,16 +344,69 @@ namespace swp391_debo_be.Services.Implements
                 var email = new MimeMessage();
                 email.From.Add(MailboxAddress.Parse(_config.GetSection("EmailUsername").Value));
                 email.To.Add(MailboxAddress.Parse(user.Email));
-                email.Subject = $"[DEBO] Dear {user.FirstName} {user.LastName} Reschedule Confirmation";
+                email.Subject = $"[DEBO] Dear {user.FirstName} {user.LastName}, Appointment Reschedule Confirmation";
                 string body = $@"
-                    <html>
-                    <body>
-                        <p>Hi {user.FirstName} {user.LastName},</p>
-                        <p>Please click the following link to confirm your appointment reschedule:</p>
-                        <a href=""{confirmationLink}"">{confirmationLink}</a>
-                    </body>
-                    </html>
-                ";
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {{
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }}
+        .container {{
+            width: 100%;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }}
+        .header {{
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 24px;
+        }}
+        .content {{
+            margin: 20px 0;
+        }}
+        .button {{
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #4CAF50;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+        }}
+        .footer {{
+            margin-top: 20px;
+            font-size: 12px;
+            color: #888;
+        }}
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <div class='header'>
+            Appointment Reschedule Confirmation
+        </div>
+        <div class='content'>
+            <p>Hi {user.FirstName} {user.LastName},</p>
+            <p>We have sent a request to reschedule your appointment with a new dentist. Please click the button below to confirm this change:</p>
+            <p><a href='{confirmationLink}' class='button'>Confirm Appointment Reschedule</a></p>
+            <p>If you did not request this change, please ignore this email or contact us immediately.</p>
+            <p>Thank you for your attention!</p>
+        </div>
+        <div class='footer'>
+            <p>This is an automated message, please do not reply.</p>
+            <p>&copy; {DateTime.Now.Year} Your Company. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
+";
                 email.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = body };
                 using var smtp = new SmtpClient();
                 smtp.Connect(
@@ -367,20 +421,180 @@ namespace swp391_debo_be.Services.Implements
                 smtp.Send(email);
                 smtp.Disconnect(true);
             }
-            catch (SmtpCommandException ex)
+            catch (Exception ex)
             {
-                // Handle specific SMTP command errors
-                Console.WriteLine($"Error sending email: {ex.Message}");
+                Console.WriteLine($"An error occurred while sending email to customer: {ex.Message}");
+                throw; // Rethrow the exception to handle it at a higher level if needed
             }
-            catch (SmtpProtocolException ex)
+        }
+
+        public async Task SendConfirmEmailToDentist(AppointmentDetailsDto appmnt)
+        {
+            try
             {
-                // Handle protocol-related errors
-                Console.WriteLine($"SMTP protocol error while sending email: {ex.Message}");
+                var dentist = await CUser.GetUserById2((Guid)appmnt.Dent_Id!);
+                var tempdent = await CUser.GetUserById2((Guid)appmnt.Temp_Dent_Id!);
+                var user = await CUser.GetUserById2((Guid)appmnt.Cus_Id!);
+                var email = new MimeMessage();
+                email.From.Add(MailboxAddress.Parse(_config.GetSection("EmailUsername").Value));
+                email.To.Add(MailboxAddress.Parse(dentist.Email));
+                email.Subject = $"[DEBO] Dear {dentist.FirstName} {dentist.LastName} Reschedule Confirmation";
+                string body = $@"
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {{
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }}
+        .container {{
+            width: 100%;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }}
+        .header {{
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 24px;
+        }}
+        .content {{
+            margin: 20px 0;
+        }}
+        .footer {{
+            margin-top: 20px;
+            font-size: 12px;
+            color: #888;
+        }}
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <div class='header'>
+            Appointment Confirmation
+        </div>
+        <div class='content'>
+            <p>Dear Dr. {dentist.FirstName + " " + dentist.LastName},</p>
+            <p>We are pleased to inform you that a customer has confirmed their appointment.</p>
+            <p><strong>Customer Name:</strong> {user.FirstName + " " + user.LastName}</p>
+            <p><strong>Appointment Date:</strong> {appmnt.StartDate}</p>
+            <p><strong>Temporary Dentist:</strong> {tempdent.FirstName + " " + tempdent.LastName}</p>
+            <p>Thank you!</p>
+        </div>
+        <div class='footer'>
+            <p>This is an automated message, please do not reply.</p>
+            <p>&copy; 2024 Your Company. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
+";
+
+                email.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = body };
+                using var smtp = new SmtpClient();
+                smtp.Connect(
+                    _config.GetSection("EmailHost").Value,
+                    int.Parse(_config.GetSection("EmailPort").Value!),
+                    MailKit.Security.SecureSocketOptions.StartTls
+                );
+                smtp.Authenticate(
+                    _config.GetSection("EmailUsername").Value,
+                    _config.GetSection("EmailPassword").Value
+                );
+                smtp.Send(email);
+                smtp.Disconnect(true);
             }
             catch (Exception ex)
             {
-                // Handle general errors
-                Console.WriteLine($"An error occurred while sending email: {ex.Message}");
+                Console.WriteLine($"An error occurred while sending email to dentist: {ex.Message}");
+                throw; // Rethrow the exception to handle it at a higher level if needed
+            }
+        }
+
+        public async Task SendConfirmEmailToTempDentist(AppointmentDetailsDto appmnt)
+        {
+            try
+            {
+                var dentist = await CUser.GetUserById2((Guid)appmnt.Dent_Id!);
+                var tempdent = await CUser.GetUserById2((Guid)appmnt.Temp_Dent_Id!);
+                var user = await CUser.GetUserById2((Guid)appmnt.Cus_Id!);
+                var email = new MimeMessage();
+                email.From.Add(MailboxAddress.Parse(_config.GetSection("EmailUsername").Value));
+                email.To.Add(MailboxAddress.Parse(tempdent.Email));
+                email.Subject = $"[DEBO] Dear {tempdent.FirstName} {tempdent.LastName} Appointment Assignment";
+                string body = $@"
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {{
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }}
+        .container {{
+            width: 100%;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }}
+        .header {{
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 24px;
+        }}
+        .content {{
+            margin: 20px 0;
+        }}
+        .footer {{
+            margin-top: 20px;
+            font-size: 12px;
+            color: #888;
+        }}
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <div class='header'>
+            Appointment Assignment
+        </div>
+        <div class='content'>
+            <p>Dear Dr. {tempdent.FirstName} {tempdent.LastName},</p>
+            <p>We are pleased to inform you that you have been assigned to the following appointment:</p>
+            <p><strong>Customer Name:</strong> {user.FirstName} {user.LastName}</p>
+            <p><strong>Appointment Date:</strong> {appmnt.StartDate}</p>
+            <p>Please be prepared for the appointment and ensure all necessary arrangements are in place.</p>
+            <p>Thank you!</p>
+        </div>
+        <div class='footer'>
+            <p>This is an automated message, please do not reply.</p>
+            <p>&copy; {DateTime.Now.Year} Your Company. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
+";
+
+                email.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = body };
+                using var smtp = new SmtpClient();
+                smtp.Connect(
+                    _config.GetSection("EmailHost").Value,
+                    int.Parse(_config.GetSection("EmailPort").Value!),
+                    MailKit.Security.SecureSocketOptions.StartTls
+                );
+                smtp.Authenticate(
+                    _config.GetSection("EmailUsername").Value,
+                    _config.GetSection("EmailPassword").Value
+                );
+                smtp.Send(email);
+                smtp.Disconnect(true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while sending email to temporary dentist: {ex.Message}");
+                throw; // Rethrow the exception to handle it at a higher level if needed
             }
         }
 
@@ -391,12 +605,14 @@ namespace swp391_debo_be.Services.Implements
                 List<Claim> claims = new List<Claim>
                 {
                     new Claim("AppointmentId", appmnt.Id.ToString()),
+                    new Claim("DentId", appmnt.Dent_Id?.ToString() ?? string.Empty),
                     new Claim("TempDentId", appmnt.Temp_Dent_Id?.ToString() ?? string.Empty),
                     new Claim("CusId", appmnt.Cus_Id.ToString() ?? string.Empty)
                 };
 
                 string confirmToken = JwtProvider.GenerateToken(claims);
-                string confirmationLink = $"http://localhost:5193/api/reschedule/{confirmToken}";
+                await CAppointment.SaveRescheduleToken(appmnt.Id, confirmToken);
+                string confirmationLink = $"http://localhost:5173/patient/reschedule/{confirmToken}";
                 await SendEmailWithConfirmationLink((Guid)appmnt.Cus_Id!, confirmationLink);
                 return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = confirmToken, Success = true, Message = "Generate token successfully" };
             }
@@ -412,6 +628,8 @@ namespace swp391_debo_be.Services.Implements
             {
                 await CAppointment.RescheduleByDentist(appmnt);
                 var data = await CAppointment.ViewAppointmentDetail(appmnt.Id);
+                await SendConfirmEmailToDentist(appmnt);
+                await SendConfirmEmailToTempDentist(appmnt);
                 return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = data, Message = "Rescheduled successfully.", Success = true };
             }
             catch (Exception ex)

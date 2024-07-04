@@ -35,6 +35,8 @@ public partial class Appointment
 
     public int? RescheduleCount { get; set; }
 
+    public string? RescheduleToken { get; set; }
+
     public virtual User? Creator { get; set; }
 
     public virtual User? Cus { get; set; }
