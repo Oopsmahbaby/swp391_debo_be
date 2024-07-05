@@ -302,5 +302,15 @@ namespace swp391_debo_be.Controllers
 
             return _userService.firstTimeBooking(userId);
         }
+
+        [Microsoft.AspNetCore.Mvc.HttpPut("dentistmajor")]
+        public async Task<IActionResult> CreateDentistMajor(DentistMajorDto dentmaj)
+        {
+            var response = await _userService.CreateDentistMajor(dentmaj);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
     }
 }

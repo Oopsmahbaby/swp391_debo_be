@@ -489,5 +489,31 @@ namespace swp391_debo_be.Dao.Implement
 
             return await query.ToListAsync();
         }
+
+        public async Task<Guid> CreateDentistMajor(DentistMajorDto dentmaj)
+        {
+            // Check if required properties are provided
+            if (dentmaj.DentId == null || dentmaj.TreatId == 0)
+            {
+                throw new ArgumentException("DentistId and Id are required properties in TreatmentDto for creating DentistMajor record.");
+            }
+
+            // Create a new DentistMajor object
+            var dentistMajor = new Employee
+            {
+                Id = dentmaj.DentId, // Assuming DentistId is nullable Guid
+                Treats = new List<ClinicTreatment>() { new ClinicTreatment { Id = dentmaj.TreatId } }
+            };
+
+            // Add the DentistMajor object to the Employees DbSet
+            _context.Employees.Add(dentistMajor);
+
+            // Save changes to the database
+            await _context.SaveChangesAsync();
+
+            // Return the DentistId (Employee's Id)
+            return dentistMajor.Id;
+        }
+
     }
 }

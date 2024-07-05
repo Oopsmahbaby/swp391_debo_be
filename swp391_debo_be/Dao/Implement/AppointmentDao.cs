@@ -70,7 +70,8 @@ namespace swp391_debo_be.Dao.Implement
                     Status = "pending",
                     CreatedDate = DateTime.Now,
                     CreatorId = cusId,
-                    IsCreatedByStaff = false
+                    IsCreatedByStaff = false,
+                    RescheduleCount = 0,
                 };
                 createdAppointments.Add(appointment);
                 _context.Appointments.Add(appointment);

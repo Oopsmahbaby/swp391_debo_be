@@ -134,5 +134,10 @@ namespace swp391_debo_be.Cores
         {
             return _userRepository.UpdatePassword(id, emp);
         }
+
+        public static Task<Guid> CreateDentistMajor(DentistMajorDto dentmaj)
+        {
+            return _userRepository.CreateDentistMajor(dentmaj);
+        }
     }
 }

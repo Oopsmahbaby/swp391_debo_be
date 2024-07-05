@@ -23,7 +23,7 @@ namespace swp391_debo_be.Repository.Implement
             return _dashBoardDao.ViewAppointmentState(id);
         }
 
-        public Task<DashboardCustomerDto> ViewTotalPaidAmountOfCustomer(Guid id)
+        public Task<List<DashboardCustomerDto>> ViewTotalPaidAmountOfCustomer(Guid id)
         {
             return _dashBoardDao.ViewTotalPaidAmountOfCustomer(id);
         }
