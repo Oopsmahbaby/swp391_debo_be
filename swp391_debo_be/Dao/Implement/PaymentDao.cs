@@ -117,13 +117,21 @@ namespace swp391_debo_be.Dao.Implement
                     if (vnpayPayResponse.vnp_ResponseCode == "00")
                     {
                         resultData.PaymentStatus = "00";
-                        payment.PaymentStatus = "Sucess";
+                        payment.PaymentStatus = "Success";
                         resultData.PaymentId = payment.Id.ToString();
                         ///TODO: Make signature
                         resultData.Signature = Guid.NewGuid().ToString();
                         resultData.Amount = payment.RequiredAmount;
                         resultData.PaymentMessage = "Payment Success";
                         resultData.PaymentDate = payment.PaymentDate.ToString();
+
+                        var appoinment = _context.Appointments.FirstOrDefault(a => a.PaymentId == payment.Id);
+
+                        appoinment.Status = "future";
+                        appoinment.PaymentId = payment.Id;
+                        _context.Update(appoinment);
+                        _context.SaveChanges();
+
                     }
                     else
                     {
