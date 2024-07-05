@@ -91,7 +91,7 @@ namespace swp391_debo_be.Dao.Implement
             {
                 Year = g.Key.Year,
                 Month = g.Key.Month,
-                TotalAppointments = g.Count()
+                TotalPatients = g.Count()
             })
             .OrderBy(x => x.Year)
             .ThenBy(x => x.Month)
