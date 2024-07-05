@@ -9,5 +9,8 @@ namespace swp391_debo_be.Repository.Interface
         public Task<DashboardAdminDto> ViewTotalRevenue();
         public Task<List<object>> ViewAppointmentStateByDentist(Guid id);
         public Task<List<object>> ViewTotalAppointmentEachMonthsByDentist(Guid id);
+        public Task<List<object>> ViewMonthlyRevenueForCurrentYear();
+        public Task<List<object>> CountAppointmentsByTreatmentCategory();
+        public Task<List<object>> CountAppointmentsByTreatment();
     }
 }

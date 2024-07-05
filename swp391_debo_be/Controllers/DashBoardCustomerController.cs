@@ -37,7 +37,7 @@ namespace swp391_debo_be.Controllers
         [HttpGet("totalrevenue")]
         public async Task<IActionResult> ViewTotalRevenue()
         {
-            var response = await _dbcus.ViewTotalRevenue();
+            var response = await _dbcus.ViewMonthlyRevenueForCurrentYear();
             return new ObjectResult(response)
             {
                 StatusCode = (int)response.StatusCode
@@ -58,6 +58,26 @@ namespace swp391_debo_be.Controllers
         public async Task<IActionResult> ViewTotalAppointmentEachMonthsByDentist(Guid id)
         {
             var response = await _dbcus.ViewTotalAppointmentEachMonthsByDentist(id);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+
+        [HttpGet("distribution/treatment")]
+        public async Task<IActionResult> CountAppointmentsByTreatment()
+        {
+            var response = await _dbcus.CountAppointmentsByTreatment();
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+
+        [HttpGet("distribution/categories")]
+        public async Task<IActionResult> CountAppointmentsByTreatmentCategory()
+        {
+            var response = await _dbcus.CountAppointmentsByTreatmentCategory();
             return new ObjectResult(response)
             {
                 StatusCode = (int)response.StatusCode

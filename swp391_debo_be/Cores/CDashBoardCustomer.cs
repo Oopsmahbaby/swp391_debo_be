@@ -42,5 +42,19 @@ namespace swp391_debo_be.Cores
         {
             return _dashboardRepo.ViewTotalAppointmentEachMonthsByDentist(id);
         }
+
+        public static Task<List<object>> ViewMonthlyRevenueForCurrentYear()
+        {
+            return _dashboardRepo.ViewMonthlyRevenueForCurrentYear();
+        }
+
+        public static Task<List<object>> CountAppointmentsByTreatmentCategory()
+        {
+            return _dashboardRepo.CountAppointmentsByTreatmentCategory();
+        }
+        public static Task<List<object>> CountAppointmentsByTreatment()
+        {
+            return _dashboardRepo.CountAppointmentsByTreatment();
+        }
     }
 }
