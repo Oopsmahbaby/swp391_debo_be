@@ -14,7 +14,8 @@ namespace swp391_debo_be.Cores
         static CDashBoardCustomer()
         {
             var context = new DeboDev02Context(new DbContextOptions<DeboDev02Context>());
-            _dashboardRepo = new DashBoardCustomerRepository(new DashBoardCustomerDao(context));
+            var context2 = new DeboDev02Context(new DbContextOptions<DeboDev02Context>());
+            _dashboardRepo = new DashBoardCustomerRepository(new DashBoardCustomerDao(context, context2));
         }
 
         public static Task<List<DashboardCustomerDto>> ViewAppointmentState(Guid id)
@@ -22,7 +23,7 @@ namespace swp391_debo_be.Cores
             return _dashboardRepo.ViewAppointmentState(id);
         }
 
-        public static Task<DashboardCustomerDto> ViewTotalPaidAmountOfCustomer(Guid id)
+        public static Task<List<DashboardCustomerDto>> ViewTotalPaidAmountOfCustomer(Guid id)
         {
             return _dashboardRepo.ViewTotalPaidAmountOfCustomer(id);
         }

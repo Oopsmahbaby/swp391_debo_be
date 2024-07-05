@@ -220,25 +220,26 @@ namespace swp391_debo_be.Controllers
             };
         }
 
-        [HttpGet("reschedule/{token}")]
-        public IActionResult ConfirmReschedule(string token)
-        {
-            try
-            {
-                var claims = _tokenService.ValidateToken(token);
-                var appointmentId = claims.FirstOrDefault(c => c.Type == "AppointmentId")?.Value;
-                var tempDentId = claims.FirstOrDefault(c => c.Type == "TempDentId")?.Value;
-                var cusId = claims.FirstOrDefault(c => c.Type == "CusId")?.Value;
+        //[HttpGet("reschedule/{token}")]
+        //public IActionResult ConfirmReschedule(string token)
+        //{
+        //    try
+        //    {
+        //        var claims = _tokenService.ValidateToken(token);
+        //        var appointmentId = claims.FirstOrDefault(c => c.Type == "AppointmentId")?.Value;
+        //        var DentId = claims.FirstOrDefault(c => c.Type == "DentId")?.Value;
+        //        var tempDentId = claims.FirstOrDefault(c => c.Type == "TempDentId")?.Value;
+        //        var cusId = claims.FirstOrDefault(c => c.Type == "CusId")?.Value;
 
-                // Implement your logic here. For example, mark the appointment as confirmed in the database.
+        //        // Implement your logic here. For example, mark the appointment as confirmed in the database.
 
-                return Ok(new { Message = "Appointment reschedule confirmed successfully", AppointmentId = appointmentId, TempDentId = tempDentId, CusId = cusId });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { Message = "Invalid token", Error = ex.Message });
-            }
-        }
+        //        return Ok(new { Message = "Appointment reschedule confirmed successfully", AppointmentId = appointmentId, TempDentId = tempDentId, CusId = cusId });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(new { Message = "Invalid token", Error = ex.Message });
+        //    }
+        //}
 
         [HttpPut("reschedulebydentist/{id}")]
         public async Task<IActionResult> RescheduleByDentist(AppointmentDetailsDto appmnt)
@@ -250,9 +251,10 @@ namespace swp391_debo_be.Controllers
             };
         }
 
-        [HttpPut("updateappointmentnote")]
-        public async Task<IActionResult> UpdatAppointmenteNote(AppointmentDetailsDto appmnt)
+        [HttpPut("updateappointmentnote/{id}")]
+        public async Task<IActionResult> UpdatAppointmenteNote(Guid id, AppointmentDetailsDto appmnt)
         {
+            id = appmnt.Id;
             var response = await _appointmentService.UpdatAppointmenteNote(appmnt);
             return new ObjectResult(response)
             {

@@ -150,5 +150,10 @@ namespace swp391_debo_be.Repository.Implement
         {
             return _userDao.AvailableManager(page, limit);
         }
+
+        public Task<Guid> CreateDentistMajor(DentistMajorDto dentmaj)
+        {
+            return _userDao.CreateDentistMajor(dentmaj);
+        }
     }
 }

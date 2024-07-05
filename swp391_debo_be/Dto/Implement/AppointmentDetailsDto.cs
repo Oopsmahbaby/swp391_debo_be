@@ -5,6 +5,7 @@ namespace swp391_debo_be.Dto.Implement
     public class AppointmentDetailsDto
     {
         public Guid Id { get; set; }
+        public int? TreatId { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? StartDate { get; set; }
         public int? TimeSlot { get; set; }
@@ -22,5 +23,6 @@ namespace swp391_debo_be.Dto.Implement
         public string? CustomerName { get; set; }
         public string? CreatorName { get; set; }
         public string? Dent_Avt {  get; set; }
+        public string? RescheduleToken { get; set; }
     }
 }

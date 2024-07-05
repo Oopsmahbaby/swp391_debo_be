@@ -356,5 +356,18 @@ namespace swp391_debo_be.Services.Implements
                 return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
         }
+
+        public async Task<ApiRespone> CreateDentistMajor(DentistMajorDto dentmaj)
+        {
+            try
+            {
+                var data = await CUser.CreateDentistMajor(dentmaj);
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = data, Message = "Create dentist major successfully.", Success = true };
+            }
+            catch (Exception ex)
+            {
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
+            }
+        }
     }
 }

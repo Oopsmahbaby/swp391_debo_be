@@ -136,5 +136,10 @@ namespace swp391_debo_be.Cores
         {
             return _appointmentRepo.UpdatAppointmenteNote(appmnt);
         }
+
+        public static Task SaveRescheduleToken(Guid appmtId, string rescheduleToken)
+        {
+            return _appointmentRepo.SaveRescheduleToken(appmtId, rescheduleToken);
+        }
     }
 }

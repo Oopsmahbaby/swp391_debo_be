@@ -61,7 +61,7 @@ namespace swp391_debo_be.Controllers
             };
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("updateBranchForEmployee/{id}")]
         public async Task<IActionResult> UpdateBranchForEmployee(Guid id, CreateEmployeeDto employee)
         {
             var response = await _employeeService.UpdateBranchForEmployee(id, employee);
