@@ -56,7 +56,7 @@ namespace swp391_debo_be.Dao.Implement
 
         public async Task<List<object>> ViewTotalAppointmentEachMonthsByDentist(Guid id)
         {
-            var appointmentCounts = await _context.Appointments
+            var appointmentCounts = await _context2.Appointments
             .Where(a => (a.TempDentId == id || (a.TempDentId == null && a.DentId == id))
                         && a.Status != "Canceled" && a.Status != "Pending")
             .GroupBy(a => new { a.StartDate.Value.Year, a.StartDate.Value.Month })
