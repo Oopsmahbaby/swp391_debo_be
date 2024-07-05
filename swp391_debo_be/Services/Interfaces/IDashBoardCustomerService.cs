@@ -9,5 +9,8 @@ namespace swp391_debo_be.Services.Interfaces
         public Task<ApiRespone> ViewTotalRevenue();
         public Task<ApiRespone> ViewAppointmentStateByDentist(Guid id);
         public Task<ApiRespone> ViewTotalAppointmentEachMonthsByDentist(Guid id);
+        public Task<ApiRespone> ViewMonthlyRevenueForCurrentYear();
+        public Task<ApiRespone> CountAppointmentsByTreatmentCategory();
+        public Task<ApiRespone> CountAppointmentsByTreatment();
     }
 }

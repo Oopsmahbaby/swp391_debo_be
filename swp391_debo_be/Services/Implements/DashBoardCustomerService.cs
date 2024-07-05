@@ -7,6 +7,32 @@ namespace swp391_debo_be.Services.Implements
 {
     public class DashBoardCustomerService : IDashBoardCustomerService
     {
+        public async Task<ApiRespone> CountAppointmentsByTreatment()
+        {
+            try
+            {
+                var data = await CDashBoardCustomer.CountAppointmentsByTreatment();
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count }, Message = "Data retrieved successfully.", Success = true };
+            }
+            catch (Exception ex)
+            {
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
+            }
+        }
+
+        public async Task<ApiRespone> CountAppointmentsByTreatmentCategory()
+        {
+            try
+            {
+                var data = await CDashBoardCustomer.CountAppointmentsByTreatmentCategory();
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count }, Message = "Data retrieved successfully.", Success = true };
+            }
+            catch (Exception ex)
+            {
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
+            }
+        }
+
         public async Task<ApiRespone> ViewAppointmentState(Guid id)
         {
             try
@@ -25,6 +51,19 @@ namespace swp391_debo_be.Services.Implements
             try
             {
                 var data = await CDashBoardCustomer.ViewAppointmentStateByDentist(id);
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count }, Message = "Data retrieved successfully.", Success = true };
+            }
+            catch (Exception ex)
+            {
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
+            }
+        }
+
+        public async Task<ApiRespone> ViewMonthlyRevenueForCurrentYear()
+        {
+            try
+            {
+                var data = await CDashBoardCustomer.ViewMonthlyRevenueForCurrentYear();
                 return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count }, Message = "Data retrieved successfully.", Success = true };
             }
             catch (Exception ex)

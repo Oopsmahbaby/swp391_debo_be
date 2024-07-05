@@ -54,6 +54,33 @@ namespace swp391_debo_be.Dao.Implement
             return appointmentStates.Cast<object>().ToList();
         }
 
+        public async Task<List<object>> ViewMonthlyRevenueForCurrentYear()
+        {
+            var currentYear = DateTime.Now.Year;
+
+            var monthlyRevenues = await _context.Appointments
+                .Where(a => a.PaymentId != null && a.StartDate.HasValue && a.StartDate.Value.Year == currentYear)
+                .Join(
+                    _context.ClinicTreatments,
+                    a => a.TreatId,
+                    ct => ct.Id,
+                    (a, ct) => new { a.StartDate, ct.Price }
+                )
+                .GroupBy(x => new { x.StartDate.Value.Year, x.StartDate.Value.Month })
+                .Select(g => new
+                {
+                    Year = g.Key.Year,
+                    Month = g.Key.Month,
+                    TotalRevenue = g.Sum(x => x.Price)
+                })
+                .OrderBy(x => x.Year)
+                .ThenBy(x => x.Month)
+                .ToListAsync();
+
+            // Convert the result to List<object> to match the return type
+            return monthlyRevenues.Cast<object>().ToList();
+        }
+
         public async Task<List<object>> ViewTotalAppointmentEachMonthsByDentist(Guid id)
         {
             var appointmentCounts = await _context2.Appointments
@@ -143,6 +170,36 @@ namespace swp391_debo_be.Dao.Implement
             };
         }
 
+        public async Task<List<object>> CountAppointmentsByTreatmentCategory()
+        {
+            var query = from ct in _context.ClinicTreatments
+                        join a in _context.Appointments on ct.Id equals a.TreatId into gj
+                        from a in gj.DefaultIfEmpty()
+                        group a by ct.Category into g
+                        orderby g.Key
+                        select new
+                        {
+                            Category = g.Key,
+                            TotalAppointments = g.Count(a => a.Id != null) // Count non-null IDs to match SQL COUNT behavior
+                        };
 
+            return await query.ToListAsync<object>();
+        }
+
+        public async Task<List<object>> CountAppointmentsByTreatment()
+        {
+            var appointmentCounts = await _context.Appointments
+                .GroupBy(a => a.TreatId)
+                .Select(g => new
+                {
+                    TreatId = g.Key,
+                    TotalAppointments = g.Count()
+                })
+                .OrderBy(x => x.TreatId)
+                .ToListAsync();
+
+            // Convert the result to List<object> to match the return type
+            return appointmentCounts.Cast<object>().ToList();
+        }
     }
 }
