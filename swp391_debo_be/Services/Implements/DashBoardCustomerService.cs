@@ -25,7 +25,7 @@ namespace swp391_debo_be.Services.Implements
             try
             {
                 var data = await CDashBoardCustomer.ViewTotalPaidAmountOfCustomer(id);
-                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = data, Message = "Data retrieved successfully.", Success = true };
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count }, Message = "Data retrieved successfully.", Success = true };
             }
             catch (Exception ex)
             {

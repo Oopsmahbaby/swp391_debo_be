@@ -9,15 +9,18 @@ namespace swp391_debo_be.Dao.Implement
     public class DashBoardCustomerDao : IDashBoardCustomerDao
     {
         private readonly DeboDev02Context _context;
+        private readonly DeboDev02Context _context2;
 
         public DashBoardCustomerDao()
         {
             _context = new DeboDev02Context();
+            _context2 = new DeboDev02Context();
         }
 
-        public DashBoardCustomerDao(DeboDev02Context context)
+        public DashBoardCustomerDao(DeboDev02Context context, DeboDev02Context context2)
         {
             _context = context;
+            _context2 = context2;
         }
         public async Task<List<DashboardCustomerDto>> ViewAppointmentState(Guid id)
         {
@@ -35,17 +38,47 @@ namespace swp391_debo_be.Dao.Implement
             return result;
         }
 
-        public async Task<DashboardCustomerDto> ViewTotalPaidAmountOfCustomer(Guid id)
+        public async Task<List<DashboardCustomerDto>> ViewTotalPaidAmountOfCustomer(Guid cusId)
         {
-            var result = await _context.Appointments
-            .Where(a => a.CusId == id && a.Cus.Role == 5 && a.Payment.PaymentStatus == "Success")
-            .GroupBy(a => a.CusId)
-            .Select(g => new DashboardCustomerDto
+            var monthlyPayments = await (from a in _context.Appointments
+                                         join p in _context.Payments on a.PaymentId equals p.Id
+                                         join t in _context.ClinicTreatments on a.TreatId equals t.Id
+                                         where a.CusId == cusId && p.PaymentStatus == "Success"
+                                         group new { a, p, t } by new
+                                         {
+                                             a.CusId,
+                                             Year = p.PaymentDate.HasValue ? p.PaymentDate.Value.Year : 0,
+                                             Month = p.PaymentDate.HasValue ? p.PaymentDate.Value.Month : 0,
+                                             a.TreatId,
+                                             t.Name
+                                         } into g
+                                         select new
+                                         {
+                                             g.Key.CusId,
+                                             g.Key.Year,
+                                             g.Key.Month,
+                                             g.Key.TreatId,
+                                             g.Key.Name,
+                                             TotalPaidAmount = (double)g.Sum(x => x.p.RequiredAmount)
+                                         }).ToListAsync();
+
+            var result = new List<DashboardCustomerDto>();
+            double runningTotal = 0;
+
+            foreach (var payment in monthlyPayments.OrderBy(p => p.Year).ThenBy(p => p.Month).ThenBy(p => p.TreatId))
             {
-                CusId = g.Key,
-                TotalPaidAmount = g.Sum(a => (double?)a.Payment.PaidAmount) ?? 0
-            })
-            .FirstOrDefaultAsync();
+                runningTotal += payment.TotalPaidAmount;
+                result.Add(new DashboardCustomerDto
+                {
+                    CusId = payment.CusId,
+                    Year = payment.Year,
+                    Month = payment.Month,
+                    TreatId = payment.TreatId,
+                    TreatmentName = payment.Name,
+                    TotalPaidAmount = payment.TotalPaidAmount,
+                    RunningTotal = runningTotal
+                });
+            }
 
             return result;
         }

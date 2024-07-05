@@ -43,5 +43,6 @@ namespace swp391_debo_be.Repository.Interface
         public Task UploadMedRecPatient(Guid id, EmployeeDto emp);
         public Task UpdatePassword(Guid id, EmployeeDto emp);
         public object firstTimeBooking(Guid userId);
+        public Task<Guid> CreateDentistMajor(DentistMajorDto dentmaj);
     }
 }
