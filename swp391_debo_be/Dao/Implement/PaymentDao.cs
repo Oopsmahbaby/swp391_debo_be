@@ -87,6 +87,20 @@ namespace swp391_debo_be.Dao.Implement
                 paymentId = payment.Id;
             }
 
+
+            for (int i = 0; i < createPaymentDto.ListAppointmentId.Count; i++)
+            {
+                Appointment? appointment = _context.Appointments.FirstOrDefault(a => a.Id.ToString() == createPaymentDto.ListAppointmentId[i]);
+                if (appointment == null)
+                {
+                    return null;
+                }
+
+                appointment.PaymentId = paymentId;
+                _context.Update(appointment);
+                _context.SaveChanges();
+            }
+
             var result = new PaymentLinkDto
              {
                 IsGeneralCheckup = isGeneralCheckup,
