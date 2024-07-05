@@ -23,6 +23,16 @@ namespace swp391_debo_be.Repository.Implement
             return _dashBoardDao.ViewAppointmentState(id);
         }
 
+        public Task<List<object>> ViewAppointmentStateByDentist(Guid id)
+        {
+            return _dashBoardDao.ViewAppointmentStateByDentist(id);
+        }
+
+        public Task<List<object>> ViewTotalAppointmentEachMonthsByDentist(Guid id)
+        {
+            return _dashBoardDao.ViewTotalAppointmentEachMonthsByDentist(id);
+        }
+
         public Task<List<DashboardCustomerDto>> ViewTotalPaidAmountOfCustomer(Guid id)
         {
             return _dashBoardDao.ViewTotalPaidAmountOfCustomer(id);

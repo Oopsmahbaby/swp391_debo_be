@@ -43,5 +43,25 @@ namespace swp391_debo_be.Controllers
                 StatusCode = (int)response.StatusCode
             };
         }
+
+        [HttpGet("dentist/appointmentstate/{id}")]
+        public async Task<IActionResult> ViewAppointmentStateByDentist(Guid id)
+        {
+            var response = await _dbcus.ViewAppointmentStateByDentist(id);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+
+        [HttpGet("dentist/totalPatient/{id}")]
+        public async Task<IActionResult> ViewTotalAppointmentEachMonthsByDentist(Guid id)
+        {
+            var response = await _dbcus.ViewTotalAppointmentEachMonthsByDentist(id);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
     }
 }
