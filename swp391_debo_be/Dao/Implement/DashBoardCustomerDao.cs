@@ -38,11 +38,46 @@ namespace swp391_debo_be.Dao.Implement
             return result;
         }
 
+        public async Task<List<object>> ViewAppointmentStateByDentist(Guid id)
+        {
+            var appointmentStates = await _context.Appointments
+            .Where(a => a.TempDentId == id || (a.TempDentId == null && a.DentId == id))
+            .GroupBy(a => a.Status)
+            .Select(g => new
+            {
+                Status = g.Key,
+                TotalAppointments = g.Count()
+            })
+            .OrderBy(x => x.Status)
+            .ToListAsync();
+
+            return appointmentStates.Cast<object>().ToList();
+        }
+
+        public async Task<List<object>> ViewTotalAppointmentEachMonthsByDentist(Guid id)
+        {
+            var appointmentCounts = await _context2.Appointments
+            .Where(a => (a.TempDentId == id || (a.TempDentId == null && a.DentId == id))
+                        && a.Status != "Canceled" && a.Status != "Pending")
+            .GroupBy(a => new { a.StartDate.Value.Year, a.StartDate.Value.Month })
+            .Select(g => new
+            {
+                Year = g.Key.Year,
+                Month = g.Key.Month,
+                TotalAppointments = g.Count()
+            })
+            .OrderBy(x => x.Year)
+            .ThenBy(x => x.Month)
+            .ToListAsync();
+
+            return appointmentCounts.Cast<object>().ToList();
+        }
+
         public async Task<List<DashboardCustomerDto>> ViewTotalPaidAmountOfCustomer(Guid cusId)
         {
-            var monthlyPayments = await (from a in _context.Appointments
-                                         join p in _context.Payments on a.PaymentId equals p.Id
-                                         join t in _context.ClinicTreatments on a.TreatId equals t.Id
+            var monthlyPayments = await (from a in _context2.Appointments
+                                         join p in _context2.Payments on a.PaymentId equals p.Id
+                                         join t in _context2.ClinicTreatments on a.TreatId equals t.Id
                                          where a.CusId == cusId && p.PaymentStatus == "Success"
                                          group new { a, p, t } by new
                                          {
@@ -107,5 +142,7 @@ namespace swp391_debo_be.Dao.Implement
                 TotalAppointment = result.TotalAppointment,
             };
         }
+
+
     }
 }

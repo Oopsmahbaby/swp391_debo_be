@@ -20,6 +20,32 @@ namespace swp391_debo_be.Services.Implements
             }
         }
 
+        public async Task<ApiRespone> ViewAppointmentStateByDentist(Guid id)
+        {
+            try
+            {
+                var data = await CDashBoardCustomer.ViewAppointmentStateByDentist(id);
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count }, Message = "Data retrieved successfully.", Success = true };
+            }
+            catch (Exception ex)
+            {
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
+            }
+        }
+
+        public async Task<ApiRespone> ViewTotalAppointmentEachMonthsByDentist(Guid id)
+        {
+            try
+            {
+                var data = await CDashBoardCustomer.ViewTotalAppointmentEachMonthsByDentist(id);
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count }, Message = "Data retrieved successfully.", Success = true };
+            }
+            catch (Exception ex)
+            {
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
+            }
+        }
+
         public async Task<ApiRespone> ViewTotalPaidAmountOfCustomer(Guid id)
         {
             try
