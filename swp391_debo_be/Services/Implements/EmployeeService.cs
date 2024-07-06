@@ -2,6 +2,7 @@
 using swp391_debo_be.Constants;
 using swp391_debo_be.Cores;
 using swp391_debo_be.Dto.Implement;
+using swp391_debo_be.Helpers;
 using swp391_debo_be.Services.Interfaces;
 using System.Net;
 
@@ -82,6 +83,41 @@ namespace swp391_debo_be.Services.Implements
             catch (Exception ex)
             {
                 return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
+            }
+        }
+
+        public ActionResult<ApiRespone> GetPatientList(string userId, int page, int limit)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Message = "Invalid user id", Success = false};
+                }
+
+                if (PaginationValidation.ValidatePagination(page, limit))
+                {
+                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Message = "Invalid page or limit", Success = false};
+                }
+
+                if (Guid.TryParse(userId, out Guid id))
+                {
+                    var result = CEmployee.GetPatientList(id, page, limit);
+
+                    if (result == null)
+                    {
+                        return new ApiRespone { StatusCode = System.Net.HttpStatusCode.NotFound, Message = "Not found", Success = false};
+                    }
+
+                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.OK, Data = result, Message = "Fetched patient list successfully", Success = true};
+                } else
+                {
+                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Message = "Invalid user id", Success = false};
+                }
+
+            } catch (Exception e)
+            {
+                return new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Message = e.Message, Success = false};
             }
         }
 

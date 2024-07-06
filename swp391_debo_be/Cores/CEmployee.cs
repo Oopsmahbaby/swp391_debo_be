@@ -36,5 +36,10 @@ namespace swp391_debo_be.Cores
         {
             return _employeeRepo.GetEmployeeWithBranchId(id, page, limit);
         }
+
+        public static object GetPatientList(Guid id, int page, int limit)
+        {
+            return _employeeRepo.GetPatientList(id, page, limit);
+        }
     }
 }

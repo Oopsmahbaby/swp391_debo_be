@@ -12,5 +12,6 @@ namespace swp391_debo_be.Dao.Interface
         public Task<List<CreateEmployeeDto>> GetEmployee(int page, int limit);
         public Task<CreateEmployeeDto> GetEmployeeById(Guid id);
         public Task UpdateBranchForEmployee(Guid id, CreateEmployeeDto employee);
+        object GetPatientList(Guid id, int page, int limit);
     }
 }

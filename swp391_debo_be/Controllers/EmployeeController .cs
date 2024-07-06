@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using swp391_debo_be.Auth;
 using swp391_debo_be.Constants;
 using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Services.Interfaces;
+using System.Net;
 
 namespace swp391_debo_be.Controllers
 {
@@ -70,5 +72,19 @@ namespace swp391_debo_be.Controllers
                 StatusCode = (int)response.StatusCode
             };
         }
+
+        [HttpGet("dentist/patients")]
+        public ActionResult<ApiRespone> GetPatientList([FromQuery] int page, [FromQuery] int limit)
+        {
+            string? userId = JwtProvider.GetUserId(Request);
+
+            if (userId == null)
+            {
+               return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = "User not found", Success = false, };
+            }
+
+            return _employeeService.GetPatientList(userId, page, limit);
+        }
+
     }
 }
