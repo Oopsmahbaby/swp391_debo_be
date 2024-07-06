@@ -188,15 +188,18 @@ namespace swp391_debo_be.Dao.Implement
 
         public async Task<List<object>> CountAppointmentsByTreatment()
         {
-            var appointmentCounts = await _context.Appointments
-                .GroupBy(a => a.TreatId)
-                .Select(g => new
-                {
-                    TreatId = g.Key,
-                    TotalAppointments = g.Count()
-                })
-                .OrderBy(x => x.TreatId)
-                .ToListAsync();
+            var appointmentCounts = await (from a in _context.Appointments
+                                           join ct in _context.ClinicTreatments
+                                           on a.TreatId equals ct.Id
+                                           group new { a, ct } by new { a.TreatId, ct.Name } into g
+                                           select new
+                                           {
+                                               TreatId = g.Key.TreatId,
+                                               TreatmentName = g.Key.Name,
+                                               TotalAppointments = g.Count()
+                                           })
+                                  .OrderBy(x => x.TreatId)
+                                  .ToListAsync();
 
             // Convert the result to List<object> to match the return type
             return appointmentCounts.Cast<object>().ToList();
