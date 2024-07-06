@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.SqlServer.Server;
 using MimeKit;
+using Org.BouncyCastle.Crypto.Macs;
 using swp391_debo_be.Auth;
 using swp391_debo_be.Constants;
 using swp391_debo_be.Cores;
@@ -32,7 +33,8 @@ namespace swp391_debo_be.Services.Implements
                 if (Guid.TryParse(id, out Guid Id))
                 {
                     var result = CAppointment.CancelAppointment(Id);
-
+                    var data = CAppointment.ViewAppointmentDetail(Id).Result;
+                    SendCancelEmailToDentist(data).Wait();
                     return result != null ? new ApiRespone { StatusCode = System.Net.HttpStatusCode.OK, Data = result, Message = "Deleted Appointment successfully", Success = true }
                     : new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Data = null, Message = "Failed to cancel appointment", Success = false };
                 }
@@ -598,6 +600,102 @@ namespace swp391_debo_be.Services.Implements
             }
         }
 
+        public async Task SendCancelEmailToDentist(AppointmentDetailsDto appmnt)
+        {
+            try
+            {
+                var dentist = await CUser.GetUserById2((Guid)appmnt.Dent_Id!);
+                var tempdent = await CUser.GetUserById2((Guid)appmnt.Temp_Dent_Id!);
+                var user = await CUser.GetUserById2((Guid)appmnt.Cus_Id!);
+                var email = new MimeMessage();
+                email.From.Add(MailboxAddress.Parse(_config.GetSection("EmailUsername").Value));
+                if (appmnt.Temp_Dent_Id != null)
+                {
+                    email.To.Add(MailboxAddress.Parse("vuthanhan3547@gmail.com"));
+                }
+                else
+                {
+                    email.To.Add(MailboxAddress.Parse("vuthanhan3547@gmail.com"));
+                }
+                string salutation = tempdent != null
+            ? $"Dear Dr. {tempdent.FirstName} {tempdent.LastName},"
+            : $"Dear Dr. {dentist.FirstName} {dentist.LastName},";
+                email.Subject = $"[DEBO] {salutation} Appointment Cancellation";
+                string body = $@"
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {{
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }}
+        .container {{
+            width: 100%;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }}
+        .header {{
+            background-color: red;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 24px;
+        }}
+        .content {{
+            margin: 20px 0;
+        }}
+        .footer {{
+            margin-top: 20px;
+            font-size: 12px;
+            color: #888;
+        }}
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <div class='header'>
+            Appointment Cancel
+        </div>
+        <div class='content'>
+            <p>{salutation}</p>
+            <p>We regret to inform you that your patient, {user.FirstName} {user.LastName}, has canceled their appointment scheduled on {appmnt.StartDate}.</p>
+            <p>If you have any questions or need further assistance, please feel free to contact us.</p>
+            <p>Thank you for your understanding.</p>
+            <br />
+            <p>Sincerely,</p>
+            <p>DEBO Clinic</p>
+        </div>
+        <div class='footer'>
+            <p>This is an automated message, please do not reply.</p>
+            <p>&copy; 2024 Your Company. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
+";
+
+                email.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = body };
+                using var smtp = new SmtpClient();
+                smtp.Connect(
+                    _config.GetSection("EmailHost").Value,
+                    int.Parse(_config.GetSection("EmailPort").Value!),
+                    MailKit.Security.SecureSocketOptions.StartTls
+                );
+                smtp.Authenticate(
+                    _config.GetSection("EmailUsername").Value,
+                    _config.GetSection("EmailPassword").Value
+                );
+                smtp.Send(email);
+                smtp.Disconnect(true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while sending email to dentist: {ex.Message}");
+                throw; // Rethrow the exception to handle it at a higher level if needed
+            }
+        }
+
         public async Task<ApiRespone> GenerateConfirmEmailToken(AppointmentDetailsDto appmnt)
         {
             try
@@ -646,7 +744,7 @@ namespace swp391_debo_be.Services.Implements
                 var data = await CAppointment.ViewAppointmentDetail(appmnt.Id);
                 return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = data, Message = "Update Note successfully.", Success = true };
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
