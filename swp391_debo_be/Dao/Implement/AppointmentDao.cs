@@ -33,7 +33,7 @@ namespace swp391_debo_be.Dao.Implement
                 return null;
             }
 
-            appointment.Status = "cancelled";
+            appointment.Status = "canceled";
             _context.Update(appointment);
             _context.SaveChanges();
 
