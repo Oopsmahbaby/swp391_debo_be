@@ -85,20 +85,20 @@ namespace swp391_debo_be.Dao.Implement
                                "other", createPaymentDto.PaymentContent ?? string.Empty, vnpayConfig.ReturnUrl, payment.Id.ToString());
                 paymentUrl = vnpayPayRequest.GetLink(vnpayConfig.PaymentUrl, vnpayConfig.HashSecret);
                 paymentId = payment.Id;
-            }
 
 
-            for (int i = 0; i < createPaymentDto.ListAppointmentId.Count; i++)
-            {
-                Appointment? appointment = _context.Appointments.FirstOrDefault(a => a.Id.ToString() == createPaymentDto.ListAppointmentId[i]);
-                if (appointment == null)
+                for (int i = 0; i < createPaymentDto.ListAppointmentId.Count; i++)
                 {
-                    return null;
-                }
+                    Appointment? appointment = _context.Appointments.FirstOrDefault(a => a.Id.ToString() == createPaymentDto.ListAppointmentId[i]);
+                    if (appointment == null)
+                    {
+                        return null;
+                    }
 
-                appointment.PaymentId = paymentId;
-                _context.Update(appointment);
-                _context.SaveChanges();
+                    appointment.PaymentId = paymentId;
+                    _context.Update(appointment);
+                    _context.SaveChanges();
+                }
             }
 
             var result = new PaymentLinkDto
