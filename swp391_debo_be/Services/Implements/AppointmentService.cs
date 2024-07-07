@@ -605,17 +605,17 @@ namespace swp391_debo_be.Services.Implements
             try
             {
                 var dentist = await CUser.GetUserById2((Guid)appmnt.Dent_Id!);
-                var tempdent = await CUser.GetUserById2((Guid)appmnt.Temp_Dent_Id!);
+                var tempdent = appmnt.Temp_Dent_Id.HasValue ? await CUser.GetUserById2((Guid)appmnt.Temp_Dent_Id) : null;
                 var user = await CUser.GetUserById2((Guid)appmnt.Cus_Id!);
                 var email = new MimeMessage();
                 email.From.Add(MailboxAddress.Parse(_config.GetSection("EmailUsername").Value));
                 if (appmnt.Temp_Dent_Id != null)
                 {
-                    email.To.Add(MailboxAddress.Parse("vuthanhan3547@gmail.com"));
+                    email.To.Add(MailboxAddress.Parse(tempdent!.Email));
                 }
                 else
                 {
-                    email.To.Add(MailboxAddress.Parse("vuthanhan3547@gmail.com"));
+                    email.To.Add(MailboxAddress.Parse(dentist.Email));
                 }
                 string salutation = tempdent != null
             ? $"Dear Dr. {tempdent.FirstName} {tempdent.LastName},"

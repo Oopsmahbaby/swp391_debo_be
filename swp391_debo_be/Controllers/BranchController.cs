@@ -42,6 +42,16 @@ namespace swp391_debo_be.Controllers
             };
         }
 
+        [HttpGet("branchmanager{id}")]
+        public async Task<IActionResult> GetManagerBranchAsync(Guid id)
+        {
+            var response = await _branchService.getManagerBranchAsync(id);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+
         [HttpPut("{id}/upload-pic-branch")]
         public async Task<IActionResult> UploadPicBranch(int id, [FromForm] BranchDto branch, IFormFile? file)
         {
