@@ -57,6 +57,9 @@ namespace swp391_debo_be.Dao.Implement
                 if (appointment.TreatId == 8)
                 {
                     isGeneralCheckup = true;
+                    appointment.Status = "future";
+                    _context.Update(appointment);
+                    _context.SaveChanges();
                 }
             }
 
