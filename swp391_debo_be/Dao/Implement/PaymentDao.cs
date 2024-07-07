@@ -142,13 +142,14 @@ namespace swp391_debo_be.Dao.Implement
                         resultData.PaymentMessage = "Payment Success";
                         resultData.PaymentDate = payment.PaymentDate.ToString();
 
-                        var appoinment = _context.Appointments.FirstOrDefault(a => a.PaymentId == payment.Id);
+                        List<Appointment> appointments = _context.Appointments.Where(a => a.PaymentId == payment.Id).ToList();
 
-                        appoinment.Status = "future";
-                        appoinment.PaymentId = payment.Id;
-                        _context.Update(appoinment);
-                        _context.SaveChanges();
-
+                        foreach (Appointment appointment in appointments)
+                        {
+                            appointment.Status = "future";
+                            _context.Update(appointment);
+                            _context.SaveChanges();
+                        }
                     }
                     else
                     {
