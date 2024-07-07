@@ -109,6 +109,30 @@ namespace swp391_debo_be.Dao.Implement
             return branchDto;
         }
 
+        public async Task<BranchDto> getManagerBranchAsync(Guid id)
+        {
+            var branch = await _context.ClinicBranches
+                        .Where(cb => cb.MngId == id)
+                        .Select(cb => new BranchDto
+                        {
+                            Id = cb.Id,
+                            MngId = cb.MngId,
+                            Name = cb.Name,
+                            Address = cb.Address,
+                            Phone = cb.Phone,
+                            Email = cb.Email,
+                            Avt = cb.Avt
+                        })
+                        .FirstOrDefaultAsync();
+
+            if (branch == null)
+            {
+                throw new KeyNotFoundException($"No branch found for manager ID: {id}");
+            }
+
+            return branch;
+        }
+
         public async Task updateBranchAsync(int id, BranchDto branch)
         {
             var existingBranch = await _context.ClinicBranches.FindAsync(id);

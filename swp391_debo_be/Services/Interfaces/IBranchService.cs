@@ -7,6 +7,7 @@ namespace swp391_debo_be.Services.Interfaces
     {
         public Task<ApiRespone> getAllBranchAsync(int page, int limit);
         public Task<ApiRespone> getBranchAsync(int id);
+        public Task<ApiRespone> getManagerBranchAsync(Guid id);
         public Task<ApiRespone> addBranchAsync(BranchDto branch);
         public Task<ApiRespone> updateBranchAsync(int id, BranchDto branch);
         public Task<ApiRespone> deleteBranchAsync(int id);
