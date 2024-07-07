@@ -29,6 +29,11 @@ namespace swp391_debo_be.Repository.Implement
             return _dashBoardDao.CountAppointmentsByTreatmentCategory();
         }
 
+        public Task<List<object>> EmployeeSalaryDistribution()
+        {
+            return _dashBoardDao.EmployeeSalaryDistribution();
+        }
+
         public Task<List<DashboardCustomerDto>> ViewAppointmentState(Guid id)
         {
             return _dashBoardDao.ViewAppointmentState(id);

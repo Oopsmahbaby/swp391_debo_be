@@ -33,6 +33,19 @@ namespace swp391_debo_be.Services.Implements
             }
         }
 
+        public async Task<ApiRespone> EmployeeSalaryDistribution()
+        {
+            try
+            {
+                var data = await CDashBoardCustomer.EmployeeSalaryDistribution();
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count }, Message = "Data retrieved successfully.", Success = true };
+            }
+            catch (Exception ex)
+            {
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
+            }
+        }
+
         public async Task<ApiRespone> ViewAppointmentState(Guid id)
         {
             try

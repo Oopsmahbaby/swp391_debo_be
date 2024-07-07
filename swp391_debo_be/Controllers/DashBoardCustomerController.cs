@@ -83,5 +83,15 @@ namespace swp391_debo_be.Controllers
                 StatusCode = (int)response.StatusCode
             };
         }
+
+        [HttpGet("employeesalarydistribution")]
+        public async Task<IActionResult> EmployeeSalaryDistribution()
+        {
+            var response = await _dbcus.EmployeeSalaryDistribution();
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
     }
 }

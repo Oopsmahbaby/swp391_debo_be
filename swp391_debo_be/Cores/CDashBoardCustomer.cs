@@ -56,5 +56,9 @@ namespace swp391_debo_be.Cores
         {
             return _dashboardRepo.CountAppointmentsByTreatment();
         }
+        public static Task<List<object>> EmployeeSalaryDistribution()
+        {
+            return _dashboardRepo.EmployeeSalaryDistribution();
+        }
     }
 }

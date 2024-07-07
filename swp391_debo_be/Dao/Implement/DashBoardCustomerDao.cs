@@ -204,5 +204,20 @@ namespace swp391_debo_be.Dao.Implement
             // Convert the result to List<object> to match the return type
             return appointmentCounts.Cast<object>().ToList();
         }
+
+        public async Task<List<object>> EmployeeSalaryDistribution()
+        {
+            var result = await(from e in _context.Employees
+                               join r in _context.Roles on e.Type equals r.RoleId
+                               group e by new { r.Role1 } into g
+                               select new
+                               {
+                                   RoleName = g.Key.Role1,
+                                   TotalSalary = g.Sum(e => e.Salary ?? 0),
+                                   TotalEmployees = g.Count()
+                               }).ToListAsync();
+
+            return result.Cast<object>().ToList();
+        }
     }
 }
