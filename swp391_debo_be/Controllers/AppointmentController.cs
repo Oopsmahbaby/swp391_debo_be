@@ -203,6 +203,16 @@ namespace swp391_debo_be.Controllers
             };
         }
 
+        [HttpGet("rescheduletempdentversion02")]
+        public async Task<IActionResult> GetAnotherDentist(Guid appointmentId, Guid currentDentistId, DateTime startDate, int timeSlot, int treatId)
+        {
+            var response = await _appointmentService.GetAnotherDentist(appointmentId, currentDentistId, startDate, timeSlot, treatId);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+
         //[HttpPost("sendConfirmEmail")]
         //public async Task<IActionResult> SendEmail(Guid id)
         //{
