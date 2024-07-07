@@ -104,5 +104,10 @@ namespace swp391_debo_be.Repository.Implement
         {
             return _appointmentDao.SaveRescheduleToken (appmtId, rescheduleToken);
         }
+
+        public Task<List<AppointmentDetailsDto>> GetAnotherDentist(Guid appointmentId, Guid currentDentistId, DateTime startDate, int timeSlot, int treatId)
+        {
+            return _appointmentDao.GetAnotherDentist(appointmentId, currentDentistId, startDate, timeSlot, treatId);
+        }
     }
 }

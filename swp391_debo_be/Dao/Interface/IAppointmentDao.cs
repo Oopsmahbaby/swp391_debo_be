@@ -20,6 +20,7 @@ namespace swp391_debo_be.Dao.Interface
         public Task RescheduleAppointment(Guid id ,AppointmentDetailsDto appmnt);
         public Task<List<AppointmentDto>> GetDentistAvailableTimeSlots(DateTime startDate, Guid dentId);
         public Task<List<AppointmentDetailsDto>> GetRescheduleTempDent(DateTime startDate, int timeSlot, int treatId);
+        public Task<List<AppointmentDetailsDto>> GetAnotherDentist(Guid appointmentId, Guid currentDentistId, DateTime startDate, int timeSlot, int treatId);
         public Task RescheduleByDentist(AppointmentDetailsDto appmnt);
         public Task UpdatAppointmenteNote(AppointmentDetailsDto appmnt);
         public Task SaveRescheduleToken(Guid appmtId, string rescheduleToken);

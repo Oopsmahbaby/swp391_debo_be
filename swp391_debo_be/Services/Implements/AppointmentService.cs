@@ -749,5 +749,18 @@ namespace swp391_debo_be.Services.Implements
                 return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
         }
+
+        public async Task<ApiRespone> GetAnotherDentist(Guid appointmentId, Guid currentDentistId, DateTime startDate, int timeSlot, int treatId)
+        {
+            try
+            {
+                var data = await CAppointment.GetAnotherDentist(appointmentId, currentDentistId, startDate, timeSlot, treatId);
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count }, Message = "Retrieve Temporary Dentist data successfully.", Success = true };
+            }
+            catch (Exception ex)
+            {
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
+            }
+        }
     }
 }

@@ -536,6 +536,42 @@ namespace swp391_debo_be.Dao.Implement
             return availableDentists;
         }
 
+        public async Task<List<AppointmentDetailsDto>> GetAnotherDentist(Guid appointmentId, Guid currentDentistId, DateTime startDate, int timeSlot, int treatId)
+        {
+            var currentDentistBranchId = await (from e in _context.Employees
+                                                join a in _context.Appointments on e.Id equals a.DentId
+                                                where a.Id == appointmentId
+                                                select e.BrId)
+                                                .FirstOrDefaultAsync();
+
+            var busyDentists = await (from a in _context.Appointments
+                                      where a.StartDate == startDate
+                                         && a.TimeSlot == timeSlot
+                                         && a.TreatId == treatId
+                                      select a.DentId)
+                                      .Distinct()
+                                      .ToListAsync();
+
+            var availableDentists = await (from e in _context.Employees
+                                           join u in _context.Users on e.Id equals u.Id
+                                           join ct in _context.ClinicTreatments on treatId equals ct.Id
+                                           where e.BrId == currentDentistBranchId
+                                              && !busyDentists.Contains(u.Id)
+                                              && ct.Dents.Any(d => d.Id == e.Id)  // Check if the dentist (employee) can perform the treatment
+                                              && u.Id != currentDentistId
+                                           select new AppointmentDetailsDto
+                                           {
+                                               Dent_Id = u.Id,
+                                               DentistName = u.FirstName + " " + u.LastName,
+                                               Dent_Avt = u.Avt
+                                           })
+                                           .ToListAsync();
+
+            return availableDentists;
+        }
+
+
+
         public async Task RescheduleByDentist(AppointmentDetailsDto appmnt)
         {
             var appointment = await _context.Appointments.FindAsync(appmnt.Id);
