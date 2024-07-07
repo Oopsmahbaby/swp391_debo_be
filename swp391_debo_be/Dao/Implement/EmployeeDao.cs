@@ -24,33 +24,33 @@ namespace swp391_debo_be.Dao.Implement
 
         public async Task<List<CreateEmployeeDto>> GetEmployee(int page, int limit)
         {
-            var result = await(from u in _context.Users
-                               join e in _context.Employees on u.Id equals e.Id
-                               where e.Type != 2
-                               select new CreateEmployeeDto
-                               {
-                                   Id = e.Id,
-                                   Name = u.FirstName + " " + u.LastName,
-                                   BrId = e.BrId,
-                                   Type = e.Type,
-                                   Salary = e.Salary
-                               }).Skip(page * limit).Take(limit).ToListAsync();
+            var result = await (from u in _context.Users
+                                join e in _context.Employees on u.Id equals e.Id
+                                where e.Type != 2
+                                select new CreateEmployeeDto
+                                {
+                                    Id = e.Id,
+                                    Name = u.FirstName + " " + u.LastName,
+                                    BrId = e.BrId,
+                                    Type = e.Type,
+                                    Salary = e.Salary
+                                }).Skip(page * limit).Take(limit).ToListAsync();
             return result;
         }
 
         public async Task<CreateEmployeeDto> GetEmployeeById(Guid id)
         {
-            var result = await(from u in _context.Users
-                               join e in _context.Employees on u.Id equals e.Id
-                               where u.Id == id
-                               select new CreateEmployeeDto
-                               {
-                                   Id = e.Id,
-                                   Name = u.FirstName + " " + u.LastName,
-                                   BrId = e.BrId,
-                                   Type = e.Type,
-                                   Salary = e.Salary
-                               }).SingleOrDefaultAsync();
+            var result = await (from u in _context.Users
+                                join e in _context.Employees on u.Id equals e.Id
+                                where u.Id == id
+                                select new CreateEmployeeDto
+                                {
+                                    Id = e.Id,
+                                    Name = u.FirstName + " " + u.LastName,
+                                    BrId = e.BrId,
+                                    Type = e.Type,
+                                    Salary = e.Salary
+                                }).SingleOrDefaultAsync();
 
             return result;
         }
@@ -71,21 +71,77 @@ namespace swp391_debo_be.Dao.Implement
             return result;
         }
 
-        public async Task<List<CreateEmployeeDto>> GetEmployeeWithBranchId(int id , int page, int limit)
+        public async Task<List<CreateEmployeeDto>> GetEmployeeWithBranchId(int id, int page, int limit)
         {
-            var result = await(from u in _context.Users
-                               join e in _context.Employees on u.Id equals e.Id
-                               where e.BrId == id
-                               select new CreateEmployeeDto
-                               {
-                                   Id = e.Id,
-                                   Name = u.FirstName + " " + u.LastName,
-                                   BrId = e.BrId,
-                                   Type = e.Type,
-                                   Salary = e.Salary
-                               }).Skip(page * limit).Take(limit).ToListAsync();
+            var result = await (from u in _context.Users
+                                join e in _context.Employees on u.Id equals e.Id
+                                where e.BrId == id
+                                select new CreateEmployeeDto
+                                {
+                                    Id = e.Id,
+                                    Name = u.FirstName + " " + u.LastName,
+                                    BrId = e.BrId,
+                                    Type = e.Type,
+                                    Salary = e.Salary
+                                }).Skip(page * limit).Take(limit).ToListAsync();
 
             return result;
+        }
+
+        public object GetPatientList(Guid id, int page, int limit)
+        {
+            List<Appointment> appointments = _context.Appointments
+                                .Where(a => a.DentId == id)
+                                .ToList();
+            List<User> users = new List<User>();
+            if (limit == -1)
+            {
+                users = _context.Users
+                                .Where(u => appointments.Select(a => a.CusId).Contains(u.Id))
+                                .ToList();
+            }
+            users = _context.Users
+                                .Where(u => appointments.Select(a => a.CusId).Contains(u.Id))
+                                .Skip(page * limit)
+                                .Take(limit)
+                                .ToList();
+
+            List<object> list = new List<object>();
+
+            foreach (var user in users)
+            {
+                List<Appointment> apps = appointments.Where(a => a.DentId == id && a.CusId == user.Id && a.Status != "pending" && a.Status != "canceled").ToList();
+
+                Appointment? nextApp = apps.Where(a => a.StartDate > DateTime.Now).OrderBy(a => a.StartDate).FirstOrDefault();
+
+                DateTime? nextAppointment = nextApp?.StartDate;
+
+                int? timeSlot = nextApp?.TimeSlot;
+
+                if (nextApp == null)
+                {
+                    timeSlot = 0;
+                }
+
+                DateTime? lastAppointment = apps.Where(a => a.StartDate < DateTime.Now).OrderByDescending(a => a.StartDate).FirstOrDefault()?.StartDate;
+
+                list.Add(new
+                {
+                    user.Id,
+                    user.Username,
+                    user.Email,
+                    user.Phone,
+                    timeSlot,
+                    NextAppointment = nextAppointment,
+                    LastAppointment = lastAppointment
+                });
+            }
+
+            return new
+            {
+                List = list,
+                Total = list.Count
+            };
         }
 
         public async Task UpdateBranchForEmployee(Guid id, CreateEmployeeDto employee)
@@ -104,7 +160,5 @@ namespace swp391_debo_be.Dao.Implement
                 await _context.SaveChangesAsync();
             }
         }
-
-
     }
 }

@@ -81,10 +81,10 @@ namespace swp391_debo_be.Dao.Implement
         }
 
 
-        public List<object> GetTreatmentsBasedOnBranchId(int branchId)
+        public List<TreatmenBranchReturnDto> GetTreatmentsBasedOnBranchId(int branchId)
         {
 
-            List<object> result = new List<object>();
+            List<TreatmenBranchReturnDto> result = new List<TreatmenBranchReturnDto>();
             var treatments = _context.ClinicBranches
                 .Where(b => b.Id == branchId)
                 .SelectMany(b => b.Employees)
@@ -104,18 +104,25 @@ namespace swp391_debo_be.Dao.Implement
                     .FirstOrDefault();
 
 
-                object treat = new
+                TreatmenBranchReturnDto treatmenBranchReturnDto = new TreatmenBranchReturnDto
                 {
-                    ID = treatment.Id,
-                    category_name = categoryName,
-                    name = treatment.Name,
-                    description = treatment.Description,
-                    price = treatment.Price,
-                    rule_name = ruleName,
-                    num_of_appointment = treatment.NumOfApp
+                    Id = treatment.Id,
+                    CategoryName = categoryName,
+                    Name = treatment.Name,
+                    Description = treatment.Description,
+                    Price = (double)treatment.Price,
+                    RuleName = ruleName,
+                    NumOfAppointment = _context.Appointments
+                        .Where(a => a.TreatId == treatment.Id)
+                        .Count()
                 };
 
-                result.Add(treat);
+                result.Add(treatmenBranchReturnDto);
+
+
+                result = result.GroupBy(r => r.Id)
+                                    .Select(g => g.First())
+                                    .ToList();
             }
             return result;
 

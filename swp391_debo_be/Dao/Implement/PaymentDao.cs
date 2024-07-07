@@ -57,6 +57,9 @@ namespace swp391_debo_be.Dao.Implement
                 if (appointment.TreatId == 8)
                 {
                     isGeneralCheckup = true;
+                    appointment.Status = "future";
+                    _context.Update(appointment);
+                    _context.SaveChanges();
                 }
             }
 
@@ -85,20 +88,20 @@ namespace swp391_debo_be.Dao.Implement
                                "other", createPaymentDto.PaymentContent ?? string.Empty, vnpayConfig.ReturnUrl, payment.Id.ToString());
                 paymentUrl = vnpayPayRequest.GetLink(vnpayConfig.PaymentUrl, vnpayConfig.HashSecret);
                 paymentId = payment.Id;
-            }
 
 
-            for (int i = 0; i < createPaymentDto.ListAppointmentId.Count; i++)
-            {
-                Appointment? appointment = _context.Appointments.FirstOrDefault(a => a.Id.ToString() == createPaymentDto.ListAppointmentId[i]);
-                if (appointment == null)
+                for (int i = 0; i < createPaymentDto.ListAppointmentId.Count; i++)
                 {
-                    return null;
-                }
+                    Appointment? appointment = _context.Appointments.FirstOrDefault(a => a.Id.ToString() == createPaymentDto.ListAppointmentId[i]);
+                    if (appointment == null)
+                    {
+                        return null;
+                    }
 
-                appointment.PaymentId = paymentId;
-                _context.Update(appointment);
-                _context.SaveChanges();
+                    appointment.PaymentId = paymentId;
+                    _context.Update(appointment);
+                    _context.SaveChanges();
+                }
             }
 
             var result = new PaymentLinkDto
@@ -139,13 +142,14 @@ namespace swp391_debo_be.Dao.Implement
                         resultData.PaymentMessage = "Payment Success";
                         resultData.PaymentDate = payment.PaymentDate.ToString();
 
-                        var appoinment = _context.Appointments.FirstOrDefault(a => a.PaymentId == payment.Id);
+                        List<Appointment> appointments = _context.Appointments.Where(a => a.PaymentId == payment.Id).ToList();
 
-                        appoinment.Status = "future";
-                        appoinment.PaymentId = payment.Id;
-                        _context.Update(appoinment);
-                        _context.SaveChanges();
-
+                        foreach (Appointment appointment in appointments)
+                        {
+                            appointment.Status = "future";
+                            _context.Update(appointment);
+                            _context.SaveChanges();
+                        }
                     }
                     else
                     {
