@@ -12,5 +12,6 @@ namespace swp391_debo_be.Repository.Interface
         public Task<List<object>> ViewMonthlyRevenueForCurrentYear();
         public Task<List<object>> CountAppointmentsByTreatmentCategory();
         public Task<List<object>> CountAppointmentsByTreatment();
+        public Task<List<object>> EmployeeSalaryDistribution();
     }
 }

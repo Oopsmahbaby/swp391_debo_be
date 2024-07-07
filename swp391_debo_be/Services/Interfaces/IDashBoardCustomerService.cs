@@ -12,5 +12,6 @@ namespace swp391_debo_be.Services.Interfaces
         public Task<ApiRespone> ViewMonthlyRevenueForCurrentYear();
         public Task<ApiRespone> CountAppointmentsByTreatmentCategory();
         public Task<ApiRespone> CountAppointmentsByTreatment();
+        public Task<ApiRespone> EmployeeSalaryDistribution();
     }
 }
