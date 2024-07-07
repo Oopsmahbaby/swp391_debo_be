@@ -38,7 +38,8 @@ namespace swp391_debo_be.Services.Implements
                 // Role = 5 la Customer -> dua tren database moi
                 Role = 5,
                 Gender = true,
-                Password = HashPasswordHelper.HashPassword(createUserDto.password)
+                Password = HashPasswordHelper.HashPassword(createUserDto.password),
+                IsFirstTime = true
             };
 
             User createdUser = CUser.CreateUser(user);
