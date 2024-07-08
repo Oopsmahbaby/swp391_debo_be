@@ -54,6 +54,11 @@ namespace swp391_debo_be.Cores
         {
             return _branchRepo.getManagerBranchAsync(id);
         }
+
+        public static Task<object> getAppointmentBranchAsync(Guid id)
+        {
+            return _branchRepo.getAppointmentBranchAsync(id);
+        }
     }
 }
 
