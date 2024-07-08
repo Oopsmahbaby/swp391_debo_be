@@ -81,6 +81,27 @@ namespace swp391_debo_be.Dao.Implement
             return await query.ToListAsync();
         }
 
+        public async Task<object> getAppointmentBranchAsync(Guid id)
+        {
+            var result = await (from a in _context.Appointments
+                                join e in _context.Employees on a.DentId equals e.Id
+                                join cb in _context.ClinicBranches on e.BrId equals cb.Id
+                                where a.Id == id
+                                select new
+                                {
+                                    AppointmentId = a.Id,
+                                    a.DentId,
+                                    a.TempDentId,
+                                    a.CreatedDate,
+                                    a.StartDate,
+                                    a.TimeSlot,
+                                    a.Status,
+                                    BranchId = e.BrId,
+                                    BranchName = cb.Name
+                                }).FirstOrDefaultAsync();
+
+            return result;
+        }
 
         public async Task<BranchDto> getBranchAsync(int id)
         {
