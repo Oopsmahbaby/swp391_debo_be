@@ -90,12 +90,12 @@ namespace swp391_debo_be.Services.Implements
             }
         }
 
-        public async Task<ApiRespone> getAppointmentBranchAsync(Guid id)
+        public async Task<ApiRespone> getAppointmentBranchAsync(int id)
         {
             try
             {
                 var data = await CBranch.getAppointmentBranchAsync(id);
-                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = data, Message = "Appointment Branch data is retrieved successfully.", Success = true };
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count }, Message = "Appointment Branch data is retrieved successfully.", Success = true };
             }
             catch (Exception ex)
             {

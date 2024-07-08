@@ -81,27 +81,62 @@ namespace swp391_debo_be.Dao.Implement
             return await query.ToListAsync();
         }
 
-        public async Task<object> getAppointmentBranchAsync(Guid id)
-        {
-            var result = await (from a in _context.Appointments
-                                join e in _context.Employees on a.DentId equals e.Id
-                                join cb in _context.ClinicBranches on e.BrId equals cb.Id
-                                where a.Id == id
-                                select new
-                                {
-                                    AppointmentId = a.Id,
-                                    a.DentId,
-                                    a.TempDentId,
-                                    a.CreatedDate,
-                                    a.StartDate,
-                                    a.TimeSlot,
-                                    a.Status,
-                                    BranchId = e.BrId,
-                                    BranchName = cb.Name
-                                }).FirstOrDefaultAsync();
+        //public async Task<object> getAppointmentBranchAsync(Guid id)
+        //{
+        //    var result = await (from a in _context.Appointments
+        //                        join e in _context.Employees on a.DentId equals e.Id
+        //                        join cb in _context.ClinicBranches on e.BrId equals cb.Id
+        //                        where a.Id == id
+        //                        select new
+        //                        {
+        //                            AppointmentId = a.Id,
+        //                            a.DentId,
+        //                            a.TempDentId,
+        //                            a.CreatedDate,
+        //                            a.StartDate,
+        //                            a.TimeSlot,
+        //                            a.Status,
+        //                            BranchId = e.BrId,
+        //                            BranchName = cb.Name
+        //                        }).FirstOrDefaultAsync();
 
-            return result;
+        //    return result;
+        //}
+
+        public async Task<List<object>> getAppointmentBranchAsync(int branchId)
+        {
+            var query = from appointment in _context.Appointments
+                        join employee in _context.Employees on appointment.DentId equals employee.Id
+                        join dentist in _context.Users on appointment.DentId equals dentist.Id into dentistGroup
+                        from dent in dentistGroup.DefaultIfEmpty()
+                        join tempDentist in _context.Users on appointment.TempDentId equals tempDentist.Id into tempDentistGroup
+                        from tempDent in tempDentistGroup.DefaultIfEmpty()
+                        join customer in _context.Users on appointment.CusId equals customer.Id into customerGroup
+                        from cus in customerGroup.DefaultIfEmpty()
+                        where employee.BrId == branchId
+                        select new
+                        {
+                            appointment.Id,
+                            appointment.TreatId,
+                            appointment.PaymentId,
+                            appointment.DentId,
+                            DentistFullName = (dent.FirstName + " " + dent.LastName),
+                            appointment.TempDentId,
+                            TempDentistFullName = (tempDent.FirstName + " " + tempDent.LastName),
+                            appointment.CusId,
+                            CustomerFullName = (cus.FirstName + " " + cus.LastName),
+                            appointment.CreatorId,
+                            appointment.CreatedDate,
+                            appointment.StartDate,
+                            appointment.TimeSlot,
+                            appointment.Description,
+                            appointment.Note,
+                        };
+
+            var result = await query.ToListAsync();
+            return result.Cast<object>().ToList();
         }
+
 
         public async Task<BranchDto> getBranchAsync(int id)
         {
