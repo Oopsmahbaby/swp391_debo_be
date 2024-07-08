@@ -42,10 +42,20 @@ namespace swp391_debo_be.Controllers
             };
         }
 
-        [HttpGet("branchmanager{id}")]
+        [HttpGet("branchmanager/{id}")]
         public async Task<IActionResult> GetManagerBranchAsync(Guid id)
         {
             var response = await _branchService.getManagerBranchAsync(id);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+
+        [HttpGet("branchappointment/{id}")]
+        public async Task<IActionResult> GetAppointmentBranchAsync(int id)
+        {
+            var response = await _branchService.getAppointmentBranchAsync(id);
             return new ObjectResult(response)
             {
                 StatusCode = (int)response.StatusCode

@@ -53,5 +53,10 @@ namespace swp391_debo_be.Repository.Implement
         {
             return _branchDao.getManagerBranchAsync(id);
         }
+
+        public Task<List<object>> getAppointmentBranchAsync(int id)
+        {
+            return _branchDao.getAppointmentBranchAsync(id);
+        }
     }
 }
