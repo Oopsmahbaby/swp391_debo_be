@@ -53,7 +53,7 @@ namespace swp391_debo_be.Controllers
         }
 
         [HttpGet("branchappointment/{id}")]
-        public async Task<IActionResult> GetAppointmentBranchAsync(Guid id)
+        public async Task<IActionResult> GetAppointmentBranchAsync(int id)
         {
             var response = await _branchService.getAppointmentBranchAsync(id);
             return new ObjectResult(response)
