@@ -20,9 +20,9 @@ namespace swp391_debo_be.Controllers
         }
 
         [HttpGet("dentists")]
-        public ActionResult<ApiRespone> GetDentistsByBranchId([FromQuery] int treatment)
+        public ActionResult<ApiRespone> GetDentistsByBranchId([FromQuery] int treatment, [FromQuery] int branch)
         {
-            return _employeeService.GetDentistBasedOnTreamentId(treatment);
+            return _employeeService.GetDentistBasedOnTreamentId(treatment, branch);
         }
         [HttpGet("getallempwithbranch")]
         public async Task<IActionResult> GetEmployeeWithBranch([FromQuery] int page = 0, [FromQuery] int limit = 5)

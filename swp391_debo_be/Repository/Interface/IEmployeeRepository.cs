@@ -5,7 +5,7 @@ namespace swp391_debo_be.Repository.Interface
 {
     public interface IEmployeeRepository
     {
-        public List<User> GetDentistBasedOnTreamentId(int treatmentId);
+        public List<User> GetDentistBasedOnTreamentId(int treatmentId, int branch);
         public Task<List<CreateEmployeeDto>> GetEmployeeWithBranch(int page, int limit);
         public Task<List<CreateEmployeeDto>> GetEmployeeWithBranchId(int id, int page, int limit);
         public Task<List<CreateEmployeeDto>> GetEmployee(int page, int limit);

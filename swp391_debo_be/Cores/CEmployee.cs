@@ -9,9 +9,9 @@ namespace swp391_debo_be.Cores
     {
         protected static IEmployeeRepository _employeeRepo = new EmployeeRepository();
 
-        public static List<User> GetDentistBasedOnTreamentId(int treatmentId)
+        public static List<User> GetDentistBasedOnTreamentId(int treatmentId, int branch)
         {
-            return _employeeRepo.GetDentistBasedOnTreamentId(treatmentId);
+            return _employeeRepo.GetDentistBasedOnTreamentId(treatmentId, branch);
         }
         public static Task<List<CreateEmployeeDto>> GetEmployeeWithBranch(int page, int limit)
         {

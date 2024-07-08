@@ -11,9 +11,9 @@ namespace swp391_debo_be.Repository.Implement
         private readonly IEmployeeDao employeeDao = new EmployeeDao();
 
 
-        public List<User> GetDentistBasedOnTreamentId(int treatmentId)
+        public List<User> GetDentistBasedOnTreamentId(int treatmentId, int branch)
         {
-            return employeeDao.GetDentistBasedOnTreamentId(treatmentId);
+            return employeeDao.GetDentistBasedOnTreamentId(treatmentId, branch);
         }
 
         public Task<List<CreateEmployeeDto>> GetEmployee(int page, int limit)

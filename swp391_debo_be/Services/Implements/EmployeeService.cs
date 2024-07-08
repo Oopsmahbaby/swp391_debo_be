@@ -10,7 +10,7 @@ namespace swp391_debo_be.Services.Implements
 {
     public class EmployeeService : IEmployeeService
     {
-        public ActionResult<ApiRespone> GetDentistBasedOnTreamentId(int treatmentId)
+        public ActionResult<ApiRespone> GetDentistBasedOnTreamentId(int treatmentId, int branch)
         {
             try
             {
@@ -19,7 +19,7 @@ namespace swp391_debo_be.Services.Implements
                 {
                     return new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Message = "Invalid treatment id", Success = false};
                 }
-                var result = CEmployee.GetDentistBasedOnTreamentId(treatmentId);
+                var result = CEmployee.GetDentistBasedOnTreamentId(treatmentId, branch);
 
                 if (result == null)
                 {

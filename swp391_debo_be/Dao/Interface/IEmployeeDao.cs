@@ -5,7 +5,7 @@ namespace swp391_debo_be.Dao.Interface
 {
     public interface IEmployeeDao
     {
-        public List<User> GetDentistBasedOnTreamentId(int treatmentId);
+        public List<User> GetDentistBasedOnTreamentId(int treatmentId, int branch);
         public Task<List<CreateEmployeeDto>> GetEmployeeWithBranch(int page, int limit);
         public Task<List<CreateEmployeeDto>> GetEmployeeWithBranchId(int id, int page, int limit);
         // Role Dentist and Staff
