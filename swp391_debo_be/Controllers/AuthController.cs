@@ -30,17 +30,34 @@ namespace swp391_debo_be.Controllers
         }
 
         [EnableCors("AllowSpecificOrigin")]
+        [HttpPost("credentials/login")]
+        public IActionResult LoginByCredentials([FromBody] UserRequestDto userRequest)
+        {
+            var result = _tokenService.GenerateAccessToken(userRequest);
+
+            return Ok(result);
+        }
+
+        [EnableCors("AllowSpecificOrigin")]
         [HttpPost("google/login")]
         public async Task<IActionResult> LoginByGoogle([FromQuery] string code)
         {
-            var userInfo = await ExchangeCodeForTokenAsync(code);
+            var tokenResponse = await ExchangeCodeForTokenAsync(code);
 
-            if (!_userService.ValidAdminEmail(userInfo.Email))
+            if (tokenResponse != null)
             {
-                return Ok(new ApiRespone { StatusCode = System.Net.HttpStatusCode.NotFound, Message = "Invalid Email", Success = false });
+                var userInfo = await GetUserInfoAsync(tokenResponse.AccessToken);
+
+                if (_userService.ValidAdminEmail(userInfo.Email))
+                {
+                    return Ok(new ApiRespone { StatusCode = System.Net.HttpStatusCode.OK, Message = "Valid accesss", Success = true, Data = tokenResponse });
+                } else
+                {
+                    return Ok(new ApiRespone { StatusCode = System.Net.HttpStatusCode.NotFound, Message = "Invalid Access", Success = false, Data = null });
+                }
             }
 
-            return Ok(new ApiRespone { StatusCode = System.Net.HttpStatusCode.OK, Message = "Valid accesss", Success = true, Data = userInfo });
+            return Ok(new ApiRespone { StatusCode = System.Net.HttpStatusCode.NotFound, Message = "Token Invalid", Success = false , Data = null });
         }
 
         [EnableCors("AllowSpecificOrigin")]
@@ -57,7 +74,7 @@ namespace swp391_debo_be.Controllers
             return Ok(new ApiRespone { Data = tokenResponse });
         }
 
-        private async Task<UserInfoGoogle> ExchangeCodeForTokenAsync(string code)
+        private async Task<TokenResponse> ExchangeCodeForTokenAsync(string code)
         {
             var initializer = new GoogleAuthorizationCodeFlow.Initializer
             {
@@ -70,14 +87,7 @@ namespace swp391_debo_be.Controllers
             var flow = new GoogleAuthorizationCodeFlow(initializer);
             var tokenResponse = await flow.ExchangeCodeForTokenAsync("user-id", code, "http://localhost:5173", CancellationToken.None);
 
-            if (tokenResponse != null)
-            {
-                // Get the user's profile information
-                var userInfo = await GetUserInfoAsync(tokenResponse.AccessToken);
-                return userInfo;
-            }
-
-            return null;
+            return tokenResponse;
         }
         private async Task<UserInfoGoogle> GetUserInfoAsync(string accessToken)
         {
