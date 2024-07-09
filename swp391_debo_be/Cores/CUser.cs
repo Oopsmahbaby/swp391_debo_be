@@ -139,5 +139,10 @@ namespace swp391_debo_be.Cores
         {
             return _userRepository.CreateDentistMajor(dentmaj);
         }
+
+        public static bool ValidAdminEmail(string email)
+        {
+            return _userRepository.ValidAdminEmail(email);
+        }
     }
 }

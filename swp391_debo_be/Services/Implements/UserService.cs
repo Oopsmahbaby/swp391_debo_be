@@ -370,5 +370,17 @@ namespace swp391_debo_be.Services.Implements
                 return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
             }
         }
+
+        public bool ValidAdminEmail(string email)
+        {
+            try
+            {
+                return CUser.ValidAdminEmail(email);
+
+            } catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }

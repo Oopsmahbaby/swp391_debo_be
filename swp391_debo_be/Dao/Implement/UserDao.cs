@@ -515,5 +515,16 @@ namespace swp391_debo_be.Dao.Implement
             return dentistMajor.Id;
         }
 
+        public bool ValidAdminEmail(string email)
+        {
+            User? user = _context.Users.Where(u => u.Email == email && u.Role == 1).FirstOrDefault();
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

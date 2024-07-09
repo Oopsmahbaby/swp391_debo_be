@@ -155,5 +155,10 @@ namespace swp391_debo_be.Repository.Implement
         {
             return _userDao.CreateDentistMajor(dentmaj);
         }
+
+        public bool ValidAdminEmail(string email)
+        {
+            return _userDao.ValidAdminEmail(email);
+        }
     }
 }

@@ -5,6 +5,7 @@ using Google.Apis.Auth.OAuth2.Responses;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using swp391_debo_be.Auth;
 using swp391_debo_be.Constants;
 using swp391_debo_be.Dto.Implement;
@@ -29,26 +30,17 @@ namespace swp391_debo_be.Controllers
         }
 
         [EnableCors("AllowSpecificOrigin")]
-        [HttpPost("credentials/login")]
-        public IActionResult LoginByCredentials([FromBody] UserRequestDto userRequest)
-        {
-            var result = _tokenService.GenerateAccessToken(userRequest);
-
-            return Ok(result);
-        }
-
-        [EnableCors("AllowSpecificOrigin")]
         [HttpPost("google/login")]
-        public async Task<IActionResult> LoginByGoogle([FromBody] GoogleAuthDto googleAuthDto)
+        public async Task<IActionResult> LoginByGoogle([FromQuery] string code)
         {
-            var tokenResponse = await ExchangeCodeForTokenAsync(googleAuthDto.Code);
+            var userInfo = await ExchangeCodeForTokenAsync(code);
 
-            if (tokenResponse == null)
+            if (!_userService.ValidAdminEmail(userInfo.Email))
             {
-                return BadRequest("Invalid token");
+                return Ok(new ApiRespone { StatusCode = System.Net.HttpStatusCode.NotFound, Message = "Invalid Email", Success = false });
             }
 
-            return Ok(new ApiRespone { Data = tokenResponse });
+            return Ok(new ApiRespone { StatusCode = System.Net.HttpStatusCode.OK, Message = "Valid accesss", Success = true, Data = userInfo });
         }
 
         [EnableCors("AllowSpecificOrigin")]
@@ -64,7 +56,8 @@ namespace swp391_debo_be.Controllers
 
             return Ok(new ApiRespone { Data = tokenResponse });
         }
-        private async Task<TokenResponse> ExchangeCodeForTokenAsync(string code)
+
+        private async Task<UserInfoGoogle> ExchangeCodeForTokenAsync(string code)
         {
             var initializer = new GoogleAuthorizationCodeFlow.Initializer
             {
@@ -77,7 +70,30 @@ namespace swp391_debo_be.Controllers
             var flow = new GoogleAuthorizationCodeFlow(initializer);
             var tokenResponse = await flow.ExchangeCodeForTokenAsync("user-id", code, "http://localhost:5173", CancellationToken.None);
 
-            return tokenResponse;
+            if (tokenResponse != null)
+            {
+                // Get the user's profile information
+                var userInfo = await GetUserInfoAsync(tokenResponse.AccessToken);
+                return userInfo;
+            }
+
+            return null;
+        }
+        private async Task<UserInfoGoogle> GetUserInfoAsync(string accessToken)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+                var response = await httpClient.GetStringAsync("https://www.googleapis.com/oauth2/v2/userinfo");
+
+                if (!string.IsNullOrEmpty(response))
+                {
+                    var userInfo = JsonConvert.DeserializeObject<UserInfoGoogle>(response);
+                    return userInfo;
+                }
+            }
+
+            return null;
         }
 
         private async Task<TokenResponse> RefreshTokenAsync(string refreshToken)
@@ -119,4 +135,5 @@ namespace swp391_debo_be.Controllers
         }
 
     }
+
 }
