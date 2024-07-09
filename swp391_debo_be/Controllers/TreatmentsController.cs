@@ -27,7 +27,7 @@ namespace swp391_debo_be.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Customer")]
+        //[Authorize(Roles = "Customer")]
         public async Task<IActionResult> GetAllTreatment([FromQuery] int page = 0, [FromQuery] int limit = 5)
         {
             var response = await _treatService.getAllTreatmentAsync(page, limit);

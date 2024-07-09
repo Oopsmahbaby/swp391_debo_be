@@ -10,14 +10,18 @@ namespace swp391_debo_be.Dao.Implement
     public class UserDao : IUserDao
     {
         private readonly DeboDev02Context _context = new DeboDev02Context(new Microsoft.EntityFrameworkCore.DbContextOptions<DeboDev02Context>());
+        private readonly DeboDev02Context _context2;
 
         public UserDao()
         {
+            _context = new DeboDev02Context();
+            _context2 = new DeboDev02Context();
         }
 
-        public UserDao(DeboDev02Context context)
+        public UserDao(DeboDev02Context context, DeboDev02Context context2)
         {
             this._context = context;
+            _context2 = context2;
         }
 
         public User CreateUser(User user)
@@ -52,7 +56,7 @@ namespace swp391_debo_be.Dao.Implement
 
         public User GetUserByEmail(string email)
         {
-            User? user = _context.Users.FirstOrDefault(u => u.Email == email);
+            User? user = _context2.Users.FirstOrDefault(u => u.Email == email);
 
             return user;
         }

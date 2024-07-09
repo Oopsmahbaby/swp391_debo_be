@@ -13,11 +13,11 @@ namespace swp391_debo_be.Cores
     {
         protected static IUserRepository _userRepository = new UserRepository();
 
-        static CUser()
-        {
-            var context = new DeboDev02Context(new DbContextOptions<DeboDev02Context>());
-            _userRepository = new UserRepository(new UserDao(context));
-        }
+        //static CUser()
+        //{
+        //    var context = new DeboDev02Context(new DbContextOptions<DeboDev02Context>());
+        //    _userRepository = new UserRepository(new UserDao(context));
+        //}
 
         public static User GetUserByPhoneNumber(string phoneNumber)
         {
