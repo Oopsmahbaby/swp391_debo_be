@@ -107,6 +107,7 @@ namespace swp391_debo_be.Dao.Implement
         {
             var query = from appointment in _context.Appointments
                         join employee in _context.Employees on appointment.DentId equals employee.Id
+                        join clinictreatment in _context.ClinicTreatments on appointment.TreatId equals clinictreatment.Id
                         join dentist in _context.Users on appointment.DentId equals dentist.Id into dentistGroup
                         from dent in dentistGroup.DefaultIfEmpty()
                         join tempDentist in _context.Users on appointment.TempDentId equals tempDentist.Id into tempDentistGroup
@@ -118,6 +119,7 @@ namespace swp391_debo_be.Dao.Implement
                         {
                             appointment.Id,
                             appointment.TreatId,
+                            clinictreatment.Name,
                             appointment.PaymentId,
                             appointment.DentId,
                             DentistFullName = (dent.FirstName + " " + dent.LastName),
