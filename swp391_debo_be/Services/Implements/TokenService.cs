@@ -142,7 +142,7 @@ namespace swp391_debo_be.Services.Implements
                 }
 
 
-                Claim claim = claims.FirstOrDefault(x => x.Type == JwtConstant.KeyClaim.Email);
+                Claim? claim = claims.FirstOrDefault(x => x.Type == "email");
                 if (claim == null)
                 {
                     return new ApiRespone { StatusCode = System.Net.HttpStatusCode.Forbidden, Message = "Invalid Claim", Success = false };

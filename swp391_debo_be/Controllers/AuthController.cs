@@ -139,9 +139,9 @@ namespace swp391_debo_be.Controllers
 
         [EnableCors("AllowSpecificOrigin")]
         [HttpPost("logout")]
-        public IActionResult Logout([FromBody] string token)
+        public ActionResult<ApiRespone> Logout([FromQuery] string token)
         {
-            return Ok(_tokenService.HandleLogout(token));
+            return _tokenService.HandleLogout(token);
         }
 
     }
