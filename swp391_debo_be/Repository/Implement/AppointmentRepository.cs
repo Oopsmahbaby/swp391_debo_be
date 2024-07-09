@@ -47,12 +47,12 @@ namespace swp391_debo_be.Repository.Implement
         }
         public Task<List<AppointmentHistoryDto>> GetHistoryAppointmentByUserID(Guid id)
         {
-            return _appointmentDao.GetHistoryAppointmentByUserID (id);
+            return appointmentDao.GetHistoryAppointmentByUserID (id);
         }
 
         public Task<List<AppointmentHistoryDto>> ViewAllAppointment(int page, int limit)
         {
-            return _appointmentDao.ViewAllAppointment(page, limit);
+            return appointmentDao.ViewAllAppointment(page, limit);
         }
 
         public List<object> GetAppointmentsByStartDateAndEndDateOfDentist(DateTime startDate, DateTime endDate, Guid id)
@@ -62,52 +62,52 @@ namespace swp391_debo_be.Repository.Implement
 
         public Task<List<AppointmentHistoryDto>> GetAppointmentByDentistId(int page, int limit, Guid dentistId)
         {
-            return _appointmentDao.GetAppointmentByDentistId (page, limit, dentistId);
+            return appointmentDao.GetAppointmentByDentistId (page, limit, dentistId);
         }
 
         public Task<List<AppointmentDetailsDto>> GetAppointmentetail(Guid id, int page, int limit)
         {
-            return _appointmentDao.GetAppointmentetail (id, page, limit);
+            return appointmentDao.GetAppointmentetail (id, page, limit);
         }
 
         public Task<AppointmentDetailsDto> ViewAppointmentDetail(Guid id)
         {
-            return _appointmentDao.ViewAppointmentDetail (id);
+            return appointmentDao.ViewAppointmentDetail (id);
         }
 
         public Task RescheduleAppointment(Guid id, AppointmentDetailsDto appmnt)
         {
-            return _appointmentDao.RescheduleAppointment (id, appmnt);
+            return appointmentDao.RescheduleAppointment (id, appmnt);
         }
 
         public Task<List<AppointmentDto>> GetDentistAvailableTimeSlots(DateTime startDate, Guid dentId)
         {
-            return _appointmentDao.GetDentistAvailableTimeSlots (startDate, dentId);
+            return appointmentDao.GetDentistAvailableTimeSlots (startDate, dentId);
         }
 
         public Task<List<AppointmentDetailsDto>> GetRescheduleTempDent(DateTime startDate, int timeSlot, int treatId)
         {
-            return _appointmentDao.GetRescheduleTempDent (startDate, timeSlot, treatId);
+            return appointmentDao.GetRescheduleTempDent (startDate, timeSlot, treatId);
         }
 
         public Task RescheduleByDentist(AppointmentDetailsDto appmnt)
         {
-            return _appointmentDao.RescheduleByDentist (appmnt);
+            return appointmentDao.RescheduleByDentist (appmnt);
         }
 
         public Task UpdatAppointmenteNote(AppointmentDetailsDto appmnt)
         {
-            return _appointmentDao.UpdatAppointmenteNote (appmnt);
+            return appointmentDao.UpdatAppointmenteNote (appmnt);
         }
 
         public Task SaveRescheduleToken(Guid appmtId, string rescheduleToken)
         {
-            return _appointmentDao.SaveRescheduleToken (appmtId, rescheduleToken);
+            return appointmentDao.SaveRescheduleToken (appmtId, rescheduleToken);
         }
 
         public Task<List<AppointmentDetailsDto>> GetAnotherDentist(Guid appointmentId, Guid currentDentistId, DateTime startDate, int timeSlot, int treatId)
         {
-            return _appointmentDao.GetAnotherDentist(appointmentId, currentDentistId, startDate, timeSlot, treatId);
+            return appointmentDao.GetAnotherDentist(appointmentId, currentDentistId, startDate, timeSlot, treatId);
         }
     }
 }
