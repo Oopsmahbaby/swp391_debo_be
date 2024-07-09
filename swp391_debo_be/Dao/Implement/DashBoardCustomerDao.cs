@@ -219,5 +219,62 @@ namespace swp391_debo_be.Dao.Implement
 
             return result.Cast<object>().ToList();
         }
+
+        public async Task<object> TotalRevenueOfBranchId(int id)
+        {
+            var totalRevenue = await(from a in _context.Appointments
+                                     join e in _context.Employees on a.DentId equals e.Id
+                                     join p in _context.Payments on a.PaymentId equals p.Id
+                                     where e.BrId == id && p.PaymentStatus == "Success"
+                                     select p.RequiredAmount)
+                                  .SumAsync();
+
+            return totalRevenue;
+        }
+
+        public async Task<List<object>> CountAppointmentsByTreatmentAndBranchId(int id)
+        {
+            var result = await(from a in _context.Appointments
+                               join e in _context.Employees on a.DentId equals e.Id
+                               join ct in _context.ClinicTreatments on a.TreatId equals ct.Id
+                               where e.BrId == id
+                               group new { a, ct } by new { a.TreatId, ct.Name } into g
+                               select new
+                               {
+                                   Treat_ID = g.Key.TreatId,
+                                   TreatmentName = g.Key.Name,
+                                   AppointmentCount = g.Count()
+                               }).ToListAsync();
+
+            // Convert the result to a list of objects
+            var resultList = result.Select(x => (object)new
+            {
+                Treat_ID = x.Treat_ID,
+                TreatmentName = x.TreatmentName,
+                AppointmentCount = x.AppointmentCount
+            }).ToList();
+
+            return resultList.Cast<object>().ToList();
+        }
+
+        public async Task<List<object>> CountAppointmentsByTreatmentCategoryAndBranchId(int branchId)
+        {
+            var result = await (from tc in _context.TreatmentCategories
+                                join ct in _context.ClinicTreatments on tc.Id equals ct.Category into ctGroup
+                                from ct in ctGroup.DefaultIfEmpty()
+                                join a in _context.Appointments on ct.Id equals a.TreatId into aGroup
+                                from a in aGroup.DefaultIfEmpty()
+                                join e in _context.Employees on a.DentId equals e.Id
+                                where e.BrId == branchId
+                                group a by new { tc.Id, tc.Name } into g
+                                select new
+                                {
+                                    CategoryID = g.Key.Id,
+                                    CategoryName = g.Key.Name,
+                                    TotalAppointments = g.Count()
+                                }).ToListAsync();
+
+            return result.Cast<object>().ToList();
+        }
     }
 }

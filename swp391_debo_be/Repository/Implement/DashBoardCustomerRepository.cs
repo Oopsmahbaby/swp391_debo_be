@@ -24,14 +24,29 @@ namespace swp391_debo_be.Repository.Implement
             return _dashBoardDao.CountAppointmentsByTreatment();
         }
 
+        public Task<List<object>> CountAppointmentsByTreatmentAndBranchId(int id)
+        {
+            return _dashBoardDao.CountAppointmentsByTreatmentAndBranchId(id);
+        }
+
         public Task<List<object>> CountAppointmentsByTreatmentCategory()
         {
             return _dashBoardDao.CountAppointmentsByTreatmentCategory();
         }
 
+        public Task<List<object>> CountAppointmentsByTreatmentCategoryAndBranchId(int id)
+        {
+            return _dashBoardDao.CountAppointmentsByTreatmentCategoryAndBranchId(id);
+        }
+
         public Task<List<object>> EmployeeSalaryDistribution()
         {
             return _dashBoardDao.EmployeeSalaryDistribution();
+        }
+
+        public Task<object> TotalRevenueOfBranchId(int id)
+        {
+            return _dashBoardDao.TotalRevenueOfBranchId(id);
         }
 
         public Task<List<DashboardCustomerDto>> ViewAppointmentState(Guid id)
