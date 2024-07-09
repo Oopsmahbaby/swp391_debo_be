@@ -12,13 +12,13 @@ namespace swp391_debo_be.Cores
     public class CAppointment
     {
         protected static IAppointmentRepository appointmentRepository = new AppointmentRepository();
-        private static readonly AppointmentRepository _appointmentRepo;
+        //private static readonly AppointmentRepository _appointmentRepo;
 
-        static CAppointment()
-        {
-            var context = new DeboDev02Context(new DbContextOptions<DeboDev02Context>());
-            _appointmentRepo = new AppointmentRepository(new AppointmentDao(context));
-        }
+        //static CAppointment()
+        //{
+        //    var context = new DeboDev02Context(new DbContextOptions<DeboDev02Context>());
+        //    _appointmentRepo = new AppointmentRepository(new AppointmentDao(context));
+        //}
 
 
         public static List<object> GetAppointmentsByStartDateAndEndDate(DateTime startDate, DateTime end ,Guid Id)

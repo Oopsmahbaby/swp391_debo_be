@@ -10,16 +10,16 @@ namespace swp391_debo_be.Repository.Implement
     public class AppointmentRepository : IAppointmentRepository
     {
         private readonly IAppointmentDao appointmentDao = new AppointmentDao();
-        private readonly IAppointmentDao _appointmentDao;
+        //private readonly IAppointmentDao _appointmentDao;
 
         public AppointmentRepository()
         {
         }
 
-        public AppointmentRepository(IAppointmentDao appointmentDao)
-        {
-            _appointmentDao = appointmentDao;
-        }
+        //public AppointmentRepository(IAppointmentDao appointmentDao)
+        //{
+        //    _appointmentDao = appointmentDao;
+        //}
 
         public List<Appointment> CreateAppointment(AppointmentDto appointment, Guid cusId)
         {
