@@ -12,9 +12,9 @@ namespace swp391_debo_be.Repository.Implement
         private readonly IAppointmentDao appointmentDao = new AppointmentDao();
         //private readonly IAppointmentDao _appointmentDao;
 
-        public AppointmentRepository()
-        {
-        }
+        //public AppointmentRepository()
+        //{
+        //}
 
         //public AppointmentRepository(IAppointmentDao appointmentDao)
         //{

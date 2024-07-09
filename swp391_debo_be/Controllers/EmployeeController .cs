@@ -16,7 +16,7 @@ namespace swp391_debo_be.Controllers
 
         public EmployeeController(IEmployeeService employeeService)
         {
-            this._employeeService = employeeService;
+            _employeeService = employeeService;
         }
 
         [HttpGet("dentists")]
@@ -44,7 +44,7 @@ namespace swp391_debo_be.Controllers
         }
 
         [HttpGet("getempwithbranchid/{id}")]
-        public async Task<IActionResult> GetEmployeeWithBranchId(int id, int page, int limit)
+        public async Task<IActionResult> GetEmployeeWithBranchId(int id, [FromQuery] int page = 0, [FromQuery] int limit = 5)
         {
             var response = await _employeeService.GetEmployeeWithBranchId(id, page, limit);
             return new ObjectResult(response)
