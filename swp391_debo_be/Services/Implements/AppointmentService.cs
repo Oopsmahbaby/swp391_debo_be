@@ -726,8 +726,8 @@ namespace swp391_debo_be.Services.Implements
             {
                 await CAppointment.RescheduleByDentist(appmnt);
                 var data = await CAppointment.ViewAppointmentDetail(appmnt.Id);
-                await SendConfirmEmailToDentist(appmnt);
-                await SendConfirmEmailToTempDentist(appmnt);
+                await SendConfirmEmailToDentist(data);
+                await SendConfirmEmailToTempDentist(data);
                 return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = data, Message = "Rescheduled successfully.", Success = true };
             }
             catch (Exception ex)
