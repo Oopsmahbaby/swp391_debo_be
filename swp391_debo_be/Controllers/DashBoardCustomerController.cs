@@ -93,5 +93,35 @@ namespace swp391_debo_be.Controllers
                 StatusCode = (int)response.StatusCode
             };
         }
+
+        [HttpGet("branchtotalrevenue/{id}")]
+        public async Task<IActionResult> TotalRevenueOfBranchId(int id)
+        {
+            var response = await _dbcus.TotalRevenueOfBranchId(id);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+
+        [HttpGet("branch/distribution/treatment/{id}")]
+        public async Task<IActionResult> CountAppointmentsByTreatmentAndBranchId(int id)
+        {
+            var response = await _dbcus.CountAppointmentsByTreatmentAndBranchId(id);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+
+        [HttpGet("branch/distribution/category/{id}")]
+        public async Task<IActionResult> CountAppointmentsByTreatmentCategoryAndBranchId(int id)
+        {
+            var response = await _dbcus.CountAppointmentsByTreatmentCategoryAndBranchId(id);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
     }
 }

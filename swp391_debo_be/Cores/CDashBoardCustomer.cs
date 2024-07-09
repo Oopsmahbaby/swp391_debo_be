@@ -60,5 +60,19 @@ namespace swp391_debo_be.Cores
         {
             return _dashboardRepo.EmployeeSalaryDistribution();
         }
+
+        public static Task<object> TotalRevenueOfBranchId(int id)
+        {
+            return _dashboardRepo.TotalRevenueOfBranchId(id);
+        }
+
+        public static Task<List<object>> CountAppointmentsByTreatmentAndBranchId(int id)
+        {
+            return _dashboardRepo.CountAppointmentsByTreatmentAndBranchId(id);
+        }
+        public static Task<List<object>> CountAppointmentsByTreatmentCategoryAndBranchId(int id)
+        {
+            return _dashboardRepo.CountAppointmentsByTreatmentCategoryAndBranchId(id);
+        }
     }
 }
