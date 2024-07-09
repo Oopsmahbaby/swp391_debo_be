@@ -242,14 +242,23 @@ namespace swp391_debo_be.Dao.Implement
         {
             IQueryable<AppointmentHistoryDto> query = from a in _context.Appointments
                                                       join ct in _context.ClinicTreatments on a.TreatId equals ct.Id
+                                                      join cus in _context.Users on a.CusId equals cus.Id into cusGroup
+                                                      from cus in cusGroup.DefaultIfEmpty()
+                                                      join dent in _context.Users on a.DentId equals dent.Id into dentGroup
+                                                      from dent in dentGroup.DefaultIfEmpty()
+                                                      join tempDent in _context.Users on a.TempDentId equals tempDent.Id into tempDentGroup
+                                                      from tempDent in tempDentGroup.DefaultIfEmpty()
                                                       select new AppointmentHistoryDto
                                                       {
                                                           Id = a.Id,
                                                           TreatName = ct.Name,
                                                           PaymentId = a.PaymentId,
                                                           DentId = a.DentId,
+                                                          DentName = dent != null ? $"{dent.FirstName} {dent.LastName}" : null,
                                                           TempDentId = a.TempDentId,
+                                                          TempDentName = tempDent != null ? $"{tempDent.FirstName} {tempDent.LastName}" : null,
                                                           CusId = a.CusId,
+                                                          CustomerName = cus != null ? $"{cus.FirstName} {cus.LastName}" : null,
                                                           CreatorId = a.CreatorId,
                                                           IsCreatedByStaff = a.IsCreatedByStaff,
                                                           CreatedDate = a.CreatedDate,
@@ -268,6 +277,7 @@ namespace swp391_debo_be.Dao.Implement
             var appointments = await query.ToListAsync();
             return appointments;
         }
+
 
         public List<object> GetAppointmentsByStartDateAndEndDateOfDentist(DateTime startDate, DateTime endDate, Guid Id)
         {
