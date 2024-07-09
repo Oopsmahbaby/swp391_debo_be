@@ -13,5 +13,8 @@ namespace swp391_debo_be.Services.Interfaces
         public Task<ApiRespone> CountAppointmentsByTreatmentCategory();
         public Task<ApiRespone> CountAppointmentsByTreatment();
         public Task<ApiRespone> EmployeeSalaryDistribution();
+        public Task<ApiRespone> TotalRevenueOfBranchId(int id);
+        public Task<ApiRespone> CountAppointmentsByTreatmentAndBranchId(int id);
+        public Task<ApiRespone> CountAppointmentsByTreatmentCategoryAndBranchId(int id);
     }
 }
