@@ -58,6 +58,15 @@ namespace swp391_debo_be.Dao.Implement
                 {
                     isGeneralCheckup = true;
                     appointment.Status = "future";
+                    User? user = _context.Users.FirstOrDefault(u => u.Id == appointment.CusId);
+
+                    if (user == null)
+                    {
+                        return null;
+                    }
+
+                    user.IsFirstTime = false;
+                    _context.Update(user);
                     _context.Update(appointment);
                     _context.SaveChanges();
                 }
