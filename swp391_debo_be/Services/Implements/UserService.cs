@@ -382,5 +382,18 @@ namespace swp391_debo_be.Services.Implements
                 return false;
             }
         }
+
+        public async Task<ApiRespone> FirstTimeBookingAsync(Guid id)
+        {
+            try
+            {
+                var data = await CUser.FirstTimeBookingAsync(id);
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = data, Message = "First Time status retrieve successfully.", Success = true };
+            }
+            catch (Exception ex)
+            {
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
+            }
+        }
     }
 }

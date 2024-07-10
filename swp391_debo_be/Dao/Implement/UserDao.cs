@@ -351,6 +351,7 @@ namespace swp391_debo_be.Dao.Implement
                                   DateOfBirthday = u.DateOfBirthday,
                                   MedRec = u.MedRec,
                                   Avt = u.Avt,
+                                  IsFirstTime = u.IsFirstTime
                               }).FirstOrDefaultAsync();
             return user;
         }
@@ -453,6 +454,38 @@ namespace swp391_debo_be.Dao.Implement
             else
             {
                 ClinicTreatment? clinicTreatment = _context.ClinicTreatments.Where(t => t.Id == 8).FirstOrDefault();
+                return new
+                {
+                    IsFirstTime = true,
+                    Treatment = clinicTreatment
+                };
+            }
+        }
+
+        public async Task<object> FirstTimeBookingAsync(Guid userId)
+        {
+            var user = await GetUserById2(userId);
+
+            if (user == null)
+            {
+                return new
+                {
+                    IsFirstTime = false,
+                    Treatment = new List<string>()
+                };
+            }
+
+            if (!(bool)user.IsFirstTime)
+            {
+                return new
+                {
+                    IsFirstTime = false,
+                    Treatment = new List<string>()
+                };
+            }
+            else
+            {
+                var clinicTreatment = await _context.ClinicTreatments.Where(t => t.Id == 8).FirstOrDefaultAsync();
                 return new
                 {
                     IsFirstTime = true,

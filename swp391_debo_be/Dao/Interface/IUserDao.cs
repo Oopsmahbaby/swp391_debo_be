@@ -45,6 +45,7 @@ namespace swp391_debo_be.Dao.Interface
         public Task UploadMedRecPatient(Guid id, EmployeeDto emp);
         public Task UpdatePassword(Guid id, EmployeeDto emp);
         public object firstTimeBooking(Guid userId);
+        public Task<object> FirstTimeBookingAsync(Guid userId);
         public Task<Guid> CreateDentistMajor(DentistMajorDto dentmaj);
         bool ValidAdminEmail(string email);
     }

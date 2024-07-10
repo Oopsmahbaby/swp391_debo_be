@@ -112,7 +112,7 @@ namespace swp391_debo_be.Dao.Implement
                     Description = treatment.Description,
                     Price = (double)treatment.Price,
                     RuleName = ruleName,
-                    NumOfAppointment = (int)treatment.NumOfApp
+                    NumOfAppointment = treatment.NumOfApp
                 };
 
                 result.Add(treatmenBranchReturnDto);
