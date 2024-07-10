@@ -303,6 +303,17 @@ namespace swp391_debo_be.Controllers
             return _userService.firstTimeBooking(userId);
         }
 
+        [Microsoft.AspNetCore.Mvc.HttpGet("patient/isfirsttimeee")]
+        public async Task<IActionResult> FirstTimeBookingAsync(Guid id)
+        {
+            var response = await _userService.FirstTimeBookingAsync(id);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+
+
         [Microsoft.AspNetCore.Mvc.HttpPut("dentistmajor")]
         public async Task<IActionResult> CreateDentistMajor(DentistMajorDto dentmaj)
         {

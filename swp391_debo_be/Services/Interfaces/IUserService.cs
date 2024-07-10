@@ -25,6 +25,7 @@ namespace swp391_debo_be.Services.Interfaces
         public Task<ApiRespone> UploadMedRecPatient(Guid id, EmployeeDto emp);
         public Task<ApiRespone> UpdatePassword(Guid id, EmployeeDto emp);
         ApiRespone firstTimeBooking(string userId);
+        public Task<ApiRespone> FirstTimeBookingAsync(Guid id);
         public Task<ApiRespone> CreateDentistMajor(DentistMajorDto dentmaj);
         bool ValidAdminEmail(string email);
     }

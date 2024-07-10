@@ -160,5 +160,10 @@ namespace swp391_debo_be.Repository.Implement
         {
             return _userDao.ValidAdminEmail(email);
         }
+
+        public Task<object> FirstTimeBookingAsync(Guid userId)
+        {
+            return _userDao.FirstTimeBookingAsync(userId);
+        }
     }
 }
