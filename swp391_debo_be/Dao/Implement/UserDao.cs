@@ -431,7 +431,7 @@ namespace swp391_debo_be.Dao.Implement
 
         public object firstTimeBooking(Guid userId)
         {
-            var user = GetUserById(userId);
+            var user = _context.Users.Where(u => u.Id == userId).FirstOrDefault();
 
             if (user == null)
             {
@@ -442,7 +442,7 @@ namespace swp391_debo_be.Dao.Implement
                 };
             }
 
-            if (!(bool)user.IsFirstTime)
+            if ((bool)user.IsFirstTime == false)
             {
                 return new
                 {
