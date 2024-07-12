@@ -344,7 +344,8 @@ namespace swp391_debo_be.Services.Implements
             {
                 var user = await CUser.GetUserById2(id);
                 var email = new MimeMessage();
-                email.From.Add(MailboxAddress.Parse(_config.GetSection("EmailUsername").Value));
+                var fromAddress = new MailboxAddress("DEBO Clinic", _config.GetSection("EmailUsername").Value);
+                email.From.Add(fromAddress);
                 email.To.Add(MailboxAddress.Parse(user.Email));
                 email.Subject = $"[DEBO] Dear {user.FirstName} {user.LastName}, Appointment Reschedule Confirmation";
                 string body = $@"
@@ -438,7 +439,8 @@ namespace swp391_debo_be.Services.Implements
                 var tempdent = await CUser.GetUserById2((Guid)appmnt.Temp_Dent_Id!);
                 var user = await CUser.GetUserById2((Guid)appmnt.Cus_Id!);
                 var email = new MimeMessage();
-                email.From.Add(MailboxAddress.Parse(_config.GetSection("EmailUsername").Value));
+                var fromAddress = new MailboxAddress("DEBO Clinic", _config.GetSection("EmailUsername").Value);
+                email.From.Add(fromAddress);
                 email.To.Add(MailboxAddress.Parse(dentist.Email));
                 email.Subject = $"[DEBO] Dear {dentist.FirstName} {dentist.LastName} Reschedule Confirmation";
                 string body = $@"
@@ -523,7 +525,8 @@ namespace swp391_debo_be.Services.Implements
                 var tempdent = await CUser.GetUserById2((Guid)appmnt.Temp_Dent_Id!);
                 var user = await CUser.GetUserById2((Guid)appmnt.Cus_Id!);
                 var email = new MimeMessage();
-                email.From.Add(MailboxAddress.Parse(_config.GetSection("EmailUsername").Value));
+                var fromAddress = new MailboxAddress("DEBO Clinic", _config.GetSection("EmailUsername").Value);
+                email.From.Add(fromAddress);
                 email.To.Add(MailboxAddress.Parse(tempdent.Email));
                 email.Subject = $"[DEBO] Dear {tempdent.FirstName} {tempdent.LastName} Appointment Assignment";
                 string body = $@"
@@ -608,7 +611,8 @@ namespace swp391_debo_be.Services.Implements
                 var tempdent = appmnt.Temp_Dent_Id.HasValue ? await CUser.GetUserById2((Guid)appmnt.Temp_Dent_Id) : null;
                 var user = await CUser.GetUserById2((Guid)appmnt.Cus_Id!);
                 var email = new MimeMessage();
-                email.From.Add(MailboxAddress.Parse(_config.GetSection("EmailUsername").Value));
+                var fromAddress = new MailboxAddress("DEBO Clinic", _config.GetSection("EmailUsername").Value);
+                email.From.Add(fromAddress);
                 if (appmnt.Temp_Dent_Id != null)
                 {
                     email.To.Add(MailboxAddress.Parse(tempdent!.Email));
