@@ -490,8 +490,7 @@ namespace swp391_debo_be.Dao.Implement
             // Update the appointment
             appointment.StartDate = newStartDate;
             appointment.TimeSlot = appmnt.TimeSlot;
-            appointment.Description = appmnt.Description;
-            appointment.Note = appmnt.Note;
+            appointment.Status = "future"; 
             appointment.RescheduleCount += 1;
 
             // Save the changes to the database
