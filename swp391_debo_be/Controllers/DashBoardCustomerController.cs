@@ -54,7 +54,7 @@ namespace swp391_debo_be.Controllers
             };
         }
 
-        [HttpGet("dentist/totalPatient/{id}")]
+        [HttpGet("dentist/totalAppointment/{id}")]
         public async Task<IActionResult> ViewTotalAppointmentEachMonthsByDentist(Guid id)
         {
             var response = await _dbcus.ViewTotalAppointmentEachMonthsByDentist(id);
