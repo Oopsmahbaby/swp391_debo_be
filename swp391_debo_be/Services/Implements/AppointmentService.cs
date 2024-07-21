@@ -745,6 +745,7 @@ namespace swp391_debo_be.Services.Implements
                     string confirmToken = appmnt.RescheduleToken;
                     string confirmationLink = $"http://localhost:5173/patient/reschedule/{confirmToken}";
                     await SendEmailWithConfirmationLink((Guid)appmnt.Cus_Id!, confirmationLink);
+                    await CAppointment.AfterManagerAcceptRescheduleRequest(appmnt.Id);
                     return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = confirmToken, Success = true, Message = "Send Email successfully" };
                 }
                 else
