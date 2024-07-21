@@ -719,7 +719,7 @@ namespace swp391_debo_be.Services.Implements
                     string confirmToken = JwtProvider.GenerateToken(claims);
                     await CAppointment.SaveRescheduleToken(appmnt.Id, confirmToken);
                     await CAppointment.RescheduleRequest(appmnt.Id);
-                    //string confirmationLink = $"http://localhost:5173/patient/reschedule/{confirmToken}";
+                    //string confirmationLink = $"http://localhost:4173/patient/reschedule/{confirmToken}";
                     //await SendEmailWithConfirmationLink((Guid)appmnt.Cus_Id!, confirmationLink);
                     //await CAppointment.AfterManagerAcceptRescheduleRequest(appmnt.Id);
                     return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = confirmToken, Success = true, Message = "Generate token successfully" };
@@ -743,8 +743,8 @@ namespace swp391_debo_be.Services.Implements
                 var appointment = await CAppointment.ViewAppointmentDetail(appmnt.Id);
                 if (appmnt.IsRequestedDentReschedule == true)
                 {
-                    string confirmToken = appmnt.RescheduleToken;
-                    string confirmationLink = $"http://localhost:5173/patient/reschedule/{confirmToken}";
+                    string confirmToken = appmnt.RescheduleToken!;
+                    string confirmationLink = $"http://localhost:4173/patient/reschedule/{confirmToken}";
                     await SendEmailWithConfirmationLink((Guid)appmnt.Cus_Id!, confirmationLink);
                     await CAppointment.AfterManagerAcceptRescheduleRequest(appmnt.Id);
                     return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = confirmToken, Success = true, Message = "Send Email successfully" };
