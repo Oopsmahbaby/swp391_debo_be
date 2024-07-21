@@ -750,7 +750,7 @@ namespace swp391_debo_be.Services.Implements
                 else
                 {
                     await CAppointment.ManagerRejectRescheduleRequest(appmnt.Id);
-                    return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = "Manager does not confirm your rechedule request. Please wait!", Success = false };
+                    return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = null, Success = true, Message = "Manager Rejected" };
                 }
             }
             catch (Exception ex)
