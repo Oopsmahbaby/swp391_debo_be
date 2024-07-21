@@ -29,7 +29,7 @@ namespace swp391_debo_be.Controllers
         public IActionResult VnpayReturn([FromQuery] VnpayPayResponse response)
         {
             var result = _paymentService.HandlePaymentResponse(response);
-            return Redirect($"http://localhost:5173/patient/booking/payment-status/{result.PaymentId}");
+            return Redirect($"http://localhost:4173/patient/booking/payment-status/{result.PaymentId}");
         }
 
         [HttpGet("{id}/status")]
