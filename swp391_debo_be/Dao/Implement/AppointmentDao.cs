@@ -651,7 +651,7 @@ namespace swp391_debo_be.Dao.Implement
                 throw new ArgumentException("Appointment not found.");
             }
             appointment.RescheduleToken = null;
-            appointment.IsRequestedDentReschedule = false;
+            //appointment.IsRequestedDentReschedule = false;
             _context.Appointments.Update(appointment);
             await _context.SaveChangesAsync();
         }
