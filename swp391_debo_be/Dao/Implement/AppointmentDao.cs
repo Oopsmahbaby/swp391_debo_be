@@ -418,6 +418,7 @@ namespace swp391_debo_be.Dao.Implement
                 CreatorName = appointment.Creator?.FirstName + " " + appointment.Creator?.LastName,
                 Dent_Avt = appointment.TempDentId != null ? appointment.TempDent?.Avt : appointment.Dent?.Avt,
                 RescheduleToken = appointment.RescheduleToken,
+                IsRequestedDentReschedule = appointment.IsRequestedDentReschedule,
             };
 
             return appointmentDetails;
@@ -598,6 +599,7 @@ namespace swp391_debo_be.Dao.Implement
                     throw new ArgumentException("Only appointments with status 'pending', 'on-going', or 'future' can be rescheduled.");
                 }
                 appointment.RescheduleToken = null;
+                appointment.IsRequestedDentReschedule = false;
                 appointment.TempDentId = appmnt.Temp_Dent_Id;
                 _context.Appointments.Update(appointment);
                 await _context.SaveChangesAsync();
@@ -616,6 +618,43 @@ namespace swp391_debo_be.Dao.Implement
             await _context.SaveChangesAsync();
         }
 
+        public async Task RescheduleRequest(Guid appmntId)
+        {
+            var appointment = await _context.Appointments.FindAsync(appmntId);
+            if (appointment == null)
+            {
+                throw new ArgumentException("Appointment not found.");
+            }
+            appointment.IsRequestedDentReschedule = true;
+            _context.Appointments.Update(appointment);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AfterManagerAcceptRescheduleRequest(Guid appmntId)
+        {
+            var appointment = await _context.Appointments.FindAsync(appmntId);
+            if (appointment == null)
+            {
+                throw new ArgumentException("Appointment not found.");
+            }
+            appointment.IsRequestedDentReschedule = false;
+            _context.Appointments.Update(appointment);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task ManagerRejectRescheduleRequest(Guid appmntId)
+        {
+            var appointment = await _context.Appointments.FindAsync(appmntId);
+            if (appointment == null)
+            {
+                throw new ArgumentException("Appointment not found.");
+            }
+            appointment.RescheduleToken = null;
+            appointment.IsRequestedDentReschedule = false;
+            _context.Appointments.Update(appointment);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task SaveRescheduleToken(Guid appmtId, string rescheduleToken)
         {
             var appointment = await _context.Appointments.FindAsync(appmtId);
@@ -626,6 +665,45 @@ namespace swp391_debo_be.Dao.Implement
             appointment.RescheduleToken = rescheduleToken;
             _context.Appointments.Update(appointment);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<object>> ViewRescheduleRequest(int branchId)
+        {
+            var query = from a in _context.Appointments
+                        join e in _context.Employees on a.DentId equals e.Id
+                        join dentUser in _context.Users on a.DentId equals dentUser.Id
+                        join cusUser in _context.Users on a.CusId equals cusUser.Id
+                        join ct in _context.ClinicTreatments on a.TreatId equals ct.Id
+                        join tempDentUser in _context.Users on a.TempDentId equals tempDentUser.Id into tempDentUserJoin
+                        from tempDentUser in tempDentUserJoin.DefaultIfEmpty()
+                        where e.BrId == branchId &&
+                              a.IsRequestedDentReschedule == true &&
+                              a.Status != "canceled" &&
+                              a.Status != "pending"
+                        select new
+                        {
+                            AppointmentId = a.Id,
+                            TreatmentId = a.TreatId,
+                            TreatmentName = ct.Name,
+                            PaymentId = a.PaymentId,
+                            DentistId = a.DentId,
+                            DentistFullName = dentUser.FirstName + " " + dentUser.LastName,
+                            TempDentistId = a.TempDentId,
+                            TempDentistFullName = (tempDentUser != null ? tempDentUser.FirstName + " " + tempDentUser.LastName : null),
+                            CustomerId = a.CusId,
+                            CustomerFullName = cusUser.FirstName + " " + cusUser.LastName,
+                            CreatorId = a.CreatorId,
+                            CreatedDate = a.CreatedDate,
+                            StartDate = a.StartDate,
+                            TimeSlot = a.TimeSlot,
+                            Status = a.Status,
+                            Description = a.Description,
+                            Note = a.Note,
+                            RescheduleToken = a.RescheduleToken,
+                            a.IsRequestedDentReschedule
+                        };
+
+            return await query.ToListAsync<object>();
         }
 
 

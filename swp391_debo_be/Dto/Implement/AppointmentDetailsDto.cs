@@ -24,5 +24,6 @@ namespace swp391_debo_be.Dto.Implement
         public string? CreatorName { get; set; }
         public string? Dent_Avt {  get; set; }
         public string? RescheduleToken { get; set; }
+        public bool? IsRequestedDentReschedule { get; set; }
     }
 }

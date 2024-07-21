@@ -8,12 +8,12 @@ namespace swp391_debo_be.Services.Implements
 {
     public class BranchService : IBranchService
     {
-        private readonly CBranch _cBranch;
+        //private readonly CBranch _cBranch;
 
-        public BranchService(CBranch cBranch)
-        {
-            _cBranch = cBranch;
-        }
+        //public BranchService(CBranch cBranch)
+        //{
+        //    _cBranch = cBranch;
+        //}
 
         public async Task<ApiRespone> activeBranchAsync(int id)
         {

@@ -58,6 +58,9 @@ public partial class DeboDev02Context : DbContext
             entity.Property(e => e.DentId).HasColumnName("Dent_ID");
             entity.Property(e => e.Description).HasMaxLength(2000);
             entity.Property(e => e.IsCreatedByStaff).HasColumnName("Is_Created_By_Staff");
+            entity.Property(e => e.IsRequestedDentReschedule)
+                .HasDefaultValue(false)
+                .HasColumnName("isRequestedDentReschedule");
             entity.Property(e => e.Note).HasMaxLength(2000);
             entity.Property(e => e.PaymentId).HasColumnName("Payment_ID");
             entity.Property(e => e.StartDate).HasColumnName("Start_Date");

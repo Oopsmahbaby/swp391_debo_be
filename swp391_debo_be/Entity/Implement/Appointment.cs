@@ -37,6 +37,8 @@ public partial class Appointment
 
     public string? RescheduleToken { get; set; }
 
+    public bool? IsRequestedDentReschedule { get; set; }
+
     public virtual User? Creator { get; set; }
 
     public virtual User? Cus { get; set; }

@@ -109,5 +109,25 @@ namespace swp391_debo_be.Repository.Implement
         {
             return appointmentDao.GetAnotherDentist(appointmentId, currentDentistId, startDate, timeSlot, treatId);
         }
+
+        public Task RescheduleRequest(Guid appmntId)
+        {
+            return appointmentDao.RescheduleRequest(appmntId);
+        }
+
+        public Task<List<object>> ViewRescheduleRequest(int branchId)
+        {
+            return appointmentDao.ViewRescheduleRequest(branchId);
+        }
+
+        public Task AfterManagerAcceptRescheduleRequest(Guid appmntId)
+        {
+            return appointmentDao.AfterManagerAcceptRescheduleRequest(appmntId);
+        }
+
+        public Task ManagerRejectRescheduleRequest(Guid appmntId)
+        {
+            return appointmentDao.ManagerRejectRescheduleRequest(appmntId);
+        }
     }
 }

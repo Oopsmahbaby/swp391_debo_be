@@ -700,11 +700,14 @@ namespace swp391_debo_be.Services.Implements
             }
         }
 
-        public async Task<ApiRespone> GenerateConfirmEmailToken(AppointmentDetailsDto appmnt)
+        public async Task<ApiRespone> GenerateConfirmToken(AppointmentDetailsDto appmnt)
         {
             try
             {
-                List<Claim> claims = new List<Claim>
+                var appointment = await CAppointment.ViewAppointmentDetail(appmnt.Id);
+                if (appointment.IsRequestedDentReschedule == false)
+                {
+                    List<Claim> claims = new List<Claim>
                 {
                     new Claim("AppointmentId", appmnt.Id.ToString()),
                     new Claim("DentId", appmnt.Dent_Id?.ToString() ?? string.Empty),
@@ -712,11 +715,43 @@ namespace swp391_debo_be.Services.Implements
                     new Claim("CusId", appmnt.Cus_Id.ToString() ?? string.Empty)
                 };
 
-                string confirmToken = JwtProvider.GenerateToken(claims);
-                await CAppointment.SaveRescheduleToken(appmnt.Id, confirmToken);
-                string confirmationLink = $"http://localhost:5173/patient/reschedule/{confirmToken}";
-                await SendEmailWithConfirmationLink((Guid)appmnt.Cus_Id!, confirmationLink);
-                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = confirmToken, Success = true, Message = "Generate token successfully" };
+                    string confirmToken = JwtProvider.GenerateToken(claims);
+                    await CAppointment.SaveRescheduleToken(appmnt.Id, confirmToken);
+                    await CAppointment.RescheduleRequest(appmnt.Id);
+                    //string confirmationLink = $"http://localhost:5173/patient/reschedule/{confirmToken}";
+                    //await SendEmailWithConfirmationLink((Guid)appmnt.Cus_Id!, confirmationLink);
+                    //await CAppointment.AfterManagerAcceptRescheduleRequest(appmnt.Id);
+                    return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = confirmToken, Success = true, Message = "Generate token successfully" };
+                }
+                else
+                {
+                    return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = "You have already sent a request", Success = false };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
+            }
+        }
+
+        public async Task<ApiRespone> ManagerConfirmAndSendEmail(AppointmentDetailsDto appmnt)
+        {
+            try
+            {
+                var appointment = await CAppointment.ViewAppointmentDetail(appmnt.Id);
+                if (appmnt.IsRequestedDentReschedule == true)
+                {
+                    string confirmToken = appmnt.RescheduleToken;
+                    string confirmationLink = $"http://localhost:5173/patient/reschedule/{confirmToken}";
+                    await SendEmailWithConfirmationLink((Guid)appmnt.Cus_Id!, confirmationLink);
+                    return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = confirmToken, Success = true, Message = "Send Email successfully" };
+                }
+                else
+                {
+                    await CAppointment.ManagerRejectRescheduleRequest(appmnt.Id);
+                    return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = "Manager does not confirm your rechedule request. Please wait!", Success = false };
+                }
             }
             catch (Exception ex)
             {
@@ -760,6 +795,19 @@ namespace swp391_debo_be.Services.Implements
             {
                 var data = await CAppointment.GetAnotherDentist(appointmentId, currentDentistId, startDate, timeSlot, treatId);
                 return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count }, Message = "Retrieve Temporary Dentist data successfully.", Success = true };
+            }
+            catch (Exception ex)
+            {
+                return new ApiRespone { StatusCode = HttpStatusCode.BadRequest, Data = null, Message = ex.Message, Success = false };
+            }
+        }
+
+        public async Task<ApiRespone> ViewRescheduleRequest(int branchId)
+        {
+            try
+            {
+                var data = await CAppointment.ViewRescheduleRequest(branchId);
+                return new ApiRespone { StatusCode = HttpStatusCode.OK, Data = new { list = data, total = data.Count }, Message = "Retrieve Rechedule Request successfully.", Success = true };
             }
             catch (Exception ex)
             {
