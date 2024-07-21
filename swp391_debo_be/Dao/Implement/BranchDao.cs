@@ -57,20 +57,48 @@ namespace swp391_debo_be.Dao.Implement
             }
         }
 
+        //public async Task<List<BranchDto>> getAllBranchAsync(int page, int limit)
+        //{
+        //    IQueryable<ClinicBranch> query = _context.ClinicBranches
+        //                                           .Where(b => b.Status == true);
+
+
+        //    if (limit > 0)
+        //    {
+        //        query = query.Skip(page * limit)
+        //                     .Take(limit);
+        //    }
+
+        //    var branchs = await query.ToListAsync();
+
+        //    var branchDto = branchs.Select(b => new BranchDto
+        //    {
+        //        Id = b.Id,
+        //        MngId = b.MngId,
+        //        Name = b.Name,
+        //        Address = b.Address,
+        //        Phone = b.Phone,
+        //        Email = b.Email,
+        //        Avt = b.Avt,
+        //    }).ToList();
+
+        //    return branchDto;
+        //}
         public async Task<List<BranchDto>> getAllBranchAsync(int page, int limit)
         {
             IQueryable<BranchDto> query = _context.ClinicBranches
-                                                   .Where(b => b.Status == true)
-                                                   .Select(b => new BranchDto
-                                                   {
-                                                       Id = b.Id,
-                                                       Name = b.Name,
-                                                       Address = b.Address,
-                                                       Phone = b.Phone,
-                                                       Email = b.Email,
-                                                       Avt = b.Avt,
-                                                   })
-                                                   .AsNoTracking();
+                                                  .AsNoTracking()
+                                                  .Where(b => b.Status == true)
+                                                  .Select(b => new BranchDto
+                                                  {
+                                                      Id = b.Id,
+                                                      MngId = b.MngId,
+                                                      Name = b.Name,
+                                                      Address = b.Address,
+                                                      Phone = b.Phone,
+                                                      Email = b.Email,
+                                                      Avt = b.Avt,
+                                                  });
 
             if (limit > 0)
             {

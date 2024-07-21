@@ -14,10 +14,10 @@ namespace swp391_debo_be.Controllers
     [ApiController]
     public class BranchController : ControllerBase
     {
-        private readonly BranchService _branchService;
+        private readonly IBranchService _branchService;
         private readonly IAmazonS3 _s3Client;
 
-        public BranchController(BranchService branchService, IAmazonS3 s3Client) 
+        public BranchController(IBranchService branchService, IAmazonS3 s3Client) 
         {
             _branchService = branchService;
             _s3Client = s3Client;

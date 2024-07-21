@@ -23,6 +23,10 @@ namespace swp391_debo_be.Repository.Interface
         public Task<List<AppointmentDetailsDto>> GetAnotherDentist(Guid appointmentId, Guid currentDentistId, DateTime startDate, int timeSlot, int treatId);
         public Task RescheduleByDentist(AppointmentDetailsDto appmnt);
         public Task UpdatAppointmenteNote(AppointmentDetailsDto appmnt);
+        public Task RescheduleRequest(Guid appmntId);
+        public Task AfterManagerAcceptRescheduleRequest(Guid appmntId);
+        public Task ManagerRejectRescheduleRequest(Guid appmntId);
+        public Task<List<object>> ViewRescheduleRequest(int branchId);
         public Task SaveRescheduleToken(Guid appmtId, string rescheduleToken);
     }
 }

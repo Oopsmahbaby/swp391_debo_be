@@ -220,36 +220,35 @@ namespace swp391_debo_be.Controllers
         //    return Ok();
         //}
 
-        [HttpPost("generateconfirmtoken")]
-        public async Task<IActionResult> GenerateConfirmEmailToken(AppointmentDetailsDto appmnt)
+        [HttpGet("manager/reschedule-request/{id}")]
+        public async Task<IActionResult> ViewRescheduleRequest(int id)
         {
-            var response = await _appointmentService.GenerateConfirmEmailToken(appmnt);
+            var response = await _appointmentService.ViewRescheduleRequest(id);
             return new ObjectResult(response)
             {
                 StatusCode = (int)response.StatusCode
             };
         }
 
-        //[HttpGet("reschedule/{token}")]
-        //public IActionResult ConfirmReschedule(string token)
-        //{
-        //    try
-        //    {
-        //        var claims = _tokenService.ValidateToken(token);
-        //        var appointmentId = claims.FirstOrDefault(c => c.Type == "AppointmentId")?.Value;
-        //        var DentId = claims.FirstOrDefault(c => c.Type == "DentId")?.Value;
-        //        var tempDentId = claims.FirstOrDefault(c => c.Type == "TempDentId")?.Value;
-        //        var cusId = claims.FirstOrDefault(c => c.Type == "CusId")?.Value;
+        [HttpPost("dentist/generateconfirmtoken")]
+        public async Task<IActionResult> GenerateConfirmEmailToken(AppointmentDetailsDto appmnt)
+        {
+            var response = await _appointmentService.GenerateConfirmToken(appmnt);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
 
-        //        // Implement your logic here. For example, mark the appointment as confirmed in the database.
-
-        //        return Ok(new { Message = "Appointment reschedule confirmed successfully", AppointmentId = appointmentId, TempDentId = tempDentId, CusId = cusId });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(new { Message = "Invalid token", Error = ex.Message });
-        //    }
-        //}
+        [HttpPost("manager/confirmreschedulerequest")]
+        public async Task<IActionResult> ManagerConfirmAndSendEmail(AppointmentDetailsDto appmnt)
+        {
+            var response = await _appointmentService.ManagerConfirmAndSendEmail(appmnt);
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
 
         [HttpPut("reschedulebydentist/{id}")]
         public async Task<IActionResult> RescheduleByDentist(AppointmentDetailsDto appmnt)

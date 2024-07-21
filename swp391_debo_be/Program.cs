@@ -78,9 +78,10 @@ builder.Services.AddScoped<IAmazonS3, AmazonS3Client>(sp =>
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IRoleDao, RoleDao>();
 builder.Services.AddScoped<IBranchDao, BranchDao>();
+builder.Services.AddScoped<IBranchRepository, BranchRepository>();
+builder.Services.AddScoped<IBranchService, BranchService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IBranchRepository, BranchRepository>();
 builder.Services.AddScoped<IUserDao, UserDao>();
 builder.Services.AddScoped<ITreatmentRepository, TreatmentRepository>();
 builder.Services.AddScoped<ITreatmentDao, TreatmentDao>();
@@ -93,11 +94,11 @@ builder.Services.AddScoped<IDashBoardCustomerDao, DashBoardCustomerDao>();
 builder.Services.AddScoped<IDashBoardCustomerRepository, DashBoardCustomerRepository>();
 builder.Services.AddScoped<IDashBoardCustomerService, DashBoardCustomerService>();
 builder.Services.AddScoped<CDashBoardCustomer>();
-builder.Services.AddScoped<BranchService>();
-builder.Services.AddScoped<CBranch>();
+//builder.Services.AddScoped<BranchService>();
+//builder.Services.AddScoped<CBranch>();
 builder.Services.AddScoped<PaymentDao>();
 builder.Services.AddScoped<CTreatment>();
-builder.Services.AddScoped<TreatmentService>();
+//builder.Services.AddScoped<TreatmentService>();
 builder.Services.AddScoped<CAppointment>();
 builder.Services.Configure<VnpayConfig>(
                 builder.Configuration.GetSection(VnpayConfig.ConfigName));

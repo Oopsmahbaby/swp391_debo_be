@@ -146,5 +146,24 @@ namespace swp391_debo_be.Cores
         {
             return appointmentRepository.SaveRescheduleToken(appmtId, rescheduleToken);
         }
+
+        public static Task RescheduleRequest(Guid appmntId)
+        {
+            return appointmentRepository.RescheduleRequest(appmntId);
+        }
+
+        public static Task<List<object>> ViewRescheduleRequest(int branchId)
+        {
+            return appointmentRepository.ViewRescheduleRequest(branchId);
+        }
+
+        public static Task AfterManagerAcceptRescheduleRequest(Guid appmntId)
+        {
+            return appointmentRepository.AfterManagerAcceptRescheduleRequest(appmntId);
+        }
+        public static Task ManagerRejectRescheduleRequest(Guid appmntId)
+        {
+            return appointmentRepository.ManagerRejectRescheduleRequest(appmntId);
+        }
     }
 }
