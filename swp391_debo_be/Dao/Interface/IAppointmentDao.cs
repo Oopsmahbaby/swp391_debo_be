@@ -14,7 +14,7 @@ namespace swp391_debo_be.Dao.Interface
         public Task<List<AppointmentHistoryDto>> GetHistoryAppointmentByUserID(Guid id);
         public Task<List<AppointmentHistoryDto>> ViewAllAppointment(int page, int limit);
         public List<object> GetAppointmentsByStartDateAndEndDateOfDentist(DateTime startDate, DateTime endDate, Guid Id);
-        public Task<List<AppointmentHistoryDto>> GetAppointmentByDentistId(int page, int limit, Guid dentistId);
+        public Task<(List<AppointmentHistoryDto> appointments, int totalCount)> GetAppointmentByDentistId(int page, int limit, Guid dentistId);
         public Task<List<AppointmentDetailsDto>> GetAppointmentetail(Guid id, int page, int limit);
         public Task<AppointmentDetailsDto> ViewAppointmentDetail(Guid id);
         public Task RescheduleAppointment(Guid id ,AppointmentDetailsDto appmnt);

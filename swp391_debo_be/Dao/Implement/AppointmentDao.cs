@@ -308,7 +308,7 @@ namespace swp391_debo_be.Dao.Implement
             return result;
         }
 
-        public async Task<List<AppointmentHistoryDto>> GetAppointmentByDentistId(int page, int limit, Guid dentistId)
+        public async Task<(List<AppointmentHistoryDto> appointments, int totalCount)> GetAppointmentByDentistId(int page, int limit, Guid dentistId)
         {
             var query = from a in _context.Appointments
                         join ct in _context.ClinicTreatments on a.TreatId equals ct.Id
@@ -331,14 +331,22 @@ namespace swp391_debo_be.Dao.Implement
                             TimeSlot = a.TimeSlot,
                             Status = a.Status,
                         };
+
+            // Calculate the total count before pagination
+            int totalCount = await query.CountAsync();
+
+            // Apply pagination
             if (limit > 0)
             {
                 query = query.Skip(page * limit)
                              .Take(limit);
             }
+
             var appointments = await query.ToListAsync();
-            return appointments;
+
+            return (appointments, totalCount);
         }
+
 
         public async Task<List<AppointmentDetailsDto>> GetAppointmentetail(Guid id, int page, int limit)
         {

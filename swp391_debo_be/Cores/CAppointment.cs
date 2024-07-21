@@ -98,7 +98,7 @@ namespace swp391_debo_be.Cores
             }
         }
 
-        public static Task<List<AppointmentHistoryDto>> GetAppointmentByDentistId(int page, int limit, Guid dentistId)
+        public static Task<(List<AppointmentHistoryDto> appointments, int totalCount)> GetAppointmentByDentistId(int page, int limit, Guid dentistId)
         {
             return appointmentRepository.GetAppointmentByDentistId(page, limit, dentistId);
         }

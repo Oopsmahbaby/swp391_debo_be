@@ -165,8 +165,8 @@ namespace swp391_debo_be.Dao.Implement
 
         public Employee CreateClinicTreatmentsForDentist(Guid dentId, List<int> clinicIds) 
         {
-            using(_context = new())
-            {
+            //using(_context = new())
+            //{
                 Employee? employee = _context.Employees.Where(e => e.Id == dentId).FirstOrDefault();
 
                 if (employee == null)
@@ -186,7 +186,7 @@ namespace swp391_debo_be.Dao.Implement
                     _context.SaveChanges();
                 }
                 return employee;
-            }
+            //}
         } 
     }
 }

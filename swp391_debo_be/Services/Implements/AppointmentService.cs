@@ -15,6 +15,7 @@ using swp391_debo_be.Services.Interfaces;
 using System.Globalization;
 using System.Net;
 using System.Security.Claims;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace swp391_debo_be.Services.Implements
 {
@@ -82,9 +83,9 @@ namespace swp391_debo_be.Services.Implements
             var response = new ApiRespone();
             try
             {
-                var data = await CAppointment.GetAppointmentByDentistId(page, limit, dentistId);
+                var(data, totalCount) = await CAppointment.GetAppointmentByDentistId(page, limit, dentistId);
                 response.StatusCode = System.Net.HttpStatusCode.OK;
-                response.Data = new { list = data, total = data.Count };
+                response.Data = new { list = data, total = totalCount };
                 response.Success = true;
                 response.Message = "Fetched appointment list successfully";
                 return response;
