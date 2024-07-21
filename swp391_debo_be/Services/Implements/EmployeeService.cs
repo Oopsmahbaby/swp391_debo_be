@@ -1,15 +1,42 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Ocsp;
 using swp391_debo_be.Constants;
 using swp391_debo_be.Cores;
 using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Helpers;
 using swp391_debo_be.Services.Interfaces;
 using System.Net;
+using System.Net.WebSockets;
 
 namespace swp391_debo_be.Services.Implements
 {
     public class EmployeeService : IEmployeeService
     {
+        public ApiRespone CreateClinicTreatmentsForDentist(AsssignClinicTreatmentDto dto) 
+        {
+            try
+            {
+                if (Guid.TryParse(dto.DentId, out var id))
+                {
+                    var respone = CEmployee.CreateClinicTreatmentsForDentist(id, dto.ClinicTreatIds);
+
+                    if (respone == null)
+                    {
+                        return new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Message = "Invalid treatment id", Success = false };
+                    }
+
+                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.OK, Data = respone, Message = "Assign Dentist Successfully", Success = true };
+                } else
+                {
+                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Message = "Invalid Dent id", Success = false };
+                }
+
+            } catch (Exception ex)
+            {
+                    return new ApiRespone { StatusCode = System.Net.HttpStatusCode.BadRequest, Message = ex.Message, Success = false };
+            }
+        }
+
         public ActionResult<ApiRespone> GetDentistBasedOnTreamentId(int treatmentId, int branch)
         {
             try

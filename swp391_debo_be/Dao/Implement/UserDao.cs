@@ -187,6 +187,8 @@ namespace swp391_debo_be.Dao.Implement
                 DateOfBirthday = employee.DateOfBirthday,
                 IsFirstTime = false,
             };
+
+
             _context.Users.Add(newDent);
             await _context.SaveChangesAsync();
             return newDent.Id;

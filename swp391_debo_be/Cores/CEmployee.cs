@@ -41,5 +41,10 @@ namespace swp391_debo_be.Cores
         {
             return _employeeRepo.GetPatientList(id, page, limit);
         }
+
+        public static Employee CreateClinicTreatmentsForDentist(Guid dentId, List<int> clinicIds)
+        {   
+            return _employeeRepo.CreateClinicTreatmentsForDentist(dentId, clinicIds);
+        }
     }
 }

@@ -86,5 +86,11 @@ namespace swp391_debo_be.Controllers
             return _employeeService.GetPatientList(userId, page, limit);
         }
 
+        [HttpPost("dentist/assignClinicTreatments")] 
+        public ActionResult<ApiRespone> AssignClinicTreatment(AsssignClinicTreatmentDto dto)
+        {
+            return _employeeService.CreateClinicTreatmentsForDentist(dto);
+        }
+
     }
 }

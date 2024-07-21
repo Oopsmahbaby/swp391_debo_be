@@ -12,5 +12,6 @@ namespace swp391_debo_be.Repository.Interface
         public Task<CreateEmployeeDto> GetEmployeeById(Guid id);
         public Task UpdateBranchForEmployee(Guid id, CreateEmployeeDto employee);
         object GetPatientList(Guid id, int page, int limit);
+        Employee CreateClinicTreatmentsForDentist(Guid dentId, List<int> clinicIds);
     }
 }

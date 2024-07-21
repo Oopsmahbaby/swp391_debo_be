@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Amazon.S3.Model;
+using Microsoft.EntityFrameworkCore;
 using swp391_debo_be.Dao.Interface;
 using swp391_debo_be.Dto.Implement;
 using swp391_debo_be.Entity.Implement;
@@ -8,7 +9,7 @@ namespace swp391_debo_be.Dao.Implement
 {
     public class EmployeeDao : IEmployeeDao
     {
-        private readonly DeboDev02Context _context = new DeboDev02Context(new DbContextOptions<DeboDev02Context>());
+        private  DeboDev02Context _context = new DeboDev02Context(new DbContextOptions<DeboDev02Context>());
         public List<User> GetDentistBasedOnTreamentId(int treatmentId, int branchId)
         {
             var employees = _context.Employees
@@ -161,5 +162,31 @@ namespace swp391_debo_be.Dao.Implement
                 await _context.SaveChangesAsync();
             }
         }
+
+        public Employee CreateClinicTreatmentsForDentist(Guid dentId, List<int> clinicIds) 
+        {
+            using(_context = new())
+            {
+                Employee? employee = _context.Employees.Where(e => e.Id == dentId).FirstOrDefault();
+
+                if (employee == null)
+                {
+                    return null;
+                }
+
+                foreach(int clinicTreatId in clinicIds)
+                {
+                    ClinicTreatment? clinic = _context.ClinicTreatments.Where(cl => cl.Id == clinicTreatId).FirstOrDefault();
+
+                    if (clinic == null)
+                    {
+                        continue;
+                    }
+                    clinic.Dents.Add(employee);
+                    _context.SaveChanges();
+                }
+                return employee;
+            }
+        } 
     }
 }

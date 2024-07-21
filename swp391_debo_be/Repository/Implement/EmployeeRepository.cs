@@ -10,6 +10,10 @@ namespace swp391_debo_be.Repository.Implement
     {
         private readonly IEmployeeDao employeeDao = new EmployeeDao();
 
+        public Employee CreateClinicTreatmentsForDentist(Guid dentId, List<int> clinicIds)
+        {
+            return employeeDao.CreateClinicTreatmentsForDentist(dentId, clinicIds);
+        }
 
         public List<User> GetDentistBasedOnTreamentId(int treatmentId, int branch)
         {
