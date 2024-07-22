@@ -14,13 +14,13 @@ namespace swp391_debo_be.Dao.Implement
 {
     public class AppointmentDao : IAppointmentDao
     {
-        private readonly DeboDev02Context _context = new DeboDev02Context(new Microsoft.EntityFrameworkCore.DbContextOptions<DeboDev02Context>());
-        public AppointmentDao() { }
+        private readonly DeboDev02Context _context = new DeboDev02Context();
+        //public AppointmentDao() { }
 
-        public AppointmentDao(DeboDev02Context context)
-        {
-            _context = context;
-        }
+        //public AppointmentDao(DeboDev02Context context)
+        //{
+        //    _context = context;
+        //}
 
         public Appointment CancelAppointment(Guid appointmentId)
         {
@@ -135,10 +135,10 @@ namespace swp391_debo_be.Dao.Implement
 
         public List<object> GetAppointmentsByStartDateAndEndDate(DateTime startDate, DateTime endDate, Guid Id)
         {
-            var appointments = _context.Appointments.Where(a => a.StartDate >= startDate 
+            var appointments = _context.Appointments.Where(a => a.StartDate >= startDate
                 && a.StartDate <= endDate &&
                 Guid.Equals(a.CusId, Id) &&
-                a.Status != "canceled" && a.Status!= "pending").ToList();
+                a.Status != "canceled" && a.Status != "pending").ToList();
 
 
             if (appointments == null)
@@ -198,7 +198,7 @@ namespace swp391_debo_be.Dao.Implement
             for (int i = 0; i < futureDate.Count; i++)
             {
                 timeSlot[i] = _context.Appointments
-                    .Where(a => (a.TempDentId == dentistId || a.DentId == dentistId) && DateOnly.FromDateTime((DateTime)a.StartDate) == DateOnly.FromDateTime(futureDate[i]) && (a.Status == "pending" || a.Status  == "future"))
+                    .Where(a => (a.TempDentId == dentistId || a.DentId == dentistId) && DateOnly.FromDateTime((DateTime)a.StartDate) == DateOnly.FromDateTime(futureDate[i]) && (a.Status == "pending" || a.Status == "future"))
                     .Select(a => (int)a.TimeSlot)
                     .ToArray();
             }
@@ -284,7 +284,8 @@ namespace swp391_debo_be.Dao.Implement
         {
             var appointments = _context.Appointments
                         .Where(a => a.StartDate >= startDate && a.StartDate <= endDate &&
-                                    (a.TempDentId == Id || a.DentId == Id) &&
+                                    ((a.TempDentId == Id) ||
+                                    (a.TempDentId == null && a.DentId == Id)) &&
                                     a.Status != "pending" && a.Status != "canceled").ToList();
             if (appointments == null || appointments.Count == 0)
             {
@@ -490,7 +491,7 @@ namespace swp391_debo_be.Dao.Implement
             // Update the appointment
             appointment.StartDate = newStartDate;
             appointment.TimeSlot = appmnt.TimeSlot;
-            appointment.Status = "future"; 
+            appointment.Status = "future";
             appointment.RescheduleCount += 1;
 
             // Save the changes to the database
@@ -608,6 +609,7 @@ namespace swp391_debo_be.Dao.Implement
                 }
                 appointment.RescheduleToken = null;
                 appointment.IsRequestedDentReschedule = false;
+                appointment.Status = "future";
                 appointment.TempDentId = appmnt.Temp_Dent_Id;
                 _context.Appointments.Update(appointment);
                 await _context.SaveChangesAsync();
@@ -622,6 +624,7 @@ namespace swp391_debo_be.Dao.Implement
                 throw new ArgumentException("Appointment not found.");
             }
             appointment.Note = appmnt.Note;
+            appointment.Status = "future";
             _context.Appointments.Update(appointment);
             await _context.SaveChangesAsync();
         }
@@ -634,6 +637,7 @@ namespace swp391_debo_be.Dao.Implement
                 throw new ArgumentException("Appointment not found.");
             }
             appointment.IsRequestedDentReschedule = true;
+            appointment.Status = "future";
             _context.Appointments.Update(appointment);
             await _context.SaveChangesAsync();
         }
@@ -646,6 +650,7 @@ namespace swp391_debo_be.Dao.Implement
                 throw new ArgumentException("Appointment not found.");
             }
             appointment.IsRequestedDentReschedule = false;
+            appointment.Status = "future";
             _context.Appointments.Update(appointment);
             await _context.SaveChangesAsync();
         }
@@ -658,6 +663,7 @@ namespace swp391_debo_be.Dao.Implement
                 throw new ArgumentException("Appointment not found.");
             }
             appointment.RescheduleToken = null;
+            appointment.Status = "future";
             //appointment.IsRequestedDentReschedule = false;
             _context.Appointments.Update(appointment);
             await _context.SaveChangesAsync();
@@ -671,6 +677,7 @@ namespace swp391_debo_be.Dao.Implement
                 throw new ArgumentException("Appointment not found.");
             }
             appointment.RescheduleToken = rescheduleToken;
+            appointment.Status = "future";
             _context.Appointments.Update(appointment);
             await _context.SaveChangesAsync();
         }
