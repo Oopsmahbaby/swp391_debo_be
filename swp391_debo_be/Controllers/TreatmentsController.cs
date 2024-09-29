@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using swp391_debo_be.Constants;
 using swp391_debo_be.Cores;
 using swp391_debo_be.Dto.Implement;
@@ -11,6 +12,7 @@ using swp391_debo_be.Services.Implements;
 using swp391_debo_be.Services.Interfaces;
 using System.Net;
 using System.Runtime.CompilerServices;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace swp391_debo_be.Controllers
 {
@@ -20,10 +22,12 @@ namespace swp391_debo_be.Controllers
     public class TreatmentsController : ControllerBase
     {
         private readonly ITreatmentService _treatService;
+        private readonly DeboDev02Context _context;
 
-        public TreatmentsController(ITreatmentService treatService)
+        public TreatmentsController(ITreatmentService treatService, DeboDev02Context context)
         {
             _treatService = treatService;
+            _context = context;
         }
 
         [HttpGet]
@@ -83,6 +87,51 @@ namespace swp391_debo_be.Controllers
         {
             var response = _treatService.GetTreatmentsBasedBranchId(branchId);
             return response;
+        }
+
+        [HttpGet("getalltreatmentTest")]
+        public async Task<IActionResult> GetAllTreatmentTest([FromQuery] int page = 0, [FromQuery] int limit = 5)
+        {
+            try
+            {
+                var query = _context.ClinicTreatments
+                                    .Where(t => t.Status == true);
+
+                if (limit > 0)
+                {
+                    query = query.Skip(page * limit)
+                                 .Take(limit);
+                }
+
+                var treatments = await query.ToListAsync();
+
+                var treatmentDtos = treatments.Select(t => new TreatmentDto
+                {
+                    Id = t.Id,
+                    Category = t.Category,
+                    Name = t.Name,
+                    Description = t.Description,
+                    Price = t.Price,
+                }).ToList();
+
+                return Ok(new ApiRespone
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Data = new { list = treatmentDtos, total = treatmentDtos.Count },
+                    Message = "Treatment data retrieved successfully.",
+                    Success = true
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiRespone
+                {
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Data = null,
+                    Message = ex.Message,
+                    Success = false
+                });
+            }
         }
     }
 }
